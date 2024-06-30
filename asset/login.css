@@ -1,0 +1,61 @@
+
+
+.login-panel {
+    display: flex;
+    min-width: 70%;
+    max-width: 80%;
+    min-height: 50%;
+    background-color: #F9E8D9;
+}
+.login-panel p {
+    color: #527853;
+}
+
+.col-5 {
+    background-color: #527853;
+}
+.col-5 .img-fluid {
+    max-width: 50%;
+    min-width: 200px;
+}
+
+button[name="login"] {
+    background-color: #527853;
+    border-radius: 0;
+    border-color: #527853;
+}
+button[name="register"] {
+    background-color: #EE7214;
+    border-radius: 0;
+    border-color: #EE7214;
+}
+
+
+.user {
+    background-color: #fff;
+}
+.user:focus {
+    /* background-color: #9b9b9b75; */
+}
+.userform{
+    position: relative;
+}
+.bi-people-fill, .bi-key-fill {
+    position: absolute;
+    top: 25%;
+    left: 2%;
+}
+
+input.user[type=text], input[type=password] {
+    max-width: 100%;
+    padding-left: 30px;
+}
+
+input::placeholder {
+    padding-left: 0px;
+}
+
+.panel-body {
+    /* min-width: 250px; */
+}
+

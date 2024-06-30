@@ -1,0 +1,282 @@
+
+.collapse {
+    min-width: 100%;
+    flex-direction: column;
+}
+
+nav.navbar {
+    min-width: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+div.sidebar {
+    padding: 0;
+    min-height: 100vh;
+    min-width: 250px !important;
+    max-width: 250px;
+    background-color: #527853;
+    /* display: flex; */
+}
+
+li.d-flex{
+    align-content: center;
+}
+
+li.nav-item {
+    margin: 5px 0px;
+}
+
+.nav-link {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.nav-link p {
+    font-size: 16px;
+    color: #fff;
+}
+.nav-link.active {
+    background-color: #0d6efd;
+}
+
+.row {
+    /* min-height: 80vh; */
+}
+
+ul {
+    width: 100%;
+    /* align-self: center; */
+}
+ul.logout {
+    margin-top: 20em;
+}
+
+a {
+    display: flex !important;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+a svg,a p {
+    margin-left: 5%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+a p {
+    font-weight: 600;
+}
+
+.col.main.content{
+    background-color: #26262633;
+}
+.col.main.content .card-body{
+    background-color: #fff;
+    margin-top: 4em;
+}
+
+table.table{
+    margin-top: 1rem; 
+}
+
+
+
+
+
+
+/* Container Flexbox */
+.chatflex {
+    display: flex;
+    height: 100vh;
+    background-color: #F9E8D9; /* Light cream color */
+}
+
+/* User List Styling */
+.user-list {
+    width: 25%; /* Adjust width as needed */
+    background-color: #F9E8D9; /* Soft blue-gray color */
+    color: #2C3E50; /* Dark blue-gray text color */
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.user-list h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #2C3E50; /* Dark blue-gray text color */
+}
+
+.user-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.user-list ul li {
+    margin-bottom: 10px;
+}
+
+.user-list ul li a {
+    color: #2C3E50; /* Dark blue-gray text color */
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.user-list ul li a:hover {
+    background-color: #EE7214; /* Bright orange color */
+    color: #F9E8D9; /* Light cream text color */
+}
+
+.list {
+    background-color: #A9B7C0;
+    height: 100%;
+}
+
+/* Chat Section Styling */
+.chat-section {
+    width: 75%; /* Adjust width as needed */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #F9E8D9; /* Light cream color */
+}
+
+
+.messages {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #bdc3c7;
+    overflow-y: auto;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-wrap: break-word; /* Ensure long words break to prevent overflow */
+    word-wrap: break-word; /* Ensure long words break to prevent overflow */
+    word-break: break-word; /* Ensure long words break to prevent overflow */
+    hyphens: auto; /* Ensure hyphenation where appropriate */
+}
+
+.message img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.message-left {
+    background-color: #527853; /* Dark green color */
+    color: #F9E8D9; /* Light cream color */
+    align-self: flex-start;
+}
+
+.message-right {
+    background-color: #EE7214; /* Bright orange color */
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.message-right img {
+    align-self: flex-end;
+}
+
+.message-left img {
+    align-self: flex-start;
+}
+
+.timestamp {
+    display: block;
+    font-size: 0.8em;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+/* Send Message Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #bdc3c7;
+    margin-bottom: 10px;
+    resize: none;
+    height: 80px;
+    background-color: #ffffff; /* White background for textarea */
+    color: #527853; /* Dark green text color */
+}
+
+button {
+    background-color: #527853; /* Dark green color */
+    color: #F9E8D9; /* Light cream color */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #EE7214; /* Bright orange color */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 442px) {
+    div.sidebar {
+        min-height: 20vh;
+    }
+    a.nav-link {
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 672px) {
+    div.sidebar {
+        min-height: 20vh;
+    }
+}
+
+@media only screen and (max-width: 748px) {
+    div.sidebar {
+        padding: 0;
+        min-width: 250px !important; 
+        max-width: none;
+        width: 100%;
+        min-height: 20vh;
+        /* display: flex; */
+    }
+    a p{
+        margin-left: 0px;
+        width: 90px;
+        padding-left: 10px;
+    }
+    a.nav-link {
+        justify-content: center;
+    }
+}

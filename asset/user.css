@@ -1,0 +1,27 @@
+a p {
+    font-weight: 600;
+}
+
+.nav-link p {
+    color: #fff;
+}
+
+.nav-link.active {
+    background-color: #EE7214;
+}
+
+ul.navbar-nav, .collapse.navbar-collapse {
+    min-height: 100%;
+}
+
+.nav-item {
+    min-height: 100%;
+}
+
+
+
+thead {
+    background-color: #F9E8D9;
+    /* border-color: #fff; */
+    /* border-color: #EE7214; */
+}
