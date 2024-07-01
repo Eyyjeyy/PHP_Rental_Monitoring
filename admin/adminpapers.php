@@ -52,15 +52,43 @@
         // Get the category ID to be deleted
         $categoryid = $_POST['categoryid'];
         // Call the deleteCategory method to delete the category
-        $deleted = $admin->deleteCategory($categoryid);
+        $deleted = $admin->deleteCategoryPapers($categoryid);
         if($deleted) {
             // Category deleted successfully, you can display a success message here if needed
-            header("Location: admincategories.php?category_deleted=1");
+            // header("Location: admincategories.php?category_deleted=1");
+            echo 'success';
         } else {
             // Error occurred while deleting category, display an error message or handle as needed
-            echo "Error occurred while deleting category.";
+            // echo "Error occurred while deleting category.";
+            echo 'error';
         }
     }
+
+    // Handle form submission for adding papers
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['category_id'])) {
+        $categoryId = $_POST['category_id'];
+        $paperName = htmlspecialchars($_POST['paper_name']);
+
+        // File upload handling
+        $uploadDir = '../uploads/'; // Specify your upload directory
+        $fileName = basename($_FILES['paper_file']['name']);
+        $targetPath = $uploadDir . $fileName;
+
+        if (move_uploaded_file($_FILES['paper_file']['tmp_name'], $targetPath)) {
+            // File uploaded successfully, insert into database
+            $added = $admin->addPaper($categoryId, $paperName, $fileName, $targetPath);
+            if ($added) {
+                // echo 'success';
+                header("Location: adminpapers.php");
+            } else {
+                // echo 'error';
+            }
+        } else {
+            echo 'error';
+        }
+        exit();
+    }
+
     $sql = "SELECT * FROM paper_categories";
     $result = $admin->conn->query($sql);
 
@@ -127,6 +155,42 @@
                 </nav>
             </div>
             <div class="col main content">
+                <div class="card-body">
+                    <div class="row">
+                        <form id="newPapersForm" action="adminpapers.php" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="paperCategory" class="form-label">Select Category</label>
+                                <select class="form-select" id="paperCategory" name="category_id" required>
+                                    <?php
+                                    // Fetch categories from database
+                                    $sql = "SELECT * FROM paper_categories";
+                                    $result = $admin->conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="paperName" class="form-label">Paper Name</label>
+                                <input type="text" class="form-control" id="paperName" name="paper_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="paperFile" class="form-label">Upload File</label>
+                                <input type="file" class="form-control" id="paperFile" name="paper_file" required>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" name="add_papers" class="btn btn-primary float-end">
+                                    <i class="fa fa-plus">
+                                    </i>
+                                    Add Papers
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -237,11 +301,45 @@
         });
     </script>
     <script>
+        // document.getElementById('new_category').addEventListener('click', function () {
+        //     var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
+        //         keyboard: false
+        //     });
+        //     newCategoryModal.show();
+        // });
+
         document.getElementById('new_category').addEventListener('click', function () {
             var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
                 keyboard: false
             });
             newCategoryModal.show();
+        });
+
+        document.getElementById('newPapersForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var form = event.target;
+            var formData = new FormData(form);
+
+            fetch('adminpapers.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response from server:', data);
+                if (data.includes('success')) {
+                    // Handle successful paper addition
+                    // window.location.reload(); // Reload the page to see the new paper
+                    form.reset();
+                } else {
+                    // Handle error in paper addition
+                    console.error('Failed to add paper');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
     </script>
     <script>
@@ -263,6 +361,43 @@
                     </td>
                 </tr>
                 `;
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('tbody').addEventListener('click', function(event) {
+                if (event.target.classList.contains('btn-delete')) {
+                    var categoryId = event.target.getAttribute('data-id');
+                    deleteCategory(categoryId);
+                }
+            });
+        });
+
+        function deleteCategory(categoryId) {
+            var formData = new FormData();
+            formData.append('delete_category', true);
+            formData.append('categoryid', categoryId);
+
+            fetch('adminpapers.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response from server:', data);
+
+                var messageDiv = document.getElementById('result');
+                if (data.includes('success')) {
+                    messageDiv.innerHTML += '<p class="text-success">Category deleted successfully.</p>';
+                    // Optionally, remove the deleted category row from the table
+                    document.querySelector('button[data-id="' + categoryId + '"]').closest('tr').remove();
+                } else {
+                    messageDiv.innerHTML += '<p class="text-danger">Failed to delete category.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
             });
         }
     </script>

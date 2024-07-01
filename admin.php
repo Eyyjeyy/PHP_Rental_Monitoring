@@ -436,5 +436,38 @@ Class Admin {
         return false; // Insertion failed
     }
   }
+
+  public function deleteCategoryPapers($categoryid) {
+    $sql = "DELETE FROM paper_categories WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $categoryid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+        return true; // Deletion successful
+    } else {
+        return false; // Deletion failed
+    }
+  }
+
+  public function addPaper($categoryId, $paperName, $fileName, $targetPath) {
+    // Prepare the SQL statement to insert a new paper record
+    $stmt = $this->conn->prepare("INSERT INTO paper_files (category_id, file_name, file_url, uploaded_at) VALUES (?, ?, ?, NOW())");
+    // Bind the parameters
+    $stmt->bind_param("iss", $categoryId, $fileName, $targetPath);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        // Success, return true
+        // $stmt->close(); // Close the statement before returning
+        return true;
+    } else {
+        // Error, return false
+        // $stmt->close(); // Close the statement before returning
+        return false;
+    }
+    // Close the statement
+    $stmt->close();
+  }
+
 }
 
