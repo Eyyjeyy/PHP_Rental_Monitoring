@@ -156,7 +156,7 @@
             </div>
             <div class="col main content">
                 <div class="card-body">
-                    <div class="row">
+                    <!-- <div class="row">
                         <form id="newPapersForm" action="adminpapers.php" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="paperCategory" class="form-label">Select Category</label>
@@ -182,13 +182,46 @@
                                 <input type="file" class="form-control" id="paperFile" name="paper_file" required>
                             </div>
                             <div class="col-lg-12">
-                                <button type="submit" name="add_papers" class="btn btn-primary float-end">
+                                <button type="submit" name="add_papers" class="btn btn-primary float-end" style="padding: 6px 20px;">
                                     <i class="fa fa-plus">
                                     </i>
                                     Add Papers
                                 </button>
                             </div>
                         </form>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary float-end" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Paper Type</th>
+                                    <th scope="col">Created At</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="papertable">
+                                <?php
+                                $sql_paper = "SELECT * FROM paper_files";
+                                $result_paper = $admin->conn->query($sql_paper);
+                                if ($result_paper->num_rows > 0) {
+                                    while ($row_paper = $result_paper->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<th scope='row'>" . $row_paper['id'] . "</th>";
+                                        echo "<td>" . htmlspecialchars($row_paper['file_name']) . "</td>";
+                                        echo "<td>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="card-body">
@@ -241,6 +274,49 @@
                             <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
                             </form>
                         </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- New Papers Modal -->
+                <div class="modal fade" id="newPapersModal" tabindex="-1" aria-labelledby="newCategoryPapersLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="newpapersModalLabel">New Papers</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newPaperFilesForm" method="POST" action="adminpapers.php">
+                                    <!-- <div class="mb-3">
+                                        <label for="username" class="form-label">Paper Name</label>
+                                        <input type="text" class="form-control" id="username" name="categoryname" required>
+                                    </div> -->
+                                    <div class="mb-3">
+                                        <label for="paperCategory" class="form-label">Select Category</label>
+                                        <select class="form-select" id="paperCategory" name="category_id" required>
+                                            <?php
+                                            // Fetch categories from database
+                                            $sql = "SELECT * FROM paper_categories";
+                                            $result = $admin->conn->query($sql);
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="paperName" class="form-label">Paper Name</label>
+                                        <input type="text" class="form-control" id="paperName" name="paper_name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="paperFile" class="form-label">Upload File</label>
+                                        <input type="file" class="form-control" id="paperFile" name="paper_file" required>
+                                    </div>
+                                    <button type="submit" name="add_category" class="btn btn-primary">Add Papers</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -315,7 +391,42 @@
             newCategoryModal.show();
         });
 
-        document.getElementById('newPapersForm').addEventListener('submit', function(event) {
+        // document.getElementById('newPapersForm').addEventListener('submit', function(event) {
+        //     event.preventDefault();
+            
+        //     var form = event.target;
+        //     var formData = new FormData(form);
+
+        //     fetch('adminpapers.php', {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //     .then(response => response.text())
+        //     .then(data => {
+        //         console.log('Response from server:', data);
+        //         if (data.includes('success')) {
+        //             // Handle successful paper addition
+        //             // window.location.reload(); // Reload the page to see the new paper
+        //             form.reset();
+        //         } else {
+        //             // Handle error in paper addition
+        //             console.error('Failed to add paper');
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+        // });
+    </script>
+    <script>
+        document.getElementById('new_papers').addEventListener('click', function () {
+            var newCategoryModal = new bootstrap.Modal(document.getElementById('newPapersModal'), {
+                keyboard: false
+            });
+            newCategoryModal.show();
+        });
+
+        document.getElementById('newPaperFilesForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
             var form = event.target;
@@ -348,7 +459,7 @@
             // document.getElementById("result").innerHTML += event.data + "<br>";
             var arrayData = JSON.parse(event.data);
             console.log(arrayData);
-            var dataContainer = document.querySelector('tbody')
+            var dataContainer = document.querySelector('tbody#result')
             dataContainer.innerHTML = ''
             arrayData.forEach(e => {
                 dataContainer.innerHTML +=`
@@ -366,7 +477,7 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('tbody').addEventListener('click', function(event) {
+            document.querySelector('tbody#result').addEventListener('click', function(event) {
                 if (event.target.classList.contains('btn-delete')) {
                     var categoryId = event.target.getAttribute('data-id');
                     deleteCategory(categoryId);
