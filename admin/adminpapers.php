@@ -70,13 +70,21 @@
         $paperName = htmlspecialchars($_POST['paper_name']);
 
         // File upload handling
+        // $uploadDir = '../uploads/'; // Specify your upload directory
+        // $fileName = basename($_FILES['paper_file']['name']);
+        // $targetPath = $uploadDir . $fileName;
+
         $uploadDir = '../uploads/'; // Specify your upload directory
-        $fileName = basename($_FILES['paper_file']['name']);
-        $targetPath = $uploadDir . $fileName;
+        $originalFileName = basename($_FILES['paper_file']['name']);
+        $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+        $fileNameWithoutExtension = pathinfo($originalFileName, PATHINFO_FILENAME);
+        $uniqueFileName = $fileNameWithoutExtension . '_' . uniqid() . '.' . $fileExtension;
+        $targetPath = $uploadDir . $uniqueFileName;
+
 
         if (move_uploaded_file($_FILES['paper_file']['tmp_name'], $targetPath)) {
             // File uploaded successfully, insert into database
-            $added = $admin->addPaper($categoryId, $paperName, $fileName, $targetPath);
+            $added = $admin->addPaper($categoryId, $paperName, $uniqueFileName, $targetPath);
             if ($added) {
                 // echo 'success';
                 header("Location: adminpapers.php");
@@ -469,6 +477,28 @@
                     <td>${e.created_at}</td>
                     <td>
                         <button class="btn btn-danger btn-delete" name="delete_category" data-id="${e.id}">Delete</button>
+                    </td>
+                </tr>
+                `;
+            });
+        }
+    </script>
+    <script>
+        var soruce_files = new EventSource("../fetch_papers_files.php");
+        soruce_files.onmessage = function(event_files) {
+            // document.getElementById("result").innerHTML += event.data + "<br>";
+            var arrayData_files = JSON.parse(event_files.data);
+            console.log(arrayData_files);
+            var dataContainer_files = document.querySelector('tbody#papertable')
+            dataContainer_files.innerHTML = ''
+            arrayData_files.forEach(e_files => {
+                dataContainer_files.innerHTML +=`
+                <tr>
+                    <td>${e_files.id}</td>
+                    <td>${e_files.file_name}</td>
+                    <td>${e_files.uploaded_at}</td>
+                    <td>
+                        <button class="btn btn-danger btn-delete" name="delete_category" data-id="${e_files.id}">Delete</button>
                     </td>
                 </tr>
                 `;
