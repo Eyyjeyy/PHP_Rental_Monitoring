@@ -208,7 +208,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Paper Type</th>
+                                    <th scope="col">Paper Name</th>
                                     <th scope="col">Created At</th>
                                     <th scope="col">Actions</th>
                                 </tr>
