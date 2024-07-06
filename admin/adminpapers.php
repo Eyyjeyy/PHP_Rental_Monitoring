@@ -97,6 +97,36 @@
         exit();
     }
 
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (isset($_POST['delete_file']) && $_POST['delete_file'] == 'true') {
+            $fileId = intval($_POST['fileid']);
+            if ($admin->deletePaper($fileId)) {
+                echo 'success';
+            } else {
+                echo 'error';
+            }
+            exit;
+        }
+        // ... handle other POST requests
+    }
+
+    // Pagination settings
+    $limit = 5; // Number of records per page
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    // Fetch total number of records
+    $sql_count = "SELECT COUNT(*) AS count FROM paper_files";
+    $result_count = $admin->conn->query($sql_count);
+    $total_records = $result_count->fetch_assoc()['count'];
+    $total_pages = ceil($total_records / $limit);
+
+    // Fetch records for current page
+    $sql_paper = "SELECT * FROM paper_files LIMIT $start, $limit";
+    $result_paper = $admin->conn->query($sql_paper);
+
+
+
     $sql = "SELECT * FROM paper_categories";
     $result = $admin->conn->query($sql);
 
@@ -148,6 +178,12 @@
                                     <path d="M3.5 1h.585A1.5 1.5 0 0 0 4 1.5V2a1.5 1.5 0 0 0 1.5 1.5h5A1.5 1.5 0 0 0 12 2v-.5q-.001-.264-.085-.5h.585A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1"/>
                                 </svg>
                                 <p>Papers</p>
+                            </a>
+                            <a class="nav-link" href="../chat.php">
+                                <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
+                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
+                                </svg>
+                                <p>Chat</p>
                             </a>
                         </ul>
                         <ul class="navbar-nav d-flex flex-column">
@@ -230,6 +266,14 @@
                                 ?>
                             </tbody>
                         </table>
+                        <!-- <div id="pagination-controls">
+                            <button id="prev-page" onclick="prevPage()">Previous</button>
+                            <span id="page-info"></span>
+                            <button id="next-page" onclick="nextPage()">Next</button>
+                        </div> -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center" id="pagination-controls"></ul>
+                        </nav>
                     </div>
                 </div>
                 <div class="card-body">
@@ -484,6 +528,146 @@
         }
     </script>
     <script>
+        var allDataFiles = [];
+        var currentPage = 1;
+        var itemsPerPage = 5;
+
+        var source_files = new EventSource("../fetch_papers_files.php");
+        source_files.onmessage = function(event_files) {
+            // allDataFiles = JSON.parse(event_files.data);
+            // currentPage = 1; // Reset to the first page whenever new data is fetched
+            // renderTable();
+            // updatePaginationControls();
+            var newDataFiles = JSON.parse(event_files.data);
+            
+            if (JSON.stringify(allDataFiles) !== JSON.stringify(newDataFiles)) {
+                allDataFiles = newDataFiles;
+                renderTable();
+                updatePaginationControls();
+            }
+        };
+
+        function renderTable() {
+            var dataContainer_files = document.querySelector('tbody#papertable');
+            dataContainer_files.innerHTML = '';
+            var startIndex = (currentPage - 1) * itemsPerPage;
+            var endIndex = startIndex + itemsPerPage;
+            var paginatedData = allDataFiles.slice(startIndex, endIndex);
+
+            paginatedData.forEach(e_files => {
+                dataContainer_files.innerHTML += `
+                    <tr>
+                        <td>${e_files.id}</td>
+                        <td>${e_files.file_name}</td>
+                        <td>${e_files.uploaded_at}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <div class="row m-0">
+                                    <div class="col d-flex justify-content-center p-0">
+                                        <button class="btn btn-danger btn-delete" name="delete_file" data-id="${e_files.id}" style="width: 100px;">Delete</button>
+                                    </div>
+                                    <div class="col d-flex justify-content-center p-0">
+                                        <a href="${e_files.file_url}" class="btn btn-primary btn-download" download="${e_files.file_name}" style="width: 100px; text-align: center;">Download</a>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        </td>
+                    </tr>
+                `;
+            });
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', function() {
+                    var id = this.getAttribute('data-id');
+                    deleteFile(id);
+                });
+            });
+        }
+
+        function deleteFile(id) {
+            var formData = new FormData();
+            formData.append('delete_file', 'true');
+            formData.append('fileid', id);
+
+            fetch('adminpapers.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response from server:', data);
+
+                var message_filesDiv = document.getElementById('papertable');
+                if (data.includes('success')) {
+                    message_filesDiv.innerHTML += '<p class="text-success">File deleted successfully.</p>';
+                    // Optionally, remove the deleted file row from the table
+                    document.querySelector('button[data-id="' + id + '"]').closest('tr').remove();
+                    // Refresh the data to reflect changes
+                    allDataFiles = allDataFiles.filter(file => file.id != id);
+                    renderTable();
+                    updatePaginationControls();
+                } else {
+                    message_filesDiv.innerHTML += '<p class="text-danger">Failed to delete file.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
+
+        function updatePaginationControls() {
+            // var totalPages = Math.ceil(allDataFiles.length / itemsPerPage);
+            // document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+
+            // document.getElementById('prev-page').disabled = currentPage === 1;
+            // document.getElementById('next-page').disabled = currentPage === totalPages;
+            var totalPages = Math.ceil(allDataFiles.length / itemsPerPage);
+            var paginationControls = document.getElementById('pagination-controls');
+            paginationControls.innerHTML = '';
+
+            for (var i = 1; i <= totalPages; i++) {
+                var li = document.createElement('li');
+                li.classList.add('page-item');
+                if (i === currentPage) {
+                    li.classList.add('active');
+                }
+                
+                var button = document.createElement('button');
+                button.textContent = i;
+                button.classList.add('page-link');
+                button.addEventListener('click', function() {
+                    currentPage = parseInt(this.textContent);
+                    renderTable();
+                    updatePaginationControls();
+                });
+
+                li.appendChild(button);
+                paginationControls.appendChild(li);
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePaginationControls();
+            }
+        }
+
+        function nextPage() {
+            var totalPages = Math.ceil(allDataFiles.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePaginationControls();
+            }
+        }
+    </script>
+    <!-- Without Pagination for papertable -->
+    <!-- <script>
         var soruce_files = new EventSource("../fetch_papers_files.php");
         soruce_files.onmessage = function(event_files) {
             // document.getElementById("result").innerHTML += event.data + "<br>";
@@ -504,7 +688,7 @@
                 `;
             });
         }
-    </script>
+    </script> -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('tbody#result').addEventListener('click', function(event) {

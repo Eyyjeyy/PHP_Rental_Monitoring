@@ -469,5 +469,17 @@ Class Admin {
     $stmt->close();
   }
 
+  public function deletePaper($categoryid) {
+    $sql = "DELETE FROM paper_files WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $categoryid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+        return true; // Deletion successful
+    } else {
+        return false; // Deletion failed
+    }
+  }
+
 }
 

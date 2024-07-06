@@ -4,4 +4,9 @@ This repository contains the source code for a Rental Monitoring System, designe
 The project is built using PHP, MySQL for database management, and incorporates essential security measures for data integrity and user privacy.
 
 5/09/24 - Project Start <br>
-6/30/24 - Admin Paper Categories - Realtime Data Fetching using SSE
+6/30/24 - Admin Paper Categories - Realtime Data Fetching using SSE <br><br>
+
+7/07/24 - Admin Paper Files <br>
+- Added Pagination <br>
+- Added Delete Functionality <br>
+- Added Download Feature <br>
