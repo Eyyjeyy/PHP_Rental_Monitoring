@@ -1,4 +1,8 @@
 <?php
+
+require 'PHPMailer-master/src/Exception.php';
+require 'PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/src/SMTP.php';
 Class Admin {
     public $conn; // Declare the connection variable
     // public $loggedIn = 3; // Define the loggedIn property
@@ -481,5 +485,94 @@ Class Admin {
     }
   }
 
+
+
+
+
+
+
+
+
+
+  public function sendEmail($to, $subject, $body, $attachmentPath = null) {
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->SMTPDebug = 0; // Disable verbose debug output
+        $mail->isSMTP(); // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true; // Enable SMTP authentication
+        $mail->Username = 'your_email@gmail.com'; // SMTP username
+        $mail->Password = 'your_password'; // SMTP password
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
+        $mail->Port = 587; // TCP port to connect to
+
+        // Recipients
+        $mail->setFrom('your_email@gmail.com', 'Mailer');
+        $mail->addAddress($to); // Add a recipient
+
+        // Attachments
+        if ($attachmentPath) {
+            $mail->addAttachment($attachmentPath); // Add attachments
+        }
+
+        // Content
+        $mail->isHTML(true); // Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+        $mail->AltBody = strip_tags($body); // Optional: plain text version for non-HTML email clients
+
+        $mail->send();
+        return true;
+    } catch (PHPMailer\PHPMailer\Exception $e) {
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        return false;
+    }
+  }
+
+  public function sendMonthlyPaymentNotifications() {
+    // Current date
+    $today = new DateTime();
+    $todayString = $today->format('Y-m-d');
+    
+    // SQL query to get all tenants
+    $sql = "SELECT t.*, u.email 
+            FROM tenants t
+            INNER JOIN users u ON t.users_id = u.id";
+    $result = $this->conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($tenant = $result->fetch_assoc()) {
+            $to = $tenant['email']; // Email from the users table
+            $datePreferred = $tenant['date_preferred'];
+            $dateStart = $tenant['date_start'];
+
+            // Determine the base date for notification
+            $baseDate = !empty($datePreferred) ? new DateTime($datePreferred) : new DateTime($dateStart);
+
+            // Calculate the months difference
+            $interval = $today->diff($baseDate);
+            $monthsDiff = $interval->y * 12 + $interval->m;
+
+            // Send email if months difference is positive and it's the exact day of the month
+            if ($monthsDiff > 0 && $baseDate->format('d') == $today->format('d')) {
+                $subject = "Monthly Payment Reminder";
+                $body = "Dear " . $tenant['fname'] . " " . $tenant['lname'] . ",<br><br>This is a reminder that your monthly payment is due.<br><br>Best regards,<br>Your Company Name";
+                if ($this->sendEmail($to, $subject, $body)) {
+                    echo "Email sent to " . $to . "\n";
+                } else {
+                    echo "Failed to send email to " . $to . "\n";
+                }
+            }
+        }
+    } else {
+        echo "No tenants to notify today.\n";
+    }
+  }
+
+  
 }
 
+// $test = new Admin();
+// $test->sendEmail("email@gmail.com", "Lupercal", "TESTING BODY 123___");
