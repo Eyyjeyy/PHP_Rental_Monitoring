@@ -536,36 +536,76 @@ Class Admin {
     $today = new DateTime();
     $todayString = $today->format('Y-m-d');
     
-    // SQL query to get all tenants
-    $sql = "SELECT t.*, u.email 
-            FROM tenants t
-            INNER JOIN users u ON t.users_id = u.id";
+    // SQL query to get all tenants and house price
+    $sql = "SELECT t.*, u.email, h.price
+    FROM tenants t
+    INNER JOIN users u ON t.users_id = u.id
+    INNER JOIN houses h ON t.house_id = h.id";
     $result = $this->conn->query($sql);
 
     if ($result->num_rows > 0) {
-        while ($tenant = $result->fetch_assoc()) {
-            $to = $tenant['email']; // Email from the users table
-            $datePreferred = $tenant['date_preferred'];
-            $dateStart = $tenant['date_start'];
+      while ($tenant = $result->fetch_assoc()) {
+        $to = $tenant['email']; // Email from the users table
+        $datePreferred = $tenant['date_preferred'];
+        $dateStart = $tenant['date_start'];
+        $price = $tenant['price'];
 
-            // Determine the base date for notification
-            $baseDate = !empty($datePreferred) ? new DateTime($datePreferred) : new DateTime($dateStart);
+        // Determine the base date for notification
+        $baseDate = !empty($datePreferred) ? new DateTime($datePreferred) : new DateTime($dateStart);
 
-            // Calculate the months difference
-            $interval = $today->diff($baseDate);
-            $monthsDiff = $interval->y * 12 + $interval->m;
+        // Calculate the months difference
+        $interval = $today->diff($baseDate);
+        $monthsDiff = $interval->y * 12 + $interval->m;
 
-            // Send email if months difference is positive and it's the exact day of the month
-            if ($monthsDiff > 0 && $baseDate->format('d') == $today->format('d')) {
-                $subject = "Monthly Payment Reminder";
-                $body = "Dear " . $tenant['fname'] . " " . $tenant['lname'] . ",<br><br>This is a reminder that your monthly payment is due.<br><br>Best regards,<br>Your Company Name";
-                if ($this->sendEmail($to, $subject, $body)) {
-                    echo "Email sent to " . $to . "\n";
-                } else {
-                    echo "Failed to send email to " . $to . "\n";
-                }
-            }
+        // Send email if months difference is positive and it's the exact day of the month
+        if ($monthsDiff > 0 && $baseDate->format('d') == $today->format('d')) {
+          // Calculate the number of months passed
+          $monthsPassed = $interval->y * 12 + $interval->m;
+
+          // Calculate the total rent due
+          // $totalRentDue = $monthsPassed * $price;
+
+          // Fetch payment amounts for the specific tenant, considering only payments on or after the base date
+          $baseDateString = $baseDate->format('Y-m-d');
+          $sql_payments = "SELECT SUM(amount) AS total_payments
+                FROM payments
+                WHERE tenants_id = {$tenant['id']}
+                  AND houses_id = {$tenant['house_id']}
+                  AND date_payment >= '$baseDateString'";
+          $result_payments = $this->conn->query($sql_payments);
+          $row_payments = $result_payments->fetch_assoc();
+          $totalPayments = $row_payments['total_payments'];
+
+          // Count the number of tenants sharing the same house
+          $sql_tenants_count = "SELECT COUNT(*) AS tenants_count
+                    FROM tenants
+                    WHERE house_id = {$tenant['house_id']}";
+          $result_tenants_count = $this->conn->query($sql_tenants_count);
+          $row_tenants_count = $result_tenants_count->fetch_assoc();
+          $tenants_count = $row_tenants_count['tenants_count'];
+
+          // Calculate the rent due per tenant
+          // $rentDuePerTenant = $totalRentDue / $tenants_count;
+          $rentDuePerTenant = $price / $tenants_count;
+
+          // Calculate the current balance for the current tenant
+          $balance = $rentDuePerTenant - $totalPayments;
+
+          // Create email content
+          $subject = "Monthly Payment Reminder";
+          $body = "Dear " . $tenant['fname'] . " " . $tenant['lname'] . ",<br><br>";
+          $body .= "This is a reminder that your monthly payment is due.<br>";
+          $body .= "Amount Due: $" . number_format($balance, 2) . "<br><br>";
+          $body .= "Best regards,<br>Your Company Name";
+
+          // Send email
+          if ($this->sendEmail($to, $subject, $body)) {
+              echo "Email sent to " . $to . "\n";
+          } else {
+              echo "Failed to send email to " . $to . "\n";
+          }
         }
+      }
     } else {
         echo "No tenants to notify today.\n";
     }
