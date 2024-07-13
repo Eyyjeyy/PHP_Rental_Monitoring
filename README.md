@@ -19,3 +19,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
    - Created sendMonthlyEmails.php. Will serve as the trigger to checking for dates for months passed and if so, will send email <br>
    - If any number of months has passed from date_preferred of tenant but has days in difference example, June 5 and current date is July 9, email won't send <br>
      It has to be exactly months or a month for email to send <br>
+
+7/13/24 - Monthly Sending Emails<br>
+- Added Dynamic Price in Email Body, retrieving price based on tenant's house and number of tenants sharing the same house
