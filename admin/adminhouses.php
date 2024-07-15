@@ -62,8 +62,8 @@
         $w_accountname = trim(htmlspecialchars($_POST['w_accountname']));
     
         // Validate the house number to ensure it contains only numerical characters
-        if (!ctype_digit($housenumber)) {
-            $_SESSION['error_message'] = "Should only be numerical characters";
+        if (ctype_digit($housenumber)) {
+            $_SESSION['error_message'] = "Should only be alphabetical characters";
             header("Location: adminhouses.php");
             exit();
         }
@@ -290,7 +290,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">House Number</label>
+                                            <label for="username" class="form-label">House Name</label>
                                             <input type="text" class="form-control" id="username" name="housenumber" required>
                                         </div>
                                     </div>
@@ -368,7 +368,7 @@
                                 <form id="updateHouseForm" method="POST" action="adminhouses.php">
                                     <input type="hidden" id="updateHouseId" name="house_id">
                                     <div class="mb-3">
-                                        <label for="updateHouseNumber" class="form-label">House Number</label>
+                                        <label for="updateHouseNumber" class="form-label">House Name</label>
                                         <input type="text" class="form-control" id="updateHouseNumber" name="house_number" required>
                                     </div>
                                     <div class="mb-3">
@@ -376,7 +376,7 @@
                                         <input type="text" class="form-control" id="updatePrice" name="price" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="updateCategoryId" class="form-label">Category ID</label>
+                                        <label for="updateCategoryId" class="form-label">Category Name</label>
                                         <select class="form-select" id="updateCategoryId" name="category_id" required>
                                             <?php
                                                 // Fetch categories from the database
@@ -387,7 +387,7 @@
                                                     // Output options for each category
                                                     while ($row_option2 = $sql2_option->fetch_assoc()) {
                                                         // echo "<option value='" . $row_option['category_id'] . "'></option>";
-                                                        echo "<option value='" . $row_option2['id'] . "'>" . $row_option2['id'] . "</option>";
+                                                        echo "<option value='" . $row_option2['id'] . "'>" . $row_option2['name'] . "</option>";
                                                     }
                                                 } else {
                                                     echo "<option value=''>No categories found</option>";

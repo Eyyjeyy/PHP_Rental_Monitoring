@@ -21,4 +21,10 @@ The project is built using PHP, MySQL for database management, and incorporates 
      It has to be exactly months or a month for email to send <br>
 
 7/13/24 - Monthly Sending Emails<br>
-- Added Dynamic Price in Email Body, retrieving price based on tenant's house and number of tenants sharing the same house
+- Added Dynamic Price in Email Body, retrieving price based on tenant's house and number of tenants sharing the same house <br>
+
+7/15/24 - Revisions <br>
+- Revised Apartment addition and update <br>
+  - House Number to House Name <br>
+  - Category ID to Category Name <br>
+    - Shown Option in dropdown from category's ID to name (Value input is still category's ID) <br>
