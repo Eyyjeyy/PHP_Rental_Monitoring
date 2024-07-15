@@ -93,6 +93,31 @@ Class Admin {
     return false;
   }
 
+  // Function to register a user
+  public function registerUser($firstname, $middlename, $lastname, $password, $email, $role) {
+    // Validate input
+    if (empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
+      return "All fields are required.";
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return "Invalid email format.";
+    }
+    
+    // Prepare the SQL statement to insert the new user
+    $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, middlename, lastname, password, email, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssss", $firstname, $lastname, $email, $password);
+
+    // Execute the statement and check if the user was added successfully
+    if ($stmt->execute()) {
+      return false;
+    } else {
+      return false;
+    }
+
+    // Close the statement
+    $stmt->close();
+  }
+
   // Function to delete a user by ID
   public function deleteUser($user_id) {
     $sql = "DELETE FROM users WHERE id = ?";

@@ -41,6 +41,11 @@
         exit();
     }
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
+        header("Location: register.php");
+        exit();
+    }
+
     // Set the title for this page
     $pageTitle = "Login Page"; // Change this according to the current page
 ?>
