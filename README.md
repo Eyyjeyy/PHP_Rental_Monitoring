@@ -28,3 +28,12 @@ The project is built using PHP, MySQL for database management, and incorporates 
   - House Number to House Name <br>
   - Category ID to Category Name <br>
     - Shown Option in dropdown from category's ID to name (Value input is still category's ID) <br>
+
+7/16/24 - Added Meralco Account Autofill <br>
+- Updated SQL query to join houses with houseaccounts on houses.id = houseaccounts.houses_id <br>
+- Modified house_data generation to include data-meralconum attribute for the update button <br>
+- Adjusted JavaScript to autofill the Meralco Account field in the update modal <br>
+
+7/16/24 - Revised Adminhouses Forms <br>
+- Revised New Modal Fields to be side by side <br>
+- Revised Update Modal Fields to be side by side <br>

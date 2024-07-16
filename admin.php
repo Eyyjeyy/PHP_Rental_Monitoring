@@ -205,15 +205,36 @@ Class Admin {
     }
   }
 
-  public function updateHouse($house_id, $housenumber, $price, $category) {
+  public function updateHouse($house_id, $housenumber, $price, $category, $meralco_accnum = null, $meralco_accname = null, $maynilad_accnum = null, $maynilad_accname = null) {
     $sql = "UPDATE houses SET house_name = ?, price = ?, category_id = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("sdii", $housenumber, $price, $category, $house_id);
     $stmt->execute();
-    if ($stmt->affected_rows > 0) {
+    
+    // Check if the house update was successful
+    $houseUpdated = $stmt->affected_rows > 0;
+    
+    // Check if we need to update the houseaccounts table
+    if ($meralco_accnum !== null) {
+      $sqlHouseAcc = "UPDATE houseaccounts SET elec_accname = ?, elec_accnum = ?, water_accname = ?, water_accnum = ? WHERE houses_id = ?";
+      $stmtHouseAcc = $this->conn->prepare($sqlHouseAcc);
+      $stmtHouseAcc->bind_param("sisii", $meralco_accname, $meralco_accnum, $maynilad_accname, $maynilad_accnum, $house_id);
+      $stmtHouseAcc->execute();
+      
+      // Check if the houseaccounts update was successful
+      $houseAccUpdated = $stmtHouseAcc->affected_rows > 0;
+      
+      // Return true if either the house or houseaccounts update was successful
+      if ($houseUpdated || $houseAccUpdated) {
         return true; // Update successful
-    } else {
+      } else if($stmtHouseAcc->error) {
         return false; // Update failed
+      } else {
+        return true;
+      }
+    } else {
+      // Return true if the house update was successful
+      return $houseUpdated;
     }
   }
 

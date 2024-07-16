@@ -108,7 +108,11 @@
         $price = htmlspecialchars($_POST['price']);
         $category_id = htmlspecialchars($_POST['category_id']);
         $house_id = $_POST['house_id'];
-        $updated = $admin->updateHouse($house_id, $housenumber, $price, $category_id);
+        $meralco_accnum = $_POST['meralco_accnum'];
+        $meralco_accname = $_POST['meralco_accname'];
+        $maynilad_accnum = $_POST['maynilad_accnum'];
+        $maynilad_accname = $_POST['maynilad_accname'];
+        $updated = $admin->updateHouse($house_id, $housenumber, $price, $category_id, $meralco_accnum, $meralco_accname, $maynilad_accnum, $maynilad_accname);
         if($updated) {
             header("Location: adminhouses.php");
             exit();
@@ -134,12 +138,21 @@
     }
     
     // $sql = "SELECT * FROM houses";
-    $sql = "SELECT houses.*, categories.name AS category_name FROM houses INNER JOIN categories ON categories.id = houses.category_id ORDER BY houses.id ASC";
+    // $sql = "SELECT houses.*, categories.name AS category_name FROM houses INNER JOIN categories ON categories.id = houses.category_id ORDER BY houses.id ASC";
+    $sql = "SELECT houses.*, categories.name AS category_name, houseaccounts.elec_accnum, houseaccounts.elec_accname, houseaccounts.water_accname, houseaccounts.water_accnum
+    FROM houses
+    INNER JOIN categories ON categories.id = houses.category_id
+    LEFT JOIN houseaccounts ON houses.id = houseaccounts.houses_id
+    ORDER BY houses.id ASC";
     $result = $admin->conn->query($sql);
     $sql_option = "SELECT * FROM categories";
     $result_option = $admin->conn->query($sql_option);
     $sql2 = "SELECT * FROM categories";
     $sql2_option = $admin->conn->query($sql2);
+
+
+    // $sql3 = "SELECT ha.* FROM houseaccounts ha INNER JOIN houses h ON ha.houses_id = h.id";
+    // $result3 = $admin->conn->query($sql3);
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -250,7 +263,7 @@
                                         echo "<div class='col-xl-6 p-0'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xl-start' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xl-start' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -302,7 +315,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="role" class="form-label">Category</label>
+                                            <label for="role" class="form-label">Category Name</label>
                                             <select class="form-select" id="role" name="category" required>
                                                 <!-- <option value="3">3</option> -->
                                                 <?php
@@ -366,36 +379,68 @@
                             </div>
                             <div class="modal-body">
                                 <form id="updateHouseForm" method="POST" action="adminhouses.php">
-                                    <input type="hidden" id="updateHouseId" name="house_id">
-                                    <div class="mb-3">
-                                        <label for="updateHouseNumber" class="form-label">House Name</label>
-                                        <input type="text" class="form-control" id="updateHouseNumber" name="house_number" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updatePrice" class="form-label">Price</label>
-                                        <input type="text" class="form-control" id="updatePrice" name="price" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateCategoryId" class="form-label">Category Name</label>
-                                        <select class="form-select" id="updateCategoryId" name="category_id" required>
-                                            <?php
-                                                // Fetch categories from the database
-                                                
+                                    <div class="row">
+                                        <input type="hidden" id="updateHouseId" name="house_id">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="updateHouseNumber" class="form-label">House Name</label>
+                                                <input type="text" class="form-control" id="updateHouseNumber" name="house_number" required>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="updatePrice" class="form-label">Price</label>
+                                                <input type="text" class="form-control" id="updatePrice" name="price" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="updateCategoryId" class="form-label">Category Name</label>
+                                                <select class="form-select" id="updateCategoryId" name="category_id" required>
+                                                    <?php
+                                                        // Fetch categories from the database
+                                                        
 
-                                                // Check if categories exist
-                                                if ($sql2_option->num_rows > 0) {
-                                                    // Output options for each category
-                                                    while ($row_option2 = $sql2_option->fetch_assoc()) {
-                                                        // echo "<option value='" . $row_option['category_id'] . "'></option>";
-                                                        echo "<option value='" . $row_option2['id'] . "'>" . $row_option2['name'] . "</option>";
-                                                    }
-                                                } else {
-                                                    echo "<option value=''>No categories found</option>";
-                                                }
-                                            ?>
-                                        </select>
+                                                        // Check if categories exist
+                                                        if ($sql2_option->num_rows > 0) {
+                                                            // Output options for each category
+                                                            while ($row_option2 = $sql2_option->fetch_assoc()) {
+                                                                // echo "<option value='" . $row_option['category_id'] . "'></option>";
+                                                                echo "<option value='" . $row_option2['id'] . "'>" . $row_option2['name'] . "</option>";
+                                                            }
+                                                        } else {
+                                                            echo "<option value=''>No categories found</option>";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="update_meralco_accnum" class="form-label">Meralco Account #</label>
+                                                <input type="number" class="form-control" id="update_meralco_accnum" name="meralco_accnum">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="update_meralco_accname" class="form-label">Meralco Account Name</label>
+                                                <input type="text" class="form-control" id="update_meralco_accname" name="meralco_accname">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="update_maynilad_accnum" class="form-label">Maynilad Account #</label>
+                                                <input type="number" class="form-control" id="update_maynilad_accnum" name="maynilad_accnum">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="update_maynilad_accname" class="form-label">Maynilad Account Name</label>
+                                                <input type="text" class="form-control" id="update_maynilad_accname" name="maynilad_accname">
+                                            </div>
+                                        </div>
+                                        <button type="submit" name="edit_house" class="btn btn-primary">Update User</button>
                                     </div>
-                                    <button type="submit" name="edit_house" class="btn btn-primary">Update User</button>
                                 </form>
                             </div>
                         </div>
@@ -452,12 +497,20 @@
                                 var username = button.getAttribute('data-housenumber');
                                 var password = button.getAttribute('data-price');
                                 var role = button.getAttribute('data-categoryid');
+                                var meralcoNum = button.getAttribute('data-meralconum');
+                                var meralcoNam = button.getAttribute('data-meralconame');
+                                var mayniladNum = button.getAttribute('data-mayniladnum');
+                                var mayniladNam = button.getAttribute('data-mayniladname');
                                 
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateHouseId').value = userId;
                                 document.getElementById('updateHouseNumber').value = username;
                                 document.getElementById('updatePrice').value = password;
                                 document.getElementById('updateCategoryId').value = role;
+                                document.getElementById('update_meralco_accnum').value = meralcoNum;
+                                document.getElementById('update_meralco_accname').value = meralcoNam;
+                                document.getElementById('update_maynilad_accnum').value = mayniladNum;
+                                document.getElementById('update_maynilad_accname').value = mayniladNam;
                                 
                                 var updateHouseModal = new bootstrap.Modal(document.getElementById('updateHouseModal'), {
                                     keyboard: false
