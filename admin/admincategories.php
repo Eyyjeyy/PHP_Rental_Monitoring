@@ -155,14 +155,14 @@
                                         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='admincategories.php' class='float-xl-end'>";
+                                        echo "<form method='POST' action='admincategories.php' class='float-xl-end align-items-center'>";
                                         echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
                                         echo "<button type='submit' name='delete_category' class='btn btn-danger' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
                                         echo "<button type='button' class='btn btn-primary update-category-btn float-xl-start' data-id='" . $row['id'] . "' data-categoryname='" . htmlspecialchars($row['name']) . "' style='width: 80px;'>Update</button>";

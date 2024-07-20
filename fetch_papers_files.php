@@ -6,7 +6,7 @@ include("db_connect.php");
 
 $previousData = '';
 while (true) {
-    $query = "SELECT * FROM paper_files";
+    $query = "SELECT paper_files.*, paper_files.id AS file_id, paper_categories.* FROM paper_files LEFT JOIN paper_categories ON paper_files.category_id = paper_categories.id";
     $result = $conn->query($query);
 
     $currentData = [];

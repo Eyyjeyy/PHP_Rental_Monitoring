@@ -194,7 +194,7 @@
     $balance = $rentDuePerTenant - $totalPayments;
 
     // Display the balance
-    echo "Current Balance: $" . number_format($balance, 2);
+    echo "Total Balance: $" . number_format($balance, 2);
     echo "<br>Total Rent Due: $" . number_format($rentDuePerTenant, 2);
     echo "<br>Total Payments: $" . number_format($totalPayments, 2);
   } else {

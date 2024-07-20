@@ -198,10 +198,15 @@ Class Admin {
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $house_id);
     $stmt->execute();
+
+    $sql_2 = "DELETE FROM houseaccounts WHERE houses_id = ?";
+    $stmt_2 = $this->conn->prepare($sql_2);
+    $stmt_2->bind_param("i", $house_id);
+    $stmt_2->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Deletion successful
+      return true; // Deletion successful
     } else {
-        return false; // Deletion failed
+      return false; // Deletion failed
     }
   }
 
@@ -500,23 +505,37 @@ Class Admin {
   }
 
   public function addPaper($categoryId, $paperName, $fileName, $targetPath) {
-    // Prepare the SQL statement to insert a new paper record
-    $stmt = $this->conn->prepare("INSERT INTO paper_files (category_id, file_name, file_url, uploaded_at) VALUES (?, ?, ?, NOW())");
-    // Bind the parameters
-    $stmt->bind_param("iss", $categoryId, $fileName, $targetPath);
-    
+    // Prepare the SQL statement to fetch the category name
+    $stmt = $this->conn->prepare("SELECT name FROM paper_categories WHERE id = ?");
+    // Bind the parameter
+    $stmt->bind_param("i", $categoryId);
     // Execute the statement
-    if ($stmt->execute()) {
-        // Success, return true
-        // $stmt->close(); // Close the statement before returning
-        return true;
-    } else {
-        // Error, return false
-        // $stmt->close(); // Close the statement before returning
-        return false;
-    }
+    $stmt->execute();
+    // Bind the result to a variable
+    $stmt->bind_result($categoryName);
+    // Fetch the result
+    $stmt->fetch();
     // Close the statement
     $stmt->close();
+
+    // Check if the category name was found
+    if (!$categoryName) {
+        return false; // Category not found
+    }
+
+    // Prepare the SQL statement to insert a new paper record
+    $stmt = $this->conn->prepare("INSERT INTO paper_files (category_id, category_name, file_name, file_url, uploaded_at) VALUES (?, ?, ?, ?, NOW())");
+    // Bind the parameters
+    $stmt->bind_param("isss", $categoryId, $categoryName, $fileName, $targetPath);
+
+    // Execute the statement
+    $result = $stmt->execute();
+
+    // Close the statement
+    $stmt->close();
+
+    // Return the result of the execution
+    return $result;
   }
 
   public function deletePaper($categoryid) {

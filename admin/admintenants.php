@@ -28,17 +28,24 @@
         // $housename = htmlspecialchars($_POST['house_name']);
         // $houseid = htmlspecialchars($_POST['house_id']);
         $registerdate = htmlspecialchars($_POST['registerdate']);
-        // Call the addTenant method to add the new tenant
-        $added = $admin->addTenant($contactno, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
-        if($added["success"]) {
-            // Tenant added successfully, you can display a success message here if needed
-            // echo "Tenant added successfully.";
-            header("Location: admintenants.php?tenant_added=1");
-            exit();
+        // Validate contact number length
+        if (preg_match('/^\d{10,11}$/', $contactno)) {
+            // Call the addTenant method to add the new tenant
+            $added = $admin->addTenant($contactno, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
+            if ($added["success"]) {
+                // Tenant added successfully, you can display a success message here if needed
+                header("Location: admintenants.php?tenant_added=1");
+                exit();
+            } else {
+                // Error occurred while adding tenant, store the error message in a session variable
+                $_SESSION['error_message'] = $added["message"];
+                header("Location: admintenants.php?error=add");
+                exit();
+            }
         } else {
-            // Error occurred while adding tenant, store the error message in a session variable
-            $_SESSION['error_message'] = $added["message"];
-            header("Location: admintenants.php?error=add");
+            // Invalid contact number length, store the error message in a session variable
+            $_SESSION['error_message'] = "Contact number must be 10-11 digits long.";
+            header("Location: admintenants.php?error=invalid_contactno");
             exit();
         }
     }
@@ -64,15 +71,23 @@
         // $housecategory = htmlspecialchars($_POST['category_id']);
         $registerdate = htmlspecialchars($_POST['registerdate']);
 
-        // Call the updateTenant method to update the tenant
-        $updated = $admin->updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate);
-        if ($updated) {
-            // Tenant updated successfully, redirect with success message
-            header("Location: admintenants.php?tenant_updated=1");
-            exit();
+        // Validate contact number length
+        if (preg_match('/^\d{10,11}$/', $contactno)) {
+            // Call the updateTenant method to update the tenant
+            $updated = $admin->updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate);
+            if ($updated) {
+                // Tenant updated successfully, redirect with success message
+                header("Location: admintenants.php?tenant_updated=1");
+                exit();
+            } else {
+                // Error occurred while updating tenant, display an error message or handle as needed
+                echo "Error occurred while updating tenant.";
+            }
         } else {
-            // Error occurred while updating tenant, display an error message or handle as needed
-            echo "Error occurred while updating tenant.";
+            // Invalid contact number length, display an error message or handle as needed
+            $_SESSION['error_message'] = "Contact number must be 10-11 digits long.";
+            header("Location: admintenants.php?error=update");
+            exit();
         }
     }
 
@@ -229,14 +244,14 @@
                                         echo "<td>" . htmlspecialchars($row['date_start']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='admintenants.php' class='float-xl-end' style='height:100%;'>";
+                                        echo "<form method='POST' action='admintenants.php' class='float-xl-end align-items-center' style='height:100%;'>";
                                         echo "<input type='hidden' name='tenantid' value='" . $row['id'] . "'>";
                                         echo "<button type='submit' name='delete_tenant' class='btn btn-danger' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='tenantid' value='" . $row['id'] . "'>";
                                         echo "<button type='button' class='btn btn-primary update-tenant-btn float-xl-start' data-id='" . $row['id'] . "' data-tenantname='" . htmlspecialchars($row['fname']) . "' data-middlename= '" . htmlspecialchars($row['mname']) . "' data-lastname= '" . htmlspecialchars($row['lname']) . "' data-contactno= '" . htmlspecialchars($row['contact']) . "' data-registerdate= '" . htmlspecialchars($row['date_start']) . "' style='width: 80px;'>Update</button>";

@@ -237,6 +237,10 @@
                                     <th scope="col">Apartment Name</th>
                                     <th scope="col">Rent</th>
                                     <th scope="col">Apartment Type</th>
+                                    <th scope="col" style="max-width: 80px;">Meralco #</th>
+                                    <th scope="col">Meralco Account Name</th>
+                                    <th scope="col">Maynilad #</th>
+                                    <th scope="col">Maynilad Account Name</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -251,19 +255,23 @@
                                         echo "<td>" . htmlspecialchars($row['price']) . "</td>";
                                         // echo "<td>" . htmlspecialchars($row['category_id']) . " <br> " . $row['category_name'] . " </td>";
                                         echo "<td>" . $row['category_name'] . " </td>";
+                                        echo "<td>" . $row['elec_accnum'] . "</td>";
+                                        echo "<td>" . $row['elec_accname'] . "</td>";
+                                        echo "<td>" . $row['water_accnum'] . "</td>";
+                                        echo "<td>" . $row['water_accname'] . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xxl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='adminhouses.php' class='float-xl-end'>";
+                                        echo "<form method='POST' action='adminhouses.php' class='float-xxl-end align-items-center'>";
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
                                         echo "<button type='submit' name='delete_house' class='btn btn-danger' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xxl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xl-start' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xxl-start' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";

@@ -191,14 +191,14 @@
                                         echo "<td>" . htmlspecialchars($row['role']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='adminusers.php' class='float-xl-end'>";
+                                        echo "<form method='POST' action='adminusers.php' class='float-xl-end align-items-center'>";
                                         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
                                         echo "<button type='submit' name='delete_user' class='btn btn-danger' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
-                                        echo "<div class='col-xl-6 p-0'>";
+                                        echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
                                         echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' style='width: 80px;'>Update</button>";

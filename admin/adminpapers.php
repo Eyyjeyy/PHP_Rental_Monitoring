@@ -245,6 +245,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Paper Name</th>
+                                    <th scope="col">Category</th>
                                     <th scope="col">Created At</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -319,11 +320,11 @@
                         </div>
                         <div class="modal-body">
                             <form id="newCategoryForm" method="POST" action="adminpapers.php">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="username" name="categoryname" required>
-                            </div>
-                            <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" id="username" name="categoryname" required>
+                                </div>
+                                <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
                             </form>
                         </div>
                         </div>
@@ -417,6 +418,14 @@
                 var messageDiv = document.getElementById('result');
                 if (data.includes('success')) {
                     messageDiv.innerHTML = '<p class="text-success">Category added successfully.</p>';
+                    
+                    // Update the dropdown with the new category
+                    var paperCategorySelect = document.getElementById('paperCategory');
+                    var newOption = document.createElement('option');
+                    newOption.value = data.newCategoryId; // Assuming the server returns the new category ID
+                    newOption.text = formData.get('categoryname');
+                    paperCategorySelect.appendChild(newOption);
+
                     // Optionally, clear the form fields after successful submission
                     form.reset();
                 } else {
@@ -525,8 +534,20 @@
                 </tr>
                 `;
             });
+
+            var paperCategorySelect = document.getElementById('paperCategory');
+            paperCategorySelect.innerHTML = ''; // Clear existing options
+
+            // Update the category dropdown
+            arrayData.forEach(function(category) {
+                var option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                paperCategorySelect.appendChild(option);
+            });
         }
     </script>
+
     <script>
         var allDataFiles = [];
         var currentPage = 1;
@@ -542,6 +563,7 @@
             
             if (JSON.stringify(allDataFiles) !== JSON.stringify(newDataFiles)) {
                 allDataFiles = newDataFiles;
+                console.log("Updated allDataFiles:", allDataFiles);
                 renderTable();
                 updatePaginationControls();
             }
@@ -557,16 +579,17 @@
             paginatedData.forEach(e_files => {
                 dataContainer_files.innerHTML += `
                     <tr>
-                        <td>${e_files.id}</td>
+                        <td>${e_files.file_id}</td>
                         <td>${e_files.file_name}</td>
+                        <td>${e_files.category_name}</td>
                         <td>${e_files.uploaded_at}</td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <div class="row m-0">
-                                    <div class="col d-flex justify-content-center p-0">
-                                        <button class="btn btn-danger btn-delete" name="delete_file" data-id="${e_files.id}" style="width: 100px;">Delete</button>
+                                    <div class="col d-flex justify-content-center px-2">
+                                        <button class="btn btn-danger btn-delete" name="delete_file" data-id="${e_files.file_id}" style="width: 100px;">Delete</button>
                                     </div>
-                                    <div class="col d-flex justify-content-center p-0">
+                                    <div class="col d-flex justify-content-center px-2">
                                         <a href="${e_files.file_url}" class="btn btn-primary btn-download" download="${e_files.file_name}" style="width: 100px; text-align: center;">Download</a>
                                     </div>
                                 </div>
@@ -606,7 +629,7 @@
                     // Optionally, remove the deleted file row from the table
                     document.querySelector('button[data-id="' + id + '"]').closest('tr').remove();
                     // Refresh the data to reflect changes
-                    allDataFiles = allDataFiles.filter(file => file.id != id);
+                    allDataFiles = allDataFiles.filter(file => file.file_id != id);
                     renderTable();
                     updatePaginationControls();
                 } else {
@@ -666,6 +689,7 @@
             }
         }
     </script>
+    
     <!-- Without Pagination for papertable -->
     <!-- <script>
         var soruce_files = new EventSource("../fetch_papers_files.php");
