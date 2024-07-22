@@ -550,6 +550,30 @@ Class Admin {
     }
   }
 
+  public function approvePayment($paymentsid) {
+    $sql = "UPDATE payments SET approval = 'true' WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $paymentsid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+        return true; // Approval successful
+    } else {
+        return false; // Approval failed
+    }
+  }
+
+  public function declinePayment($paymentsid) {
+    $sql = "UPDATE payments SET approval = 'false' WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $paymentsid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      return true; // Approval successful
+    } else {
+      return false; // Approval failed
+    }
+  }
+
 
 
 

@@ -58,16 +58,16 @@
                 <div class="row m-0 h-100 justify-content-center">
                     <!-- <img src="asset/Renttrack pro.png" style="object-fit: cover; width: 10%;" class="position-absolute p-0 img-fluid align-items-center" alt="..."> -->
 
-                    <div id="carouselExampleControls" class="carousel slide align-self-center" data-bs-ride="carousel">
+                    <div id="carouselExampleControls" class="carousel slide align-self-center" data-bs-ride="">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; height: 500px;" class="d-block w-100" alt="...">
+                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; height: 500px;" class="d-block w-100" alt="...">
+                                <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; height: 500px;" class="d-block w-100" alt="...">
+                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">

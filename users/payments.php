@@ -174,7 +174,8 @@
           FROM payments
           WHERE tenants_id = $tenant_id
             AND houses_id = $house_id
-            AND date_payment >= '$baseDateString'";
+            AND date_payment >= '$baseDateString'
+            AND approval = 'true'";
     $result_payments = $admin->conn->query($sql_payments);
     $row_payments = $result_payments->fetch_assoc();
     $totalPayments = $row_payments['total_payments'];
@@ -218,22 +219,27 @@
     </div> -->
     <div class="container-fluid">
         <a class="navbar-brand py-0" href="#">
-            <img src="../asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 40px;">
+            <img src="../asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse align-self-stretch" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">
-                        <p class="mb-0">HOME</p>
+            <ul class="navbar-nav mb-2 mb-lg-0 w-100">
+                <li class="ms-auto nav-item mx-1">
+                    <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
+                        <p class="mb-0 text-center">Contact</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">
-                        <p class="mb-0">PAYMENTS</p>
+                <li class="nav-item mx-1">
+                    <a class="nav-link active h-100 d-flex align-items-center" href="#">
+                        <p class="mb-0">Payment</p>
                     </a>
+                </li>
+                <li class="nav-item mx-1">
+                  <a class="nav-link h-100 d-flex align-items-center" href="#">
+                    <p class="mb-0">Info</p>
+                  </a>
                 </li>
                 <li class="d-none nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -246,7 +252,7 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="d-none nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
@@ -273,6 +279,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Image</th>
+                            <th scope="col">Approved</th>
                             <th scope="col">Payment Date</th>
                         </tr>
                     </thead>
@@ -286,6 +293,7 @@
                                 echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
                                 echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
                                 echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 200px; height: auto;'></td>";
+                                echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
                                 echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
                                 echo "</tr>";
                             }

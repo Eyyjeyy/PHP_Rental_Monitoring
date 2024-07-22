@@ -37,3 +37,8 @@ The project is built using PHP, MySQL for database management, and incorporates 
 7/16/24 - Revised Adminhouses Forms <br>
 - Revised New Modal Fields to be side by side <br>
 - Revised Update Modal Fields to be side by side <br>
+
+7/22/24 - Created Adminpayments <br>
+- Admin can approve or decline payment/s of tenants <br>
+- Approved payments are taken into payments.php's calculation mechanism <br>
+- Added Image Preview on click <br>

@@ -1,5 +1,5 @@
 <?php
-    // session_start(); // Start the session (important for checking session variables)
+
     include '../admin.php';
     $admin = new Admin();
     // $admin->handleRedirect(); // Call handleRedirect to check login status and redirect
@@ -14,51 +14,33 @@
         exit();
     }
 
-    // Check if the form is submitted for adding a new category
-    if(isset($_POST['add_category'])) {
-        // Get the category data from the form
-        $categoryname = htmlspecialchars($_POST['categoryname']);
-        // Call the addCategory method to add the new category
-        $added = $admin->addCategory($categoryname);
-        if($added) {
-            // Category added successfully, you can display a success message here if needed
-            // echo "Category added successfully.";
-            header("Location: admincategories.php?category_added=1");
-            exit();
+    if(isset($_POST['approve_payment'])) {
+        // Get the payment ID to be approved
+        $paymentsid = $_POST['paymentsid'];
+
+        $approved = $admin->approvePayment($paymentsid);
+        if($approved) {
+
+            header("Location: adminpayments.php?payment=approved");
         } else {
-            // Error occurred while adding category, display an error message or handle as needed
-            echo "Error occurred while adding Category.";
+
+            echo "Error occurred while approving a payment.";
         }
     }
 
-    if(isset($_POST['edit_category'])) {
-        $categoryname = htmlspecialchars($_POST['categoryname']);
-        $categoryid = $_POST['categoryid'];
-        $updated = $admin->updateCategory($categoryid, $categoryname);
-        if($updated) {
-            header("Location: admincategories.php");
-            exit();
+    if(isset($_POST['decline_payment'])) {
+        // Get the payment ID to be approved
+        $paymentsid = $_POST['paymentsid'];
+
+        $declined = $admin->declinePayment($paymentsid);
+        if($declined) {
+            header("Location: adminpayments.php?payment=declined");
         } else {
-            echo "Error occurred while updating user.";
+            echo "Error occurred while approving a payment.";
         }
     }
 
-    // Check if the form is submitted for deleting a category
-    if(isset($_POST['delete_category'])) {
-        // Get the category ID to be deleted
-        $categoryid = $_POST['categoryid'];
-        // Call the deleteCategory method to delete the category
-        $deleted = $admin->deleteCategory($categoryid);
-        if($deleted) {
-            // Category deleted successfully, you can display a success message here if needed
-            header("Location: admincategories.php?category_deleted=1");
-        } else {
-            // Error occurred while deleting category, display an error message or handle as needed
-            echo "Error occurred while deleting category.";
-        }
-    }
-    
-    $sql = "SELECT * FROM categories";
+    $sql = "SELECT * FROM payments";
     $result = $admin->conn->query($sql);
 
     // Set the title for this page
@@ -91,7 +73,7 @@
                                 </svg>
                                 <p>Apartments</p>
                             </a>
-                            <a class="nav-link active" aria-current="page" href="admincategories.php">
+                            <a class="nav-link" href="admincategories.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
                                 </svg>
@@ -103,7 +85,7 @@
                                 </svg>
                                 <p>Tenants</p>
                             </a>
-                            <a class="nav-link" href="adminpayments.php">
+                            <a class="nav-link active" aria-current="page" href="adminpayments.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-bank2" viewBox="0 0 16 16">
                                     <path d="M8.277.084a.5.5 0 0 0-.554 0l-7.5 5A.5.5 0 0 0 .5 6h1.875v7H1.5a.5.5 0 0 0 0 1h13a.5.5 0 1 0 0-1h-.875V6H15.5a.5.5 0 0 0 .277-.916zM12.375 6v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zM8 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2M.5 15a.5.5 0 0 0 0 1h15a.5.5 0 1 0 0-1z"/>
                                 </svg>
@@ -147,7 +129,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Apartment Type</th>
+                                    <th scope="col">Tenant</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Receipt</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -159,19 +143,54 @@
                                         echo "<tr>";
                                         echo "<th scope='row'>" . $row['id'] . "</th>";
                                         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
+                                        // echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 100px; height: auto;'></td>";
+
+                                        echo "
+                                        <td>
+                                            <a href='#' data-bs-toggle='modal' data-bs-target='#imageModal" . $row["id"] . "'>
+                                                <img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 100px; height: auto;'>
+                                            </a>
+                                        </td>
+                                        <div class='modal fade' id='imageModal" . $row["id"] . "' tabindex='-1' aria-labelledby='imageModalLabel" . $row["id"] . "' aria-hidden='true'>
+                                            <div class='modal-dialog modal-dialog-centered'>
+                                                <div class='modal-content'>
+                                                    <div class='modal-header'>
+                                                        <h5 class='modal-title' id='imageModalLabel" . $row["id"] . "'>Receipt Preview</h5>
+                                                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                                                    </div>
+                                                    <div class='modal-body'>
+                                                        <img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid'>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>";
+
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                        echo "<div class='col-xl-6 px-2'>";
+                                        echo "<div class='col-xxl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='admincategories.php' class='float-xl-end align-items-center'>";
-                                        echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_category' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<form method='POST' action='adminpayments.php' class='float-xxl-end align-items-center'>";
+                                        echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";
+                                        echo "<button type='submit' name='approve_payment' class='btn btn-primary d-flex' style='width: 120px;'>
+                                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-check align-self-center' viewBox='0 0 16 16'>
+                                            <path d='M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z'/>
+                                        </svg>
+                                        Approve
+                                        </button>";
                                         echo "</form>";
                                         echo "</div>";
-                                        echo "<div class='col-xl-6 px-2'>";
+                                        echo "<div class='col-xxl-6 d-flex justify-content-center justify-content-xxl-start px-2'>";
                                         // Add a form with a update button for each record
-                                        echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-category-btn float-xl-start' data-id='" . $row['id'] . "' data-categoryname='" . htmlspecialchars($row['name']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<form method='POST' action='adminpayments.php' class='align-items-center'>";
+                                        echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";
+                                        echo "<button type='submit' name='decline_payment' class='btn btn-danger update-category-btn float-xxl-start d-flex' data-id='" . $row['id'] . "' data-paymentname='" . htmlspecialchars($row['name']) . "' style='width: 120px;'>
+                                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-ban-fill align-self-center me-2' viewBox='0 0 16 16'>
+                                            <path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M2.71 12.584q.328.378.706.707l9.875-9.875a7 7 0 0 0-.707-.707l-9.875 9.875Z'/>
+                                        </svg>
+                                        Decline
+                                        </button>";
+                                        echo "</form>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -186,78 +205,6 @@
                         </table>
                     </div>
                 </div>
-                <!-- New Category Modal -->
-                <div class="modal fade" id="newCategoryModal" tabindex="-1" aria-labelledby="newCategoryModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcategoryModalLabel">New Category</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="newCategoryForm" method="POST" action="admincategories.php">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="username" name="categoryname" required>
-                            </div>
-                            <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
-                            </form>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Update Category Modal -->
-                <div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="updateCategoryModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="updateCategoryModalLabel">Update Category</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="updateCategoryForm" method="POST" action="admincategories.php">
-                                    <input type="hidden" id="updateCategoryId" name="categoryid">
-                                    <div class="mb-3">
-                                        <label for="updateCategoryname" class="form-label">Category Name</label>
-                                        <input type="text" class="form-control" id="updateCategoryname" name="categoryname" required>
-                                    </div>
-                                    <button type="submit" name="edit_category" class="btn btn-primary">Update Category</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    document.getElementById('new_category').addEventListener('click', function () {
-                        var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
-                            keyboard: false
-                        });
-                        newCategoryModal.show();
-                    });
-                </script>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var updateButtons = document.querySelectorAll('.update-category-btn');
-                        updateButtons.forEach(function (button) {
-                            button.addEventListener('click', function () {
-                                var userId = button.getAttribute('data-id');
-                                var username = button.getAttribute('data-categoryname');
-                                
-                                // Fill the modal with the user's current data
-                                document.getElementById('updateCategoryId').value = userId;
-                                document.getElementById('updateCategoryname').value = username;
-                                
-                                var updateCategoryModal = new bootstrap.Modal(document.getElementById('updateCategoryModal'), {
-                                    keyboard: false
-                                });
-                                updateCategoryModal.show();
-                            });
-                        });
-                    });
-                </script>
-                <p>Home</p>
             </div>
         </div>
     </div>
-
-    <?php include 'includes/footer.php'; ?>
