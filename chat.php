@@ -9,6 +9,10 @@
         header("Location: login.php");
         exit();
     }
+    if($admin->isLoggedIn() && $admin->session_role == 'user') {
+        header("Location: index.php");
+        exit();
+    }
 
     $user_id = $admin->session_id;
     $chat_user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;

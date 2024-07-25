@@ -195,9 +195,40 @@
     $balance = $rentDuePerTenant - $totalPayments;
 
     // Display the balance
-    echo "Total Balance: $" . number_format($balance, 2);
-    echo "<br>Total Rent Due: $" . number_format($rentDuePerTenant, 2);
-    echo "<br>Total Payments: $" . number_format($totalPayments, 2);
+    // echo "Total Balance: $" . number_format($balance, 2);
+    // echo "<br>Total Rent Due: $" . number_format($rentDuePerTenant, 2);
+    // echo "<br>Total Payments: $" . number_format($totalPayments, 2);
+
+    // Monthly Balance Calculation
+    $currentMonthStart = (new DateTime('first day of this month'))->format('Y-m-d');
+    $currentMonthEnd = (new DateTime('last day of this month'))->format('Y-m-d');
+
+    // Calculate the monthly rent due for the tenant
+    $monthlyRentDue = $price;
+
+    // Fetch approved payment amounts for the current month
+    $sql_monthly_payments = "SELECT SUM(amount) AS total_monthly_payments
+      FROM payments
+      WHERE tenants_id = $tenant_id
+        AND houses_id = $house_id
+        AND date_payment >= '$currentMonthStart'
+        AND date_payment <= '$currentMonthEnd'
+        AND approval = 'true'";
+    $result_monthly_payments = $admin->conn->query($sql_monthly_payments);
+    $row_monthly_payments = $result_monthly_payments->fetch_assoc();
+    $totalMonthlyPayments = $row_monthly_payments['total_monthly_payments'];
+
+    // Calculate the balance for the current month
+    $monthlyBalance = $monthlyRentDue - $totalMonthlyPayments;
+
+    // Ensure the balance does not go below 0
+    $monthlyBalance = max(0, $monthlyBalance);
+
+    // Display the monthly balance
+    // echo "<br>Monthly Balance: $" . number_format($monthlyBalance, 2);
+    // echo "<br>Monthly Rent Due: $" . number_format($monthlyRentDue, 2);
+    // echo "<br>Total Monthly Payments: $" . number_format($totalMonthlyPayments, 2);
+
   } else {
     echo "No tenant information found for the current user.";
   }
@@ -206,7 +237,7 @@
 
 
 
-    
+  $pageTitle = 'Payments Page'; 
 ?>
 
 <?php include '../regular/includes/header_user.php'; ?>
@@ -261,19 +292,27 @@
 </nav>
 
 <div class="col main content px-lg-5">
-    <div class="card mt-5">
-        <div class="card-header">Header</div>
+    <div class="card mt-5 mx-auto" style="max-width: 900px;">
+        <div class="card-header text-center">Payment</div>
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-lg-12">
-                  <button type="button" class="btn btn-primary float-end" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                      <i class="fa fa-plus"></i> Create Receipt
-                  </button>
-                  <p>Balance: </p>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <?php 
+                    echo "<p class='fw-bolder'>Monthly Balance: $" . number_format($monthlyBalance, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Monthly Rent Due: $" . number_format($monthlyRentDue, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Total Payments: $" . number_format($totalPayments, 2) . "</p>";
+                    ?>
+                  </div>
+                  <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end">
+                    <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                        <i class="fa fa-plus"></i> Create Receipt
+                    </button>
+                  </div>
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered border-1">
+                <table class="table table-striped table-bordered border border-5">
                     <thead class="">
                         <tr>
                             <th scope="col">Name</th>

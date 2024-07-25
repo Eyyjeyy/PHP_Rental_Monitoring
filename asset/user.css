@@ -2,7 +2,7 @@ a p {
     font-weight: 600;
 }
 
-.nav-link p {
+.nav-link p, .card-header {
     color: #fff;
 }
 
@@ -24,4 +24,82 @@ thead {
     background-color: #F9E8D9;
     /* border-color: #fff; */
     /* border-color: #EE7214; */
+}
+
+.card-header {
+    background-color: #527853;
+}
+
+.card-body {
+    background-color: #F9F3EE;
+}
+
+.table-responsive {
+    background-color: #F9E8D9;
+}
+
+.border {
+    border-width: 2.5px !important;
+    border-color: #000000 !important;
+    
+}
+
+.btn.receipt {
+    color: #fff;
+    background-color: #527853;
+    border-color: #527853;
+}
+
+.message {
+    margin-bottom: 10px;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.message-right {
+    background-color: #EE7214;
+    color: #ffffff;
+}
+.message-left {
+    background-color: #527853;
+    color: #F9E8D9;
+}
+
+textarea#message-input[name="message"] {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #bdc3c7;
+    margin-bottom: 10px;
+    resize: none;
+    height: 80px;
+    background-color: #ffffff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.inter-google {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0;
 }

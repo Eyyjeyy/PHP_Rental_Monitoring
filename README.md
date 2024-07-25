@@ -42,3 +42,9 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Admin can approve or decline payment/s of tenants <br>
 - Approved payments are taken into payments.php's calculation mechanism <br>
 - Added Image Preview on click <br>
+
+7/24/24 - User Payments <br>
+- Added Monthly Balance which resets to 0 when covered by payment, only shows price to pay for the month and not total <br>
+
+7/26/24 - User Chat <br>
+- Added Chat for User Side, different UI from admin chat <br>
