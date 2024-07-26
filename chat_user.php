@@ -222,7 +222,7 @@
                     <ul class="ps-0" style="list-style: none;">
                         <?php foreach ($users as $user): ?>
                             <li>
-                                <a href="chat_user.php?user_id=<?php echo $user['id']; ?>" class="text-decoration-none" style="color: #2C3E50;">
+                                <a href="chat_user.php?user_id=<?php echo $user['id']; ?>" data-user-id="<?php echo $user['id']; ?>" class="text-decoration-none" style="color: #2C3E50;">
                                     <p class="fs-5 mb-2">
                                         <?php echo htmlspecialchars($user['username']); ?>
                                     </p>
@@ -306,47 +306,137 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            // Fetch messages initially
-            function fetchMessages() {
-                var userId = <?php echo $chat_user_id; ?>; // Assuming $chat_user_id is set in PHP
-                $.ajax({
-                    url: 'chat_user.php?fetch_messages=1&user_id=' + userId,
-                    method: 'GET',
-                    success: function(data) {
-                        $('.messages').html(data);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error('Error fetching messages:', textStatus, errorThrown);
-                    }
-                });
+<script>
+    $(document).ready(function() {
+        var userId = <?php echo $user_id; ?>; // Assuming $user_id is set in PHP
+
+        function initSSE(chatUserId) {
+            if (typeof(EventSource) !== "undefined") {
+                var source = new EventSource("fetch_chat.php?user_id=" + userId + "&chat_user_id=" + chatUserId);
+
+                source.onmessage = function(event) {
+                    var data = JSON.parse(event.data);
+                    var messagesHtml = '';
+
+                    data.forEach(function(row) {
+                        var sender = row.sender_id == userId ? 'You' : row.sender_username;
+                        var messageClass = row.sender_id == userId ? 'message-right' : 'message-left';
+                        var messageHtml = '<div class="message ' + messageClass + '">';
+                        messageHtml += '<p><strong>' + sender + ':</strong> ' + row.message + '</p>';
+                        if (row.image_path) {
+                            messageHtml += '<img src="' + row.image_path + '" alt="Image">';
+                        }
+                        messageHtml += '<span class="timestamp">' + row.timestamp + '</span>';
+                        messageHtml += '</div>';
+
+                        messagesHtml += messageHtml;
+                    });
+
+                    $('.messages').html(messagesHtml);
+                };
+
+                source.onerror = function(event) {
+                    console.error('Error with SSE:', event);
+                };
+
+                return source;
+            } else {
+                console.error("Your browser does not support SSE.");
+                return null;
             }
+        }
 
-            fetchMessages();
+        var currentSource = null;
+        function switchChatUser(newChatUserId) {
+            if (currentSource) {
+                currentSource.close();
+            }
+            currentSource = initSSE(newChatUserId);
+        }
 
-            // Handle form submission
-            $('#message-form').on('submit', function(e){
-                e.preventDefault();
+        // Initial fetch of messages for the first user
+        var chatUserId = <?php echo $chat_user_id; ?>;
+        if (chatUserId) {
+            switchChatUser(chatUserId);
+        }
 
-                var formData = new FormData(this);
-                var userId2 = <?php echo $chat_user_id; ?>; // Assuming $chat_user_id is set in PHP
-                $.ajax({
-                    url: 'chat_user.php?user_id=' + userId2, // Same PHP file
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        console.log('Form submitted successfully:', response);
-                        $('#message-input').val('');
-                        $('#image-input').val('');
-                        fetchMessages();
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error('Error submitting form:', textStatus, errorThrown);
-                    }
-                });
+        // Handle user selection
+        $('a').on('click', function(e) {
+            e.preventDefault();
+            var newChatUserId = $(this).data('user-id');
+            switchChatUser(newChatUserId);
+            // Update URL parameter
+            history.pushState(null, '', '?user_id=' + newChatUserId);
+        });
+
+        // Handle form submission
+        $('#message-form').on('submit', function(e){
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            var userId2 = <?php echo $chat_user_id; ?>;
+            $.ajax({
+                url: 'chat_user.php?user_id=' + userId2,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Form submitted successfully:', response);
+                    $('#message-input').val('');
+                    $('#image-input').val('');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error submitting form:', textStatus, errorThrown);
+                }
             });
         });
-    </script>
+    });
+
+</script>
+
+<!-- No Realtime Update from Receiving Other User Message -->
+<!-- <script>
+    $(document).ready(function(){
+        // Fetch messages initially
+        function fetchMessages() {
+            var userId = <?php echo $chat_user_id; ?>; // Assuming $chat_user_id is set in PHP
+            $.ajax({
+                url: 'chat_user.php?fetch_messages=1&user_id=' + userId,
+                method: 'GET',
+                success: function(data) {
+                    $('.messages').html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching messages:', textStatus, errorThrown);
+                }
+            });
+        }
+
+        fetchMessages();
+
+        // Handle form submission
+        $('#message-form').on('submit', function(e){
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            var userId2 = <?php echo $chat_user_id; ?>; // Assuming $chat_user_id is set in PHP
+            $.ajax({
+                url: 'chat_user.php?user_id=' + userId2, // Same PHP file
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Form submitted successfully:', response);
+                    $('#message-input').val('');
+                    $('#image-input').val('');
+                    fetchMessages();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error submitting form:', textStatus, errorThrown);
+                }
+            });
+        });
+    });
+</script> -->

@@ -48,3 +48,4 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 7/26/24 - User Chat <br>
 - Added Chat for User Side, different UI from admin chat <br>
+- Implemented SSE for realtime update from database operations, such as receiving and display of message from other user while on chat page <br>

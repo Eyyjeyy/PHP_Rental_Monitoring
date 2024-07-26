@@ -80,7 +80,9 @@ textarea#message-input[name="message"] {
 
 
 
-
+svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
+    color: #F7B787;
+}
 
 
 
