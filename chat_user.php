@@ -193,7 +193,7 @@
           </a>
         </li>
         <li class="nav-item mx-1">
-          <a class="nav-link h-100 d-flex align-items-center" href="#">
+          <a class="nav-link h-100 d-flex align-items-center" href="users/payments.php">
             <p class="mb-0 text-center text-white" style="font-weight: 600;">Payment</p>
           </a>
         </li>
@@ -285,21 +285,23 @@
                     </div>
                 </div>
                 <!-- Send Message Form -->
-                <?php if ($chat_user_id): ?>
-                    <form id="message-form" action="chat_user.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data" style="height: 15%;">
-                        <div class="row h-100 m-0">
-                            <div class="col-7 p-0 pt-2">
-                                <div class="row px-3 m-0">
-                                    <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                <div id="form-container">
+                    <?php if ($chat_user_id): ?>
+                        <form id="message-form" action="chat_user.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data" style="height: 15%;">
+                            <div class="row h-100 m-0">
+                                <div class="col-7 p-0 pt-2">
+                                    <div class="row px-3 m-0">
+                                        <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-5 p-0 pt-2">
+                                    <input class="w-100" type="file" name="image" id="image-input" accept="image/*">
+                                    <button class="btn btn-primary" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
                                 </div>
                             </div>
-                            <div class="col-5 p-0 pt-2">
-                                <input class="w-100" type="file" name="image" id="image-input" accept="image/*">
-                                <button class="btn btn-primary" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
-                            </div>
-                        </div>
-                    </form>
-                <?php endif; ?>
+                        </form>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -352,6 +354,7 @@
                 currentSource.close();
             }
             currentSource = initSSE(newChatUserId);
+            showSendMessageForm(newChatUserId);
         }
 
         // Initial fetch of messages for the first user
@@ -361,39 +364,61 @@
         }
 
         // Handle user selection
-        $('a').on('click', function(e) {
+        $('a[data-user-id]').on('click', function(e) {
             e.preventDefault();
             var newChatUserId = $(this).data('user-id');
-            switchChatUser(newChatUserId);
-            // Update URL parameter
             history.pushState(null, '', '?user_id=' + newChatUserId);
+            switchChatUser(newChatUserId);
         });
 
-        // Handle form submission
-        $('#message-form').on('submit', function(e){
-            e.preventDefault();
+        function showSendMessageForm(chatUserId) {
+            if (chatUserId) {
+                var formHtml = `
+                    <form id="message-form" action="chat_user.php?user_id=${chatUserId}" method="POST" enctype="multipart/form-data" style="height: 15%;">
+                        <div class="row h-100 m-0">
+                            <div class="col-7 p-0 pt-2">
+                                <div class="row px-3 m-0">
+                                    <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-5 p-0 pt-2">
+                                <input class="w-100" type="file" name="image" id="image-input" accept="image/*">
+                                <button class="btn btn-primary" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                `;
+                $('#form-container').html(formHtml);
 
-            var formData = new FormData(this);
-            var userId2 = <?php echo $chat_user_id; ?>;
-            $.ajax({
-                url: 'chat_user.php?user_id=' + userId2,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    console.log('Form submitted successfully:', response);
-                    $('#message-input').val('');
-                    $('#image-input').val('');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error submitting form:', textStatus, errorThrown);
-                }
-            });
-        });
+                // Re-bind form submission handler
+                $('#message-form').on('submit', function(e) {
+                    e.preventDefault();
+
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: 'chat_user.php?user_id=' + chatUserId,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log('Form submitted successfully:', response);
+                            $('#message-input').val('');
+                            $('#image-input').val('');
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.error('Error submitting form:', textStatus, errorThrown);
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initial call to display the send message form
+        showSendMessageForm(chatUserId);
     });
-
 </script>
+
 
 <!-- No Realtime Update from Receiving Other User Message -->
 <!-- <script>

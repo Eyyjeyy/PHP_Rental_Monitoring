@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2024 at 10:23 AM
+-- Generation Time: Jul 30, 2024 at 07:20 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -61,7 +61,7 @@ CREATE TABLE `houseaccounts` (
 
 INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `water_accname`, `water_accnum`) VALUES
 (1, 846, 'aj', 765, '', 0),
-(2, 847, 'ange', 1, '', 0);
+(3, 848, 'asd', 4234, 'asd', 54235);
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`) VALUES
 (844, '2', 43, 65),
 (845, '54', 123, 65),
 (846, '54', 123, 65),
-(847, '12', 54, 65);
+(848, 'asd', 123, 65);
 
 -- --------------------------------------------------------
 
@@ -222,7 +222,22 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (156, 40, 41, 40, '24', '2024-06-30 03:27:06', NULL),
 (157, 40, 41, 40, '32', '2024-06-30 21:44:35', NULL),
 (158, 40, 41, 40, '123', '2024-07-02 18:12:19', NULL),
-(159, 40, 41, 40, '123', '2024-07-02 18:15:22', NULL);
+(159, 40, 41, 40, '123', '2024-07-02 18:15:22', NULL),
+(160, 41, 40, 41, 'asd', '2024-07-26 06:08:58', NULL),
+(161, 41, 40, 41, 'asd', '2024-07-26 06:11:15', NULL),
+(162, 41, 40, 41, 'asd', '2024-07-26 06:11:26', NULL),
+(163, 41, 40, 41, 'asd', '2024-07-26 06:11:29', NULL),
+(164, 41, 40, 41, 'asd', '2024-07-26 06:11:33', NULL),
+(165, 41, 40, 41, 'asd', '2024-07-26 06:11:56', NULL),
+(166, 41, 40, 41, 'asd', '2024-07-26 06:11:58', NULL),
+(167, 40, 41, 40, 'asd', '2024-07-26 06:13:43', NULL),
+(168, 41, 40, 41, 'asd', '2024-07-26 06:13:50', NULL),
+(169, 41, 40, 41, 'a', '2024-07-26 06:14:02', NULL),
+(170, 40, 41, 40, 'ffas', '2024-07-26 08:23:48', NULL),
+(171, 41, 41, 41, 'm41', '2024-07-26 17:02:10', NULL),
+(172, 41, 41, 41, 'asd', '2024-07-26 17:02:21', NULL),
+(173, 41, 41, 41, '456', '2024-07-26 17:02:49', NULL),
+(174, 41, 41, 41, 'as', '2024-07-26 17:19:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -243,7 +258,8 @@ CREATE TABLE `paper_categories` (
 INSERT INTO `paper_categories` (`id`, `name`, `created_at`) VALUES
 (63, '3432', '2024-07-01 13:58:59'),
 (68, 'asd', '2024-07-02 18:43:27'),
-(70, 'affd', '2024-07-03 16:53:49');
+(70, 'affd', '2024-07-03 16:53:49'),
+(83, 'xds', '2024-07-18 18:50:47');
 
 -- --------------------------------------------------------
 
@@ -254,6 +270,7 @@ INSERT INTO `paper_categories` (`id`, `name`, `created_at`) VALUES
 CREATE TABLE `paper_files` (
   `id` int(50) NOT NULL,
   `category_id` int(50) NOT NULL,
+  `category_name` varchar(50) NOT NULL,
   `file_name` varchar(500) NOT NULL,
   `file_url` varchar(500) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -263,13 +280,14 @@ CREATE TABLE `paper_files` (
 -- Dumping data for table `paper_files`
 --
 
-INSERT INTO `paper_files` (`id`, `category_id`, `file_name`, `file_url`, `uploaded_at`) VALUES
-(1, 63, 'Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '../uploads/Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '2024-07-01 17:04:33'),
-(3, 63, 'received_993104588452786.jpeg', '../uploads/received_993104588452786.jpeg', '2024-07-01 17:08:14'),
-(23, 63, '6685763997254.docx', '../uploads/6685763997254.docx', '2024-07-03 16:03:05'),
-(25, 63, 'Untitled_66858228aefaf.png', '../uploads/Untitled_66858228aefaf.png', '2024-07-03 16:54:00'),
-(29, 63, 'rmPtZ1eY_400x400_6689056f5fbb2.jpg', '../uploads/rmPtZ1eY_400x400_6689056f5fbb2.jpg', '2024-07-06 08:50:55'),
-(31, 63, 'BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '../uploads/BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '2024-07-06 09:18:33');
+INSERT INTO `paper_files` (`id`, `category_id`, `category_name`, `file_name`, `file_url`, `uploaded_at`) VALUES
+(1, 63, '', 'Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '../uploads/Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '2024-07-01 17:04:33'),
+(3, 63, '', 'received_993104588452786.jpeg', '../uploads/received_993104588452786.jpeg', '2024-07-01 17:08:14'),
+(23, 63, '', '6685763997254.docx', '../uploads/6685763997254.docx', '2024-07-03 16:03:05'),
+(25, 63, '', 'Untitled_66858228aefaf.png', '../uploads/Untitled_66858228aefaf.png', '2024-07-03 16:54:00'),
+(31, 63, '', 'BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '../uploads/BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '2024-07-06 09:18:33'),
+(32, 85, '', 'Terms and Conditions for Unleash_669a700d8f616.docx', '../uploads/Terms and Conditions for Unleash_669a700d8f616.docx', '2024-07-19 13:54:21'),
+(38, 83, 'xds', 'Untitled_669a891a62e5c.png', '../uploads/Untitled_669a891a62e5c.png', '2024-07-19 15:41:14');
 
 -- --------------------------------------------------------
 
@@ -284,18 +302,21 @@ CREATE TABLE `payments` (
   `tenants_id` int(50) NOT NULL,
   `houses_id` int(50) NOT NULL,
   `filepath` varchar(200) NOT NULL,
-  `date_payment` date NOT NULL
+  `date_payment` date NOT NULL,
+  `approval` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`) VALUES
-(7, 'Lucious Black Gorehound', 0, 63, 847, '../uploads/GAMEPOSTER_666b08e7a6d95.jpg', '2024-06-13'),
-(8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13'),
-(9, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/received_993104588452786_666b0958540c1.jpeg', '2024-06-14'),
-(10, 'Mad3434 Good', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02');
+INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
+(7, 'Lucious Black Gorehound', 0, 63, 847, '../uploads/GAMEPOSTER_666b08e7a6d95.jpg', '2024-06-13', ''),
+(8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13', ''),
+(9, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/received_993104588452786_666b0958540c1.jpeg', '2024-06-14', ''),
+(10, 'Mad3434 Good', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
+(11, 'Mad3434 Good', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
+(12, 'Mad3434 Good', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'false');
 
 -- --------------------------------------------------------
 
@@ -323,7 +344,7 @@ CREATE TABLE `tenants` (
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(61, ' NeloAngelo', 'Mad3434', 'Good', '123', '41', 'aj', 846, '093', '2024-06-09', NULL, NULL),
+(61, ' NeloAngelo', 'Mad3434', 'Good', '123', '41', 'aj', 846, '093', '2024-05-09', NULL, NULL),
 (62, 'John', 'Payo', 'Junio', '0983', '69', 'aj', 839, '09', '2024-06-09', NULL, NULL),
 (63, 'Lucious', 'Black', 'Gorehound', '093414', '70', 'OuterHeaven', 847, '093', '2024-05-01', NULL, '2024-05-01'),
 (66, 'Romeo', 'Juliet', 'Echo', '123', '71', 'Bad', 847, '093', '2024-05-01', NULL, '2024-05-01'),
@@ -367,7 +388,8 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `p
 (70, 'OuterHeaven', 'Lucious', 'Black', 'Gorehound', '123', '', 'user', '2024-06-12 22:05:52'),
 (71, 'Bad', 'Romeo', 'Juliet', 'Echo', '123', '', 'user', '2024-06-14 00:44:38'),
 (72, 'testing1', 'test fname', 'testmiddle', 'testlastname', '123', 'redrider0939@gmail.com', 'user', '2024-07-07 19:19:18'),
-(73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52');
+(73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52'),
+(74, 'test3', 'fnm', 'mnm', 'lnm', '123', '', 'user', '2024-07-18 15:55:16');
 
 --
 -- Indexes for dumped tables
@@ -443,49 +465,49 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=848;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=851;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`
 --
 ALTER TABLE `paper_categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `paper_files`
 --
 ALTER TABLE `paper_files`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- Constraints for dumped tables

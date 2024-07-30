@@ -19,6 +19,9 @@ Class Admin {
     }
     $this->checkSessionTimeout();
 
+    // Run the setup script
+    include 'db_setup.php';
+
     include 'db_connect.php';
     $this->conn = $conn;
   }
