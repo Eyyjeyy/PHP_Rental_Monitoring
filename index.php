@@ -25,16 +25,16 @@
             <img src="../asset/Renttrack pro no word.png" class="img-fluid" alt="..." width="120" height="96">
         </a>
     </div> -->
-    <div class="container-fluid">
-        <a class="navbar-brand py-0" href="#">
-            <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
-        </a>
+    <div class="container-fluid mb-3 mt-3">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse align-self-stretch" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0 w-100">
-                <li class="ms-auto nav-item mx-1">
+        <div class="collapse navbar-collapse justify-content-center align-self-stretch" id="navbarSupportedContent">
+            <a class="navbar-brand py-0" href="#">
+                <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
+            </a>
+            <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left: 50%;">
+                <li class="nav-item mx-1">
                     <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
                         <p class="mb-0 text-center">Contact</p>
                     </a>
@@ -150,3 +150,5 @@
 
     </form>
 </div>
+
+<?php include 'regular/includes/footer.php'; ?>
