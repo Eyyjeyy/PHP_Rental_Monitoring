@@ -54,8 +54,8 @@
     <div class="container-fluid">
         <div class="row" style="min-height: 100vh;">
             <div class="col-7 p-0">
-                <img src="asset/Renttrack pro.png" style="object-fit: cover; width: 150px;" class="position-absolute p-0 img-fluid align-items-center" alt="...">
-                <div class="row m-0 h-100 justify-content-center">
+             
+                <div class="div-col1">
                     <!-- <img src="asset/Renttrack pro.png" style="object-fit: cover; width: 10%;" class="position-absolute p-0 img-fluid align-items-center" alt="..."> -->
 
                     <div id="carouselExampleControls" class="carousel slide align-self-center" data-bs-ride="">
@@ -83,13 +83,13 @@
                     <!-- <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; width: 95%; height: 75%;" class="p-0 img-fluid align-self-center" alt="..."> -->
                 </div>
             </div>
-            <div class="d-flex flex-column justify-content-center align-items-center col-5 position-relative mx-auto">
+            <div class="div-col2">
                 <div class="d-flex justify-content-center position-absolute" style="margin-bottom: 70vh;">
                     <img src="asset/Renttrack pro no word.png" class="img-fluid" alt="...">
                 </div>
                 <div class="login-panel panel panel-primary flex-column justify-content-center align-self-center mx-auto">
                     <div class="d-flex justify-content-center">
-                        <p class="fs-3 fw-bold">
+                        <p class="header">
                             Log In
                         </p>
                     </div>
@@ -105,7 +105,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" style="color: #9b9b9b75;" width="20" height="20" fill="currentColor" class="bi bi-key-fill" viewBox="0 0 16 16">
                                     <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
                                 </svg>
-                                <input class="form-control" placeholder="Password" type="password" name="password">
+                                <input class="form-control password" placeholder="Password" type="password" name="password">
                             </div>
                             <div class="row w-100">
                                 <div class="col-sm-12 col-md-6 p-0 text-center">
@@ -148,5 +148,3 @@
             </div>
         </div>
     </div>
-
-    <?php include 'regular/includes/footer.php'; ?>

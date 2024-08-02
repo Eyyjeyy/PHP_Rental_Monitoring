@@ -84,6 +84,7 @@
 </nav>
 
 <div class="container-fluid">
+<div style="margin-left: 175px; margin-right: 175px;">
     <div class="row mt-5">
         <div class="col-12 col-lg-6 d-flex flex-column justify-content-center">
             <p class="fs-1 fw-bolder inter-google text-center mb-lg-5">Welcome to RentTrack Pro</p>
@@ -124,6 +125,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div>
