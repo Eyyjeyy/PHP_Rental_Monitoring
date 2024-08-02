@@ -128,6 +128,8 @@ Class Admin {
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
+        // Log the action
+        $this->History($this->session_id, 'delete', 'Deleted User, ID: ' . $user_id);
         return true; // Deletion successful
     } else {
         return false; // Deletion failed
@@ -701,6 +703,13 @@ Class Admin {
     } else {
         echo "No tenants to notify today.\n";
     }
+  }
+
+  public function History($admin_id, $action, $details) {
+    $stmt = $this->conn->prepare("INSERT INTO history (admin_id, action, details) VALUES (?, ?, ?)");
+    $stmt->bind_param("iss", $admin_id, $action, $details);
+    $stmt->execute();
+    $stmt->close();
   }
 
   

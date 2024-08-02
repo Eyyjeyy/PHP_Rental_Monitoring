@@ -102,5 +102,48 @@
                 </div>
             </div>
         </div>
+
+        <div class="container-fluid" style="background-color: #F7B787;">
+            <div class="row mx-auto justify-content-center d-lg-none">
+                <div class="col-6" style="padding-left: 15%;">
+                    <div class="d-flex justify-content-center">
+                        <p>Contact</p>
+                    </div>
+                    <ul class="p-0 w-50 mx-auto" style="list-style-type:none;">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill mb-1" viewBox="0 0 16 16">
+                                <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+                            </svg>
+                            Email
+                        </li>
+                        <li style="overflow: hidden;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill mb-1" viewBox="0 0 16 16">
+                                <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+                            </svg>
+                            Contact Number
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-6" style="padding-right: 15%;">
+                    <div class="d-flex justify-content-center">
+                        <p>Contact</p>
+                    </div>
+                    <ul class="p-0 w-50 mx-auto" style="list-style-type:none;">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill mb-1" viewBox="0 0 16 16">
+                                <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+                            </svg>
+                            Email
+                        </li>
+                        <li style="overflow: hidden;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill mb-1" viewBox="0 0 16 16">
+                                <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+                            </svg>
+                            Contact Number
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
