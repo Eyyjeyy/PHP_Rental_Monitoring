@@ -53,3 +53,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 7/31/24 - Automated MySQL DB Setup <br>
 - Created db_setup.php script responsible for checking and automated setup of MySQL database, requires .sql file <br>
 - Modified admin.php, inserted code in constructor integrating db_setup.php <br>
+
+8/2/24 - User Side Navbar Revision & Footer <br>
+- Added History for Admin Activities <br>
+- Applied same navbar from index.php for all non-admin pages for uniformity <br>
