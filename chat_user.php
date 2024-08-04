@@ -177,7 +177,7 @@
 
 <?php include 'regular/includes/header_user.php'; ?>
 
-<nav class="navbar navbar-expand-lg navbar-light flex-column py-0" style="background-color: #527853;">
+<nav class="navbar navbar-expand-lg navbar-light flex-column py-0" id="navbar" style="background-color: #527853;">
     <!-- <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img src="../asset/Renttrack pro no word.png" class="img-fluid" alt="..." width="120" height="96">
@@ -222,6 +222,14 @@
                     </svg>
                   </a>
                 </li>
+                </li>
+                <li class="nav-item mx-1">
+                  <a class="nav-link h-100 d-flex align-items-center" href="logout.php">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                    </svg>
+                  </a>
                 <li class="d-none nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Dropdown
@@ -245,13 +253,13 @@
 
 
 <div class="container-fluid">
-    <div class="row mt-5 mx-auto w-75" style="height: 80vh;">
-        <div class="col-12 col-md-4 pe-0 h-100">
+    <div class="row mt-5 mx-auto" id="coluserchat" style="height: 60vh;">
+        <div class="col-12 col-md-4 pe-0" id="usercol">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #EE7214;">
                     <h5 class="text-center mb-0">Users</h5>
                 </div>
-                <div class="card-body bg-white" style="overflow-y: auto;">
+                <div class="card-body bg-white" id="list" style="overflow-y: auto;">
                     <ul class="ps-0" style="list-style: none;">
                         <?php foreach ($users as $user): ?>
                             <li>
@@ -266,7 +274,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-8 ps-0 h-100">            
+        <div class="col-12 col-md-8 ps-0" id="chatcol">            
             <div class="card h-100">
                 <div class="card-header">
                     <h5 class="text-center mb-0">Chat</h5>
@@ -321,15 +329,21 @@
                 <div id="form-container">
                     <?php if ($chat_user_id): ?>
                         <form id="message-form" action="chat_user.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data" style="height: 15%;">
-                            <div class="row h-100 m-0">
-                                <div class="col-7 p-0 pt-2">
-                                    <div class="row px-3 m-0">
+                            <div class="row h-100 m-0" id="textbtnzone">
+                                <div class="textzone-2">
+                                    <div class="row m-0" id="textzone">
                                         <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
                                     </div>
                                 </div>
-                                <div class="col-5 p-0 pt-2">
-                                    <input class="w-100" type="file" name="image" id="image-input" accept="image/*">
-                                    <button class="btn btn-primary" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                                <div class="col-3 p-0 pt-2" id="btnzone">
+                              
+                                <div class="btn-2">
+                                    <label id="file-name-label">No file selected</label>
+                                    <input type="file" id="file" name="file" style="display:none;">
+                                    <button type="submit" style="border-style: none; border-radius: 4px;" id="file-btn" class="btn btn-primary">Upload File</button>
+
+                                    <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                                  </div>
                                 </div>
                             </div>
                         </form>
@@ -408,15 +422,22 @@
             if (chatUserId) {
                 var formHtml = `
                     <form id="message-form" action="chat_user.php?user_id=${chatUserId}" method="POST" enctype="multipart/form-data" style="height: 15%;">
-                        <div class="row h-100 m-0">
-                            <div class="col-7 p-0 pt-2">
-                                <div class="row px-3 m-0">
+                        <div class="row h-100 m-0" id="textbtnzone">
+                            <div class="textzone-2">
+                                <div class="row m-0" id="textzone">
                                     <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
                                 </div>
                             </div>
-                            <div class="col-5 p-0 pt-2">
-                                <input class="w-100" type="file" name="image" id="image-input" accept="image/*">
-                                <button class="btn btn-primary" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                            <div class="col-3 p-0" id="btnzone">
+                          
+                           
+                                    <div class="btn-2">
+                                    <label id="file-name-label">No file selected</label>
+                                    <input type="file" id="file" name="file" style="display:none;">
+                                    <button type="submit" style="border-style: none; border-radius: 4px;" id="file-btn" class="btn btn-primary">Upload File</button>
+
+                                <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -498,3 +519,4 @@
         });
     });
 </script> -->
+
