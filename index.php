@@ -29,10 +29,11 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <a class="navbar-brand py-0" href="#">
+            <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
+        </a>
         <div class="collapse navbar-collapse justify-content-center align-self-stretch" id="navbarSupportedContent">
-            <a class="navbar-brand py-0" href="#">
-                <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
-            </a>
+            
             <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left: 50%;">
                 <li class="nav-item mx-1">
                     <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
