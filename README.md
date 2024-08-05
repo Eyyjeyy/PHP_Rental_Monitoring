@@ -57,3 +57,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
 8/2/24 - User Side Navbar Revision & Footer <br>
 - Added History for Admin Activities <br>
 - Applied same navbar from index.php for all non-admin pages for uniformity <br>
+
+8/5/24 - Added History Page <br>
+- Utilizes History function from admin.php <br>
