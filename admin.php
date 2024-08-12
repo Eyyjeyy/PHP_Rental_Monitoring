@@ -123,13 +123,22 @@ Class Admin {
 
   // Function to delete a user by ID
   public function deleteUser($user_id) {
+    $retrievesql = "SELECT * FROM users WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $user_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $delete_username = $retrieveRow['username'];
+
     $sql = "DELETE FROM users WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
         // Log the action
-        $this->History($this->session_id, 'delete', 'Deleted User, ID: ' . $user_id);
+        $this->History($this->session_id, 'Delete', 'Deleted User, ID: ' . $user_id . '<br> Username: ' . $delete_username);
         return true; // Deletion successful
     } else {
         return false; // Deletion failed
@@ -152,6 +161,16 @@ Class Admin {
   // Function to update a user's username, password, and role
   public function updateUser($user_id, $username, $firstname, $middlename, $lastname, $password, $role) {
     $this->conn->begin_transaction(); // Start transaction
+
+    // Retrieve Old Values for History Logs
+    $oldvalsql = "SELECT * FROM users WHERE id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql);
+    $oldvalstmt->bind_param("i", $user_id);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_username = $oldvalRow['username'];
 
     // Update the users table
     $sql_users = "UPDATE users SET username = ?, firstname = ?, middlename = ?, lastname = ?, password = ?, role = ? WHERE id = ?";
@@ -179,6 +198,16 @@ Class Admin {
       return false; // Update failed in tenants table
     }
 
+    $retrievesql = "SELECT * FROM users WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $user_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $update_username = $retrieveRow['username'];
+    $this->History($this->session_id, 'Update', 'Updated User, ID: ' . $user_id . '<br> New Username: ' . $update_username . '<br> Old Username: ' . $oldval_username);
+
     // If execution reaches here, it means there were no errors
     $this->conn->commit(); // Commit transaction
     return true; // Update successful
@@ -191,14 +220,46 @@ Class Admin {
     $stmt->bind_param("ssssss", $username, $firstname, $middlename, $lastname, $password, $role);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Insertion successful
+      // Get the ID of the newly inserted record
+      $newUserId = $stmt->insert_id;
+
+      $retrievesql = "SELECT * FROM users WHERE id = ?";
+      $retrievestmt = $this->conn->prepare($retrievesql);
+      $retrievestmt->bind_param("i", $newUserId);
+      $retrievestmt->execute();
+      $retrieveResult = $retrievestmt->get_result();
+
+      // Fetch the user record as an associative array
+      $userRecord = $retrieveResult->fetch_assoc();
+      $added_username = $userRecord['username'];
+
+      $this->History($this->session_id, 'Add', 'Added User, ID: ' . $newUserId . '<br> Username: ' . $added_username);
+
+      return true; // Insertion successful
     } else {
-        return false; // Insertion failed
+      return false; // Insertion failed
     }
   }
 
   // Function to delete a house by ID
   public function deleteHouse($house_id) {
+    $retrievesql = "SELECT houses.*, 
+                      categories.name AS category_name,
+                      houseaccounts.*
+                    FROM houses
+                    INNER JOIN categories ON categories.id = houses.category_id
+                    LEFT JOIN houseaccounts ON houses.id = houseaccounts.houses_id
+                    WHERE houses.id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $house_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $delete_housename = $retrieveRow['house_name'];
+    $delete_categoryname = $retrieveRow['category_name'];
+    $delete_price = $retrieveRow['price'];
+
     $sql = "DELETE FROM houses WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $house_id);
@@ -209,6 +270,9 @@ Class Admin {
     $stmt_2->bind_param("i", $house_id);
     $stmt_2->execute();
     if ($stmt->affected_rows > 0) {
+      // Log the action
+      $this->History($this->session_id, 'Delete', 'Deleted House, ID: ' . $house_id . '<br> Housename: ' . $delete_housename . '<br> Category: ' . $delete_categoryname
+      . '<br> Price: ' . $delete_price);
       return true; // Deletion successful
     } else {
       return false; // Deletion failed
@@ -216,6 +280,45 @@ Class Admin {
   }
 
   public function updateHouse($house_id, $housenumber, $price, $category, $meralco_accnum = null, $meralco_accname = null, $maynilad_accnum = null, $maynilad_accname = null) {
+    $oldvalsql  = "SELECT houses.*, 
+                      categories.name AS category_name,
+                      houseaccounts.*
+                    FROM houses
+                    INNER JOIN categories ON categories.id = houses.category_id
+                    LEFT JOIN houseaccounts ON houses.id = houseaccounts.houses_id
+                    WHERE houses.id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql );
+    $oldvalstmt->bind_param("i", $house_id);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_housename = $oldvalRow['house_name'];
+    $oldval_categoryname = $oldvalRow['category_name'];
+    $oldval_price = $oldvalRow['price'];
+
+    $newCatSql = "SELECT name FROM categories WHERE id = ?";
+    $newCatStmt = $this->conn->prepare($newCatSql);
+    $newCatStmt->bind_param("i", $category);
+    $newCatStmt->execute();
+    $newCatResult = $newCatStmt->get_result();
+    $newCatRow = $newCatResult->fetch_assoc();
+    $new_categoryname = $newCatRow['name'];
+
+    $changes = [];
+
+    if ($oldval_housename !== $housenumber) {
+      $changes[] = 'Housename: ' . $oldval_housename . ' -> ' . $housenumber;
+    }
+
+    if ($oldval_categoryname !== $new_categoryname) {
+      $changes[] = 'Category: ' . $oldval_categoryname . ' -> ' . $new_categoryname;
+    }
+
+    if ($oldval_price !== $price) {
+      $changes[] = 'Price: ' . $oldval_price . ' -> ' . $price;
+    }
+
     $sql = "UPDATE houses SET house_name = ?, price = ?, category_id = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("sdii", $housenumber, $price, $category, $house_id);
@@ -233,9 +336,29 @@ Class Admin {
       
       // Check if the houseaccounts update was successful
       $houseAccUpdated = $stmtHouseAcc->affected_rows > 0;
+
+      // Log additional changes if needed
+      if ($oldvalRow['elec_accnum'] != $meralco_accnum) {
+        $changes[] = 'Electric Account Number: ' . $oldvalRow['elec_accnum'] . ' -> ' . $meralco_accnum;
+      }
+      if ($oldvalRow['elec_accname'] !== $meralco_accname) {
+        $changes[] = 'Electric Account Name: ' . $oldvalRow['elec_accname'] . ' -> ' . $meralco_accname;
+      }
+      if ($oldvalRow['water_accnum'] != $maynilad_accnum) {
+        $changes[] = 'Water Account Number: ' . $oldvalRow['water_accnum'] . ' -> ' . $maynilad_accnum;
+      }
+      if ($oldvalRow['water_accname'] !== $maynilad_accname) {
+        $changes[] = 'Water Account Name: ' . $oldvalRow['water_accname'] . ' -> ' . $maynilad_accname;
+      }
       
       // Return true if either the house or houseaccounts update was successful
       if ($houseUpdated || $houseAccUpdated) {
+        // Combine all changes into a single log message
+        $logMessage = 'Updated House, ID: ' . $house_id . '<br>' . implode('<br>', $changes);
+
+        // Log the action
+        $this->History($this->session_id, 'Update', $logMessage);
+
         return true; // Update successful
       } else if($stmtHouseAcc->error) {
         return false; // Update failed
@@ -266,9 +389,13 @@ Class Admin {
 
       // Check if insertion into housesaccounts table was successful
       if ($stmtAccounts->affected_rows > 0) {
-          return true; // Insertion successful
+        // Log the action
+        $this->History($this->session_id, 'Add', 'Added House, ID: ' . $houseId . '<br> Housename: ' . $housenumber . '<br> Category: ' . $category
+        . '<br> Price: ' . $price . '<br> Electric Account: ' . $e_accountname . ' (' . $e_accountnum . ')<br> Water Account: ' . $w_accountname . ' (' . $w_accountnum . ')');
+
+        return true; // Insertion successful
       } else {
-          return false; // Insertion into housesaccounts failed
+        return false; // Insertion into housesaccounts failed
       }
     } else {
       return false; // Insertion failed
@@ -276,26 +403,59 @@ Class Admin {
   }
 
   public function deleteCategory($categoryid) {
+    $retrievesql = "SELECT * FROM categories WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $categoryid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $delete_category = $retrieveRow['name'];
+
     $sql = "DELETE FROM categories WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $categoryid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Deletion successful
+      // Log the action
+      $this->History($this->session_id, 'Delete', 'Deleted Category, ID: ' . $categoryid . '<br> Username: ' . $delete_category);
+
+      return true; // Deletion successful
     } else {
-        return false; // Deletion failed
+      return false; // Deletion failed
     }
   }
 
   public function updateCategory($categoryid, $categoryname) {
+    $oldvalsql = "SELECT * FROM categories WHERE id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql);
+    $oldvalstmt->bind_param("i", $categoryid);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_category = $oldvalRow['name'];
+
+    $changes = [];
+
+    if ($oldval_category !== $categoryname) {
+      $changes[] = 'Housename: ' . $oldval_category . ' -> ' . $categoryname;
+    }
+
     $sql = "UPDATE categories SET name = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("si", $categoryname, $categoryid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Update successful
+      // Combine all changes into a single log message
+      $logMessage = 'Updated Category, ID: ' . $categoryid . '<br>' . implode('<br>', $changes);
+
+      // Log the action
+      $this->History($this->session_id, 'Update', $logMessage);
+
+      return true; // Update successful
     } else {
-        return false; // Update failed
+      return false; // Update failed
     }
   }
 
@@ -305,9 +465,23 @@ Class Admin {
     $stmt->bind_param("s", $categoryname);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Insertion successful
+      $newCategoryId = $stmt->insert_id;
+
+      $retrievesql = "SELECT * FROM categories WHERE id = ?";
+      $retrievestmt = $this->conn->prepare($retrievesql);
+      $retrievestmt->bind_param("i", $newCategoryId);
+      $retrievestmt->execute();
+      $retrieveResult = $retrievestmt->get_result();
+
+      // Fetch the category record as an associative array
+      $categoryRecord = $retrieveResult->fetch_assoc();
+      $added_category = $categoryRecord['name'];
+
+      $this->History($this->session_id, 'Add', 'Added Category, ID: ' . $newCategoryId . '<br> Username: ' . $added_category);
+
+      return true; // Insertion successful
     } else {
-        return false; // Insertion failed
+      return false; // Insertion failed
     }
   }
 
@@ -324,26 +498,97 @@ Class Admin {
   // }
 
   public function deleteTenant($tenantid) {
+    $retrievesql = "SELECT * FROM tenants where id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $tenantid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $delete_fname = $retrieveRow['fname'];
+    $delete_mname = $retrieveRow['mname'];
+    $delete_lname = $retrieveRow['lname'];
+    $delete_usersid = $retrieveRow['users_id'];
+    $delete_users_username = $retrieveRow['users_username'];
+    $delete_house_id = $retrieveRow['house_id'];
+
     $sql = "DELETE FROM tenants WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $tenantid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Deletion successful
+      // Log the action
+      $this->History($this->session_id, 'Delete', 'Deleted Tenant, ID: ' . $tenantid . '<br> Firstname: ' . $delete_fname . '<br> Middlename: ' . $delete_mname
+      . '<br> Lastname: ' . $delete_lname . '<br> User ID: ' . $delete_usersid . '<br> Username: ' . $delete_users_username . '<br> House ID: ' .$delete_house_id);
+
+      return true; // Deletion successful
     } else {
-        return false; // Deletion failed
+      return false; // Deletion failed
     }
   }
 
   public function updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate) {
+    $oldvalsql = "SELECT * FROM tenants WHERE id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql);
+    $oldvalstmt->bind_param("i", $tenant_id);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_fname = $oldvalRow['fname'];
+    $oldval_mname = $oldvalRow['mname'];
+    $oldval_lname = $oldvalRow['lname'];
+    $oldval_contact = $oldvalRow['contact'];
+    $oldval_datestart = $oldvalRow['date_start'];
+    $oldval_houseid = $oldvalRow['house_id'];
+    $oldval_housecategory = $oldvalRow['house_category'];
+
+    $changes = [];
+
+    if ($oldval_fname != $firstname) {
+      $changes[] = 'Firstname: ' . $oldval_fname . ' -> ' . $firstname;
+    }
+
+    if ($oldval_mname != $middlename) {
+      $changes[] = 'Middlename: ' . $oldval_mname . ' -> ' . $middlename;
+    }
+
+    if ($oldval_lname != $lastname) {
+      $changes[] = 'Lastname: ' . $oldval_lname . ' -> ' . $lastname;
+    }
+
+    if ($oldval_contact != $contactno) {
+      $changes[] = 'Contact: ' . $oldval_contact . ' -> ' . $contactno;
+    }
+
+    if ($oldval_houseid != $houseid) {
+      $changes[] = 'House ID: ' . $oldval_houseid . ' -> ' . $houseid;
+    }
+
+    if ($oldval_housecategory != $housecategory) {
+      $changes[] = 'House Category: ' . $oldval_housecategory . ' -> ' . $housecategory;
+    }
+
+    if ($oldval_datestart != $registerdate) {
+      $changes[] = 'Registration Date: ' . $oldval_datestart . ' -> ' . $registerdate;
+    }
+
     $sql = "UPDATE tenants SET fname = ?, mname = ?, lname = ?, contact = ?, house_id = ?, house_category = ?, date_start = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("sssssssi", $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate, $tenant_id);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Update successful
+      // Combine all changes into a single log message
+      $logMessage = 'Updated Tenant, ID: ' . $tenant_id . '<br>' . implode('<br>', $changes);
+
+      // Log the action
+      $this->History($this->session_id, 'Update', $logMessage);
+
+      return true; // Update successful
+    } else if ($stmt->errno) {
+      return false; // Update failed
     } else {
-        return false; // Update failed
+      return true; // No changes were made, but query executed without error
     }
   }
 
@@ -388,15 +633,46 @@ Class Admin {
         $insertStmt->execute();
 
         if ($insertStmt->affected_rows > 0) {
-            // Insertion successful
-            return array("success" => true);
+          $newTenantId = $insertStmt->insert_id;
+
+          $retrievesql = "SELECT * FROM tenants WHERE id = ?";
+          $retrievestmt = $this->conn->prepare($retrievesql);
+          $retrievestmt->bind_param("i", $newTenantId);
+          $retrievestmt->execute();
+          $retrieveResult = $retrievestmt->get_result();
+
+          $categoryRecord = $retrieveResult->fetch_assoc();
+          $added_tenantfn = $categoryRecord['fname'];
+          $added_tenantmn = $categoryRecord['mname'];
+          $added_tenantln = $categoryRecord['lname'];
+          $added_tenantcontact = $categoryRecord['contact'];
+          $added_tenantusersid = $categoryRecord['users_id'];
+          $added_tenantusersusername = $categoryRecord['users_username'];
+          $added_houseid = $categoryRecord['house_id'];
+          $added_housecategory = $categoryRecord['house_category'];
+
+          $logMessage = 
+          'Added Tenant, ID: ' . $newTenantId . '<br>' .
+          'First Name: ' . $added_tenantfn . '<br>' .
+          'Middle Name: ' . $added_tenantmn . '<br>' .
+          'Last Name: ' . $added_tenantln . '<br>' .
+          'Contact: ' . $added_tenantcontact . '<br>' .
+          'User ID: ' . $added_tenantusersid . '<br>' .
+          'Username: ' . $added_tenantusersusername . '<br>' .
+          'House ID: ' . $added_houseid . '<br>' .
+          'House Category: ' . $added_housecategory;
+
+          $this->History($this->session_id, 'Add', $logMessage);
+
+          // Insertion successful
+          return array("success" => true);
         } else {
-            // Insertion failed
-            return array("success" => false, "message" => "Error occurred while adding tenant.");
+          // Insertion failed
+          return array("success" => false, "message" => "Error occurred while adding tenant.");
         }
       } else {
-          // User not found in the users table
-          return array("success" => false, "message" => "User not found.");
+        // User not found in the users table
+        return array("success" => false, "message" => "User not found.");
       }
     }
 
@@ -461,10 +737,39 @@ Class Admin {
     $sql = "INSERT INTO messages (sender_id, receiver_id, users_id, message, timestamp, image_path) VALUES (?, ?, ?, ?, NOW(), ?)";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("iiiss", $sender_id, $receiver_id, $sender_id, $message, $image_path); // Assuming users_id is the same as sender_id
+
+    $retrievesql = "SELECT * FROM users WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $this->session_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    $userRecord = $retrieveResult->fetch_assoc();
+    $user_role = $userRecord['role'];
+
+    $receiversql = "SELECT * FROM users WHERE id = ?";
+    $receiverstmt = $this->conn->prepare($receiversql);
+    $receiverstmt->bind_param("i", $receiver_id);
+    $receiverstmt->execute();
+    $receiverResult = $receiverstmt->get_result();
+
+    $receiverRecord = $receiverResult->fetch_assoc();
+    $receiver_username = $receiverRecord['username'];
+
     if ($stmt->execute()) {
-        return true;
+      $newMessageId = $stmt->insert_id;
+      
+      if($retrieveResult->num_rows > 0 && $user_role == 'admin') {
+        $logMessage = 
+        'Message, ID: ' . $newMessageId . '<br>' .
+        'Receiver, : ' . $receiver_username . '<br>';
+
+        $this->History($this->session_id, 'Message', $logMessage);
+      }
+
+      return true;
     } else {
-        return false;
+      return false;
     }
   }
 
@@ -491,21 +796,56 @@ Class Admin {
     $stmt->bind_param("s", $categorynamepapers);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Insertion successful
+      $newPaperCategoryId = $stmt->insert_id;
+
+      $retrievesql = "SELECT * FROM paper_categories WHERE id = ?";
+      $retrievestmt = $this->conn->prepare($retrievesql);
+      $retrievestmt->bind_param("i", $newPaperCategoryId);
+      $retrievestmt->execute();
+      $retrieveResult = $retrievestmt->get_result();
+
+      // Fetch the papercategory record as an associative array
+      $papercategoryRecord = $retrieveResult->fetch_assoc();
+      $added_papercategory = $papercategoryRecord['name'];
+
+      $logMessage = 
+      'Added Paper Category, ID: ' . $newPaperCategoryId . '<br>' .
+      'Category Name, : ' . $added_papercategory . '<br>';
+
+      $this->History($this->session_id, 'Add', $logMessage);
+
+      return true; // Insertion successful
     } else {
-        return false; // Insertion failed
+      return false; // Insertion failed
     }
   }
 
   public function deleteCategoryPapers($categoryid) {
+    $retrievesql = "SELECT * FROM paper_categories WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $categoryid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    // Fetch the papercategory record as an associative array
+    $papercategoryRecord = $retrieveResult->fetch_assoc();
+    $deleted_papercategory = $papercategoryRecord['name'];
+
     $sql = "DELETE FROM paper_categories WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $categoryid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Deletion successful
+
+      $logMessage = 
+      'Deleted Paper Category, ID: ' . $categoryid . '<br>' .
+      'Category Name, : ' . $deleted_papercategory . '<br>';
+
+      $this->History($this->session_id, 'Delete', $logMessage);
+
+      return true; // Deletion successful
     } else {
-        return false; // Deletion failed
+      return false; // Deletion failed
     }
   }
 
@@ -536,6 +876,28 @@ Class Admin {
     // Execute the statement
     $result = $stmt->execute();
 
+    if ($stmt->affected_rows > 0) {
+      $newPaperId = $stmt->insert_id;
+
+      $retrievesql = "SELECT * FROM paper_files WHERE id = ?";
+      $retrievestmt = $this->conn->prepare($retrievesql);
+      $retrievestmt->bind_param("i", $newPaperId);
+      $retrievestmt->execute();
+      $retrieveResult = $retrievestmt->get_result();
+
+      // Fetch the category record as an associative array
+      $categoryRecord = $retrieveResult->fetch_assoc();
+      $added_paper = $categoryRecord['category_name'];
+      $added_paperfilename = $categoryRecord['file_name'];
+
+      $logMessage = 
+      'Added Paper, ID: ' . $newPaperId . '<br>' .
+      'Category Name : ' . $added_paper . '<br>' .
+      'File Name : ' . $added_paperfilename . '<br>';
+
+      $this->History($this->session_id, 'Add', $logMessage);
+    }
+
     // Close the statement
     $stmt->close();
 
@@ -544,35 +906,104 @@ Class Admin {
   }
 
   public function deletePaper($categoryid) {
+    $retrievesql = "SELECT * FROM paper_files WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $categoryid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    // Fetch the papercategory record as an associative array
+    $papercategoryRecord = $retrieveResult->fetch_assoc();
+    $deleted_paper = $papercategoryRecord['file_name'];
+
     $sql = "DELETE FROM paper_files WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $categoryid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Deletion successful
+      
+      $logMessage = 
+      'Deleted Paper, ID: ' . $categoryid . '<br>' .
+      'Paper Name, : ' . $deleted_paper . '<br>';
+
+      $this->History($this->session_id, 'Delete', $logMessage);
+
+      return true; // Deletion successful
     } else {
-        return false; // Deletion failed
+      return false; // Deletion failed
     }
   }
 
   public function approvePayment($paymentsid) {
+    $retrievesql = "SELECT * FROM payments WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $paymentsid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    // Fetch the papercategory record as an associative array
+    $approvePaymentRecord = $retrieveResult->fetch_assoc();
+    $approve_paymentname = $approvePaymentRecord['name'];
+    $approve_paymentamount = $approvePaymentRecord['amount'];
+
+    // Log additional changes if needed
+    if ($approvePaymentRecord['approval'] != 'true') {
+      $changes[] = 'Approval: ' . ($approvePaymentRecord['approval'] == null ? 'Pending' : 'Declined') . ' -> ' . 'Accepted';
+    }
+
     $sql = "UPDATE payments SET approval = 'true' WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $paymentsid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
-        return true; // Approval successful
+
+      // Combine all changes into a single log message
+      $logMessage = 'Payment Approved, ID: ' . $paymentsid . '<br>' . implode('<br>', $changes);
+
+      $this->History($this->session_id, 'Approve', $logMessage);
+
+      return true; // Approval successful
     } else {
-        return false; // Approval failed
+      return false; // Approval failed
     }
   }
 
   public function declinePayment($paymentsid) {
+    $retrievesql = "SELECT * FROM payments WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $paymentsid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    // Fetch the papercategory record as an associative array
+    $approvePaymentRecord = $retrieveResult->fetch_assoc();
+
+    // Payment record not found
+    if (!$approvePaymentRecord) {
+      return false; 
+    }
+
+    $approve_paymentname = $approvePaymentRecord['name'];
+    $approve_paymentamount = $approvePaymentRecord['amount'];
+
+    $changes = [];
+
+    // Log additional changes if needed
+    if ($approvePaymentRecord['approval'] != 'false') {
+      $changes[] = 'Approval: ' . ($approvePaymentRecord['approval'] == null ? 'Pending' : 'Accepted') . ' -> ' . 'Declined';
+    }
+
     $sql = "UPDATE payments SET approval = 'false' WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $paymentsid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
+
+      // Combine all changes into a single log message
+      $logMessage = 'Payment Declined, ID: ' . $paymentsid . '<br>' . implode('<br>', $changes);
+
+      $this->History($this->session_id, 'Declined', $logMessage);
+
       return true; // Approval successful
     } else {
       return false; // Approval failed

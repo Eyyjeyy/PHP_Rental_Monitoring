@@ -60,3 +60,16 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 8/5/24 - Added History Page <br>
 - Utilizes History function from admin.php <br>
+
+8/9/24 - History Functionality <br>
+- Added History: Delete user, Update user, Add User <br>
+- Added History for Delete House/Apartments <br>
+
+8/10/24 - History Functionality <br>
+- Added History: Update House <br>
+
+8/11/24 - History Functionality <br>
+- Continuation until tenants <br>
+
+8/12/24 - History Functionality <br>
+- Completion of History for administrator actions <br>
