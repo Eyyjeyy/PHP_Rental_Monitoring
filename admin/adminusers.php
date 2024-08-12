@@ -39,7 +39,11 @@
             exit();
         } else {
             // Error occurred while adding user, display an error message or handle as needed
-            echo "Error occurred while adding user.";
+            // echo "Error occurred while adding user.";
+
+            $_SESSION['error_message'] = "Addition Failed due to an error";
+            header("Location: adminusers.php?error=add");
+            exit();
         }
     }
 
