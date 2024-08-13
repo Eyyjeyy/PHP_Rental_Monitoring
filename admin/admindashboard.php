@@ -12,7 +12,11 @@
     if($admin->isLoggedIn() && $admin->session_role == 'user') {
         header("Location: ../index.php");
         exit();
-    }   
+    }
+    
+    $data = $admin->getTenantCountByApartment();
+    print_r($data);
+
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -104,6 +108,7 @@
                                 <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <canvas id="myChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -130,5 +135,40 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chartData = <?php echo $data; ?>;
+
+        var labels = chartData.map(function(e) {
+            return e.house_name;
+        });
+        var data = chartData.map(function(e) {
+            return e.tenant_count;
+        });
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tenant Count',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
 
     <?php include 'includes/footer.php'; ?>

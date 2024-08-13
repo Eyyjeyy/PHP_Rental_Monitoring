@@ -21,6 +21,10 @@ Class Admin {
 
     // Run the setup script
     include 'db_setup.php';
+    if (isset($_SESSION['dbmessage'])) {
+      echo '<div class="alert alert-success">' . $_SESSION['dbmessage'] . '</div>';
+      unset($_SESSION['dbmessage']);
+    }
 
     include 'db_connect.php';
     $this->conn = $conn;
@@ -1134,6 +1138,24 @@ Class Admin {
     } else {
         echo "No tenants to notify today.\n";
     }
+  }
+
+  public function getTenantCountByApartment() {
+    $sql = "SELECT h.house_name AS house_name, COUNT(t.id) AS tenant_count 
+        FROM houses h 
+        LEFT JOIN tenants t ON h.id = t.house_id 
+        GROUP BY h.house_name";
+            
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $data[] = $row;
+      }
+    }
+
+    return json_encode($data);
   }
 
   public function History($admin_id, $action, $details) {

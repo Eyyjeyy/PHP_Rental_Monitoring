@@ -18,7 +18,8 @@ $dbExists = $mysqli->query("SHOW DATABASES LIKE '$dbname'");
 if ($dbExists->num_rows == 0) {
     // Database does not exist, create it
     if ($mysqli->query("CREATE DATABASE `$dbname`")) {
-        echo "Database `$dbname` created successfully.<br>";
+        $_SESSION['dbmessage'] = "Database `$dbname` created successfully.";
+        // echo "Database `$dbname` created successfully.<br>";
     } else {
         die("Error creating database: " . $mysqli->error);
     }
@@ -45,7 +46,7 @@ foreach ($sqlStatements as $statement) {
     }
 }
 
-echo "Database setup completed successfully.";
+// echo "Database setup completed successfully.";
 
 $mysqli->close();
 ?>

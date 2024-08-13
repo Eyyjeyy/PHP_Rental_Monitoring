@@ -13,6 +13,9 @@
     <?php else: ?>
         <link rel="stylesheet" href="../asset/admin.css">
     <?php endif; ?>
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+
 
 
     <title><?php echo isset($pageTitle) ? $pageTitle : 'Default Title'; ?></title>
