@@ -1158,6 +1158,49 @@ Class Admin {
     return json_encode($data);
   }
 
+  public function getMonthlyIncome() {
+    $sql = "SELECT 
+                DATE_FORMAT(date_payment, '%Y-%m') AS month, 
+                SUM(amount) AS total_income 
+            FROM payments 
+            GROUP BY DATE_FORMAT(date_payment, '%Y-%m')
+            ORDER BY date_payment ASC";
+
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
+    }
+
+    return json_encode($data);
+  }
+
+  public function getUserRolePercentage() {
+    $sql = "SELECT role, COUNT(*) as count FROM users GROUP BY role";
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    // Get the total number of users
+    $total = 0;
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $total += $row['count'];
+          $data[] = $row;
+      }
+    }
+
+    // Calculate the percentage
+    foreach ($data as &$item) {
+      $item['percentage'] = round(($item['count'] / $total) * 100, 2);
+    }
+
+    return json_encode($data);
+  }
+
+
   public function History($admin_id, $action, $details) {
     $stmt = $this->conn->prepare("INSERT INTO history (admin_id, action, details) VALUES (?, ?, ?)");
     $stmt->bind_param("iss", $admin_id, $action, $details);

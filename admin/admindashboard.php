@@ -17,6 +17,12 @@
     $data = $admin->getTenantCountByApartment();
     print_r($data);
 
+    echo "<br><br>";
+    
+    $incomedata = $admin->getMonthlyIncome();
+    print_r($incomedata);
+
+    $userRolesData = $admin->getUserRolePercentage();
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -117,6 +123,7 @@
                                 <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <canvas id="incomeChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -125,6 +132,7 @@
                                 <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <canvas id="roleChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -137,6 +145,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var chartData = <?php echo $data; ?>;
@@ -169,6 +179,95 @@
             }
         });
     </script>
+
+    <script>
+        var ctx = document.getElementById('incomeChart').getContext('2d');
+        var chartData = <?php echo $incomedata; ?>;
+
+        var labels = chartData.map(function(e) {
+            return e.month;
+        });
+        var data = chartData.map(function(e) {
+            return e.total_income;
+        });
+
+        var incomeChart = new Chart(ctx, {
+            type: 'line', // You can change this to 'bar' if you prefer bar charts
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Monthly Income',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById('roleChart').getContext('2d');
+        var chartData = <?php echo $userRolesData; ?>;
+
+        var labels = chartData.map(function(e) {
+            return e.role === 'admin' ? 'Admin' : 'User';
+        });
+        var data = chartData.map(function(e) {
+            return e.count;
+        });
+        var percentages = chartData.map(function(e) {
+            return e.percentage + '%';
+        });
+
+        var roleChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Role Distribution',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)', // Blue for Admin
+                        'rgba(255, 99, 132, 0.2)'  // Red for User
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        color: '#000000',
+                        formatter: function(value, context) {
+                            return context.chart.data.labels[context.dataIndex] + '\n' + percentages[context.dataIndex];
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    </script>
+
 
 
     <?php include 'includes/footer.php'; ?>
