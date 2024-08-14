@@ -14,51 +14,52 @@
         exit();
     }
 
-    // Check if the form is submitted for adding a new category
-    if(isset($_POST['add_category'])) {
-        // Get the category data from the form
-        $categoryname = htmlspecialchars($_POST['categoryname']);
-        // Call the addCategory method to add the new category
-        $added = $admin->addCategory($categoryname);
+    if(isset($_POST['add_expenses'])) {
+        // Get the expenses data from the form
+        $expensesname = htmlspecialchars($_POST['expensesname']);
+        $infodata = htmlspecialchars($_POST['expensesinfo']);
+        // Call the addExpenses method to add the new expenses
+        $added = $admin->addExpenses($expensesname, $infodata);
         if($added) {
-            // Category added successfully, you can display a success message here if needed
-            // echo "Category added successfully.";
-            header("Location: admincategories.php?category_added=1");
+            // Expenses added successfully, you can display a success message here if needed
+            // echo "Expenses added successfully.";
+            header("Location: adminexpenses.php?expenses_added=1");
             exit();
         } else {
-            // Error occurred while adding category, display an error message or handle as needed
-            echo "Error occurred while adding Category.";
+            // Error occurred while adding expenses, display an error message or handle as needed
+            echo "Error occurred while adding Expenses.";
         }
     }
 
-    if(isset($_POST['edit_category'])) {
-        $categoryname = htmlspecialchars($_POST['categoryname']);
-        $categoryid = $_POST['categoryid'];
-        $updated = $admin->updateCategory($categoryid, $categoryname);
+    if(isset($_POST['edit_expenses'])) {
+        $expensesname = htmlspecialchars($_POST['expensesname']);
+        $expensesid = $_POST['expensesid'];
+        $expensesinfo = htmlspecialchars($_POST['expensesinfo']);
+        $updated = $admin->updateExpenses($expensesname, $expensesinfo, $expensesid);
         if($updated) {
-            header("Location: admincategories.php");
+            header("Location: adminexpenses.php");
             exit();
         } else {
-            echo "Error occurred while updating user.";
+            echo "Error occurred while updating expenses.";
         }
     }
 
-    // Check if the form is submitted for deleting a category
-    if(isset($_POST['delete_category'])) {
-        // Get the category ID to be deleted
-        $categoryid = $_POST['categoryid'];
-        // Call the deleteCategory method to delete the category
-        $deleted = $admin->deleteCategory($categoryid);
+    // Check if the form is submitted for deleting an expense
+    if(isset($_POST['delete_expenses'])) {
+        // Get the expense ID to be deleted
+        $expensesid = $_POST['expensesid'];
+        // Call the deleteExpenses method to delete the expense
+        $deleted = $admin->deleteExpenses($expensesid);
         if($deleted) {
-            // Category deleted successfully, you can display a success message here if needed
-            header("Location: admincategories.php?category_deleted=1");
+            // Expense deleted successfully, you can display a success message here if needed
+            header("Location: adminexpenses.php?expenses_deleted=1");
         } else {
-            // Error occurred while deleting category, display an error message or handle as needed
-            echo "Error occurred while deleting category.";
+            // Error occurred while deleting expense, display an error message or handle as needed
+            echo "Error occurred while deleting expense.";
         }
     }
-    
-    $sql = "SELECT * FROM categories";
+
+    $sql = "SELECT * FROM expenses";
     $result = $admin->conn->query($sql);
 
     // Set the title for this page
@@ -72,7 +73,7 @@
                 <nav class="navbar navbar-expand navbar-dark sidebar">
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav d-flex flex-column">
-                            <a class="nav-link" href="admindashboard.php">
+                            <a class="nav-link" aria-current="page" href="admindashboard.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
                                     <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/>
                                 </svg>
@@ -91,7 +92,7 @@
                                 </svg>
                                 <p>Apartments</p>
                             </a>
-                            <a class="nav-link active" aria-current="page" href="admincategories.php">
+                            <a class="nav-link" href="admincategories.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
                                 </svg>
@@ -116,7 +117,7 @@
                                 </svg>
                                 <p>Papers</p>
                             </a>
-                            <a class="nav-link" href="adminexpenses.php">
+                            <a class="nav-link active" href="adminexpenses.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-wallet-fill" viewBox="0 0 16 16">
                                     <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2h6a.5.5 0 0 1 .5.5c0 .253.08.644.306.958.207.288.557.542 1.194.542s.987-.254 1.194-.542C9.42 6.644 9.5 6.253 9.5 6a.5.5 0 0 1 .5-.5h6v-2A1.5 1.5 0 0 0 14.5 2z"/>
                                     <path d="M16 6.5h-5.551a2.7 2.7 0 0 1-.443 1.042C9.613 8.088 8.963 8.5 8 8.5s-1.613-.412-2.006-.958A2.7 2.7 0 0 1 5.551 6.5H0v6A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5z"/>
@@ -154,7 +155,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_category"><i class="fa fa-plus"></i> New Category</button>
+                            <button class="btn btn-primary float-end" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -162,7 +163,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Apartment Type</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Info</th>
+                                    <th scope="col">Date</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -174,102 +177,115 @@
                                         echo "<tr>";
                                         echo "<th scope='row'>" . $row['id'] . "</th>";
                                         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['info']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a delete button for each record
-                                        echo "<form method='POST' action='admincategories.php' class='float-xl-end align-items-center'>";
-                                        echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_category' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<form method='POST' action='adminexpenses.php' class='float-xl-end align-items-center'>";
+                                        echo "<input type='hidden' name='expensesid' value='" . $row['id'] . "'>";
+                                        echo "<button type='submit' name='delete_expenses' class='btn btn-danger' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
-                                        echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-category-btn float-xl-start' data-id='" . $row['id'] . "' data-categoryname='" . htmlspecialchars($row['name']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<input type='hidden' name='expensesid' value='" . $row['id'] . "'>";
+                                        echo "<button type='button' class='btn btn-primary update-expenses-btn float-xl-start' data-id='" . $row['id'] . "' data-expensesname='" . htmlspecialchars($row['name']) . "'data-expensesinfo='" . htmlspecialchars($row['info']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='4'>No categories found</td></tr>";
+                                    echo "<tr><td colspan='4'>No Expenses found</td></tr>";
                                 }
                                 $admin->conn->close();
                                 ?>
                             </tbody>
                         </table>
-                    </div>
+                    </div>   
                 </div>
-                <!-- New Category Modal -->
-                <div class="modal fade" id="newCategoryModal" tabindex="-1" aria-labelledby="newCategoryModalLabel" aria-hidden="true">
+                <!-- New Expenses Modal -->
+                <div class="modal fade" id="newExpensesModal" tabindex="-1" aria-labelledby="newExpensesModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="newcategoryModalLabel">New Category</h5>
+                            <h5 class="modal-title" id="newexpensesModalLabel">New Expenses</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="newCategoryForm" method="POST" action="admincategories.php">
+                            <form id="newExpensesForm" method="POST" action="adminexpenses.php">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="username" name="categoryname" required>
+                                <label for="username" class="form-label">Expense Name</label>
+                                <input type="text" class="form-control" id="username" name="expensesname" required>
                             </div>
-                            <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Expense Info</label>
+                                <input type="text" class="form-control" id="username" name="expensesinfo" required>
+                            </div>
+                            <button type="submit" name="add_expenses" class="btn btn-primary">Add Expenses</button>
                             </form>
                         </div>
                         </div>
                     </div>
                 </div>
-                <!-- Update Category Modal -->
-                <div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="updateCategoryModalLabel" aria-hidden="true">
+                <!-- Update Expenses Modal -->
+                <div class="modal fade" id="updateExpensesModal" tabindex="-1" aria-labelledby="updateExpensesModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="updateCategoryModalLabel">Update Category</h5>
+                                <h5 class="modal-title" id="updateExpensesModalLabel">Update Expenses</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form id="updateCategoryForm" method="POST" action="admincategories.php">
-                                    <input type="hidden" id="updateCategoryId" name="categoryid">
+                                <form id="updateExpensesForm" method="POST" action="adminexpenses.php">
+                                    <input type="hidden" id="updateExpensesId" name="expensesid">
                                     <div class="mb-3">
-                                        <label for="updateCategoryname" class="form-label">Category Name</label>
-                                        <input type="text" class="form-control" id="updateCategoryname" name="categoryname" required>
+                                        <label for="updateExpensesname" class="form-label">Expenses Name</label>
+                                        <input type="text" class="form-control" id="updateExpensesname" name="expensesname" required>
                                     </div>
-                                    <button type="submit" name="edit_category" class="btn btn-primary">Update Category</button>
+                                    <div class="mb-3">
+                                        <label for="updateExpensesinfo" class="form-label">Expenses Info</label>
+                                        <input type="text" class="form-control" id="updateExpensesinfo" name="expensesinfo" required>
+                                    </div>
+                                    <button type="submit" name="edit_expenses" class="btn btn-primary">Update Expenses</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 <script>
-                    document.getElementById('new_category').addEventListener('click', function () {
-                        var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
+                    document.getElementById('new_expenses').addEventListener('click', function () {
+                        var newExpensesModal = new bootstrap.Modal(document.getElementById('newExpensesModal'), {
                             keyboard: false
                         });
-                        newCategoryModal.show();
+                        newExpensesModal.show();
                     });
                 </script>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        var updateButtons = document.querySelectorAll('.update-category-btn');
+                        var updateButtons = document.querySelectorAll('.update-expenses-btn');
                         updateButtons.forEach(function (button) {
                             button.addEventListener('click', function () {
                                 var userId = button.getAttribute('data-id');
-                                var username = button.getAttribute('data-categoryname');
+                                var username = button.getAttribute('data-expensesname');
+                                var userinfo = button.getAttribute('data-expensesinfo');
                                 
                                 // Fill the modal with the user's current data
-                                document.getElementById('updateCategoryId').value = userId;
-                                document.getElementById('updateCategoryname').value = username;
+                                document.getElementById('updateExpensesId').value = userId;
+                                document.getElementById('updateExpensesname').value = username;
+                                document.getElementById('updateExpensesinfo').value = userinfo;
                                 
-                                var updateCategoryModal = new bootstrap.Modal(document.getElementById('updateCategoryModal'), {
+                                var updateExpensesModal = new bootstrap.Modal(document.getElementById('updateExpensesModal'), {
                                     keyboard: false
                                 });
-                                updateCategoryModal.show();
+                                updateExpensesModal.show();
                             });
                         });
                     });
                 </script>
+                             
                 <p>Home</p>
             </div>
         </div>

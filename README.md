@@ -73,3 +73,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 8/12/24 - History Functionality <br>
 - Completion of History for administrator actions <br>
+
+8/12/24 - Added Expenses Page <br>
+- Created expenses table for phpMyAdmin (MYSQL) <br>
+- Completed, Add, Update and Delete for Expenses <br>

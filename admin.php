@@ -1015,6 +1015,108 @@ Class Admin {
   }
 
 
+  public function addExpenses($expensesname, $infodata) {
+    $sql = "INSERT INTO expenses (name, info) VALUES (?, ?)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ss", $expensesname, $infodata);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      $newExpensesId = $stmt->insert_id;
+
+      $retrievesql = "SELECT * FROM expenses WHERE id = ?";
+      $retrievestmt = $this->conn->prepare($retrievesql);
+      $retrievestmt->bind_param("i", $newExpensesId);
+      $retrievestmt->execute();
+      $retrieveResult = $retrievestmt->get_result();
+
+      // Fetch the expenses record as an associative array
+      $expensesRecord = $retrieveResult->fetch_assoc();
+      $added_expensesname = $expensesRecord['name'];
+      $added_infodata = $expensesRecord['info'];
+
+      $logMessage = 
+      'Added Expenses, ID: ' . $newExpensesId . '<br>' .
+      'Expenses Name, : ' . $added_expensesname . '<br>' .
+      'Expenses Info, : ' . $added_infodata . '<br>';
+
+      $this->History($this->session_id, 'Add', $logMessage);
+
+      return true; // Insertion successful
+    } else {
+      return false; // Insertion failed
+    }
+  }
+
+  public function updateExpenses($expensesname, $expensesinfo, $expensesid) {
+    $oldvalsql = "SELECT * FROM expenses WHERE id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql);
+    $oldvalstmt->bind_param("i", $expensesid);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_expensesname = $oldvalRow['name'];
+    $oldval_expensesinfo = $oldvalRow['info'];
+
+    $changes = [];
+
+    if ($oldval_expensesname !== $expensesname) {
+      $changes[] = 'Expense Name: ' . $oldval_expensesname . ' -> ' . $expensesname;
+    }
+
+    if ($oldval_expensesinfo !== $expensesinfo) {
+      $changes[] = 'Expenses Info: ' . $oldval_expensesinfo . ' -> ' . $expensesinfo;
+    }
+
+    $sql = "UPDATE expenses SET name = ?, info = ? WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ssi", $expensesname, $expensesinfo, $expensesid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      // Combine all changes into a single log message
+      $logMessage = 'Updated Expense, ID: ' . $expensesid . '<br>' . implode('<br>', $changes);
+
+      // Log the action
+      $this->History($this->session_id, 'Update', $logMessage);
+
+      return true; // Update successful
+    } else if ($stmt->error) {
+      return false; // Update failed
+    } else {
+      return true;
+    }
+  }
+
+  public function deleteExpenses($expensesid) {
+    $retrievesql = "SELECT * FROM expenses WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $expensesid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    // Fetch the expenses record as an associative array
+    $expensesRecord = $retrieveResult->fetch_assoc();
+    $deleted_expenses = $expensesRecord['name'];
+    $deleted_expensesinfo = $expensesRecord['info'];
+
+    $sql = "DELETE FROM expenses WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $expensesid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      
+      $logMessage = 
+      'Deleted Expense, ID: ' . $expensesid . '<br>' .
+      'Expense Name : ' . $deleted_expenses . '<br>' .
+      'Expense Info : ' . $deleted_expensesinfo . '<br>';
+
+      $this->History($this->session_id, 'Delete', $logMessage);
+
+      return true; // Deletion successful
+    } else {
+      return false; // Deletion failed
+    }
+  }
 
 
 
