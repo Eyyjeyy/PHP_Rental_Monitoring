@@ -240,9 +240,41 @@
   $pageTitle = 'Payments Page'; 
 ?>
 
-<?php include '../regular/includes/header_user.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<nav class="navbar navbar-expand-lg navbar-light flex-column py-0" style="background-color: #527853;">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <?php if ($pageTitle == 'Index Page' || $pageTitle == 'UserChat Page'): ?>
+        <link rel="stylesheet" href="asset/user.css">
+    <?php else: ?>
+        <link rel="stylesheet" href="../asset/user.css">
+    <?php endif; ?>
+    <!-- <link rel="stylesheet" href= "../asset/user.css"> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <title><?php echo isset($pageTitle) ? $pageTitle : 'Default Title'; ?></title>
+  </head>
+  <body>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+
+    <nav class="navbar navbar-expand-lg navbar-light flex-column py-0" id="navbar" style="background-color: #3A583C;">
     <!-- <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img src="../asset/Renttrack pro no word.png" class="img-fluid" alt="..." width="120" height="96">
@@ -252,18 +284,14 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <a class="navbar-brand py-0" href="#">
+            <img src="../asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
+        </a>
         <div class="collapse navbar-collapse justify-content-center align-self-stretch" id="navbarSupportedContent">
-            <a class="navbar-brand py-0" href="#">
-                <img src="../asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
-            </a>
+            
             <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left: 50%;">
                 <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
-                        <p class="mb-0 text-center">Contact</p>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" href="payments.php">
+                    <a class="nav-link h-100 d-flex align-items-center" href="../users/payments.php">
                         <p class="mb-0">Payment</p>
                     </a>
                 </li>
@@ -287,6 +315,14 @@
                     </svg>
                   </a>
                 </li>
+                <li class="nav-item mx-1">
+                  <a class="nav-link h-100 d-flex align-items-center" href="../logout.php">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                    </svg>
+                  </a>
+                </li>
                 <li class="d-none nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Dropdown
@@ -305,6 +341,7 @@
         </div>
     </div>
 </nav>
+
 
 <div class="col main content px-lg-5">
     <div class="card mt-5 mx-auto" style="max-width: 900px;">

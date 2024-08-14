@@ -19,125 +19,97 @@
 
 <?php include 'regular/includes/header_user.php'; ?>
 
-<nav class="navbar navbar-expand-lg navbar-light flex-column py-0" id="navbar" style="background-color: #527853;">
-    <!-- <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="../asset/Renttrack pro no word.png" class="img-fluid" alt="..." width="120" height="96">
-        </a>
-    </div> -->
-    <div class="container-fluid mb-3 mt-3">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand py-0" href="#">
-            <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
-        </a>
-        <div class="collapse navbar-collapse justify-content-center align-self-stretch" id="navbarSupportedContent">
-            
-            <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left: 50%;">
-                <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
-                        <p class="mb-0 text-center">Contact</p>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" href="users/payments.php">
-                        <p class="mb-0">Payment</p>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="#">
-                    <p class="mb-0">Info</p>
-                  </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="profile_user.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                    </svg>
-                  </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="chat_user.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
-                        <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                    </svg>
-                  </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="logout.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
-                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
-                    </svg>
-                  </a>
-                </li>
-                <li class="d-none nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="d-none nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
+
+
+<div class="container-fluid p-0">
+    <div class="row mx-auto w-65 d-flex align-items-center m-0 p-0">
+        <div class="row mt-5 m-0 p-0">
+            <div class="col-12 col-lg-6 d-flex flex-column justify-content-center m-0 p-0">
+                <p class="fs-1 fw-bolder inter-google text-center mb-lg-5 m-0 p-0">Welcome to RentTrack Pro</p>
+                <p class="fs-5 inter-google mx-sm-4 text-center d-lg-none m-0 p-0">
+                    RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
+                    for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
+                    the processing and storage of tenant, payments and house information.
+                </p>
+                <p class="fs-10 inter-google mx-sm-4 text-center w-80 d-none d-lg-block align-self-center m-0 p-0">
+                    RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
+                    for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
+                    the processing and storage of tenant, payments and house information.
+                </p>
+            </div>
+            <div class="col-12 col-lg-6 m-0 p-0">
+                <div class="row m-0 h-100 justify-content-center p-0">
+                    <div id="carouselExampleControls" class="carousel slide align-self-center m-0 p-0" data-bs-ride="">
+                        <div class="carousel-inner m-0 p-0">
+                            <div class="carousel-item active m-0 p-0">
+                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; width: 100%; height: 300px;" class="mx-auto d-block" alt="...">
+                            </div>
+                            <div class="carousel-item m-0 p-0">
+                                <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
+                            </div>
+                            <div class="carousel-item m-0 p-0">
+                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</nav>
-
-<div class="container-fluid">
-<div style="margin-left: 175px; margin-right: 175px;">
-    <div class="row mt-5">
-        <div class="col-12 col-lg-6 d-flex flex-column justify-content-center">
-            <p class="fs-1 fw-bolder inter-google text-center mb-lg-5">Welcome to RentTrack Pro</p>
-            <p class="fs-5 inter-google mx-sm-4 text-center d-lg-none">
-                RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
-                for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
-                the processing and storage of tenant, payments and house information.
-            </p>
-            <p class="fs-5 inter-google mx-sm-4 text-center w-75 d-none d-lg-block align-self-center">
-                RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
-                for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
-                the processing and storage of tenant, payments and house information.
-            </p>
-        </div>
-        <div class="col-12 col-lg-6">
-            <div class="row m-0 h-100 justify-content-center">
-                <div id="carouselExampleControls" class="carousel slide align-self-center" data-bs-ride="">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
+    <div class="row mx-auto w-65 d-flex align-items-center m-0 p-0">
+        <div class="row mt-5 m-0 p-0">
+         
+            <div class="col-12 col-lg-6 m-0 p-0">
+                <div class="row m-0 h-100 justify-content-center p-0">
+                    <div id="carouselExampleControls" class="carousel slide align-self-center m-0 p-0" data-bs-ride="">
+                        <div class="carousel-inner m-0 p-0">
+                            <div class="carousel-item active m-0 p-0">
+                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; width: 100%; height: 300px;" class="mx-auto d-block" alt="...">
+                            </div>
+                            <div class="carousel-item m-0 p-0">
+                                <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
+                            </div>
+                            <div class="carousel-item m-0 p-0">
+                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
+                            </div>
                         </div>
-                        <div class="carousel-item">
-                            <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; width: 100%; height: 600px;" class="mx-auto d-block" alt="...">
-                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex flex-column justify-content-center m-0 p-0">
+                <p class="fs-1 fw-bolder inter-google text-center mb-lg-5 m-0 p-0">Welcome to RentTrack Pro</p>
+                <p class="fs-5 inter-google mx-sm-4 text-center d-lg-none m-0 p-0">
+                    RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
+                    for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
+                    the processing and storage of tenant, payments and house information.
+                </p>
+                <p class="fs-10 inter-google mx-sm-4 text-center w-80 d-none d-lg-block align-self-center m-0 p-0">
+                    RentTrack Pro is a rental monitoring system, designed to cater to the needs of the landlord/s
+                    for a system for managing house rentals efficiently, leveraging the power of web technologies to streamline
+                    the processing and storage of tenant, payments and house information.
+                </p>
             </div>
         </div>
     </div>
 </div>
-</div>
 
-<div>
     <p>Index.php</p>
     <?php
     if ($admin->isLoggedIn()) {

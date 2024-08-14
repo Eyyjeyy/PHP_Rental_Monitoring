@@ -8,7 +8,6 @@ a p {
     z-index: 1000;
 }
 
-
 .nav-link p, .card-header {
     color: #fff;
 }
@@ -24,6 +23,24 @@ ul.navbar-nav, .collapse.navbar-collapse {
 .nav-item {
     min-height: 100%;
 }
+
+#navbarbar {
+    display: flex!important; /* Enables flexbox layout */
+    align-items: center!important; /* Vertically centers items */
+    justify-content: center!important; /* Horizontally centers items */
+
+    /* Add additional styling as needed */
+}
+
+
+#navbarSupportedContent {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+}
+
 
 thead {
     background-color: #F9E8D9;
@@ -54,6 +71,10 @@ thead {
     border-color: #527853;
 }
 
+#form-container {
+    background-color: #FDF4EF;
+}
+
 .message {
     margin-bottom: 15px;
     padding: 10px;
@@ -70,7 +91,7 @@ thead {
 
 /* Styles for right-aligned (sent) messages */
 .message-right {
-    background-color: #66b266;
+    background-color: #8DA58D;
     font-size: 13px;
     float: right;
     align-self: flex-end;
@@ -176,7 +197,7 @@ textarea#message-input[name="message"] {
 }
 
 #list ul li a p:hover {
-    background-color: #f0f0f0;
+    background-color: #F7B787;
 }
 
 #viewchat {
@@ -194,8 +215,9 @@ textarea#message-input[name="message"] {
 }
 
 #coluserchat {
-   width: 75%;
-   margin-bottom: 100px!important;
+   width: 100%;
+   margin-bottom: 40px!important;
+   margin-top: 100px!important;
 }
 
 #btnzone {
@@ -233,6 +255,9 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
 }
 
 
+.w-65 {
+    width: 60% !important;
+}
 /* Media Queries for responsiveness */
 
 
@@ -278,5 +303,9 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     #coluserchat {
         width: 95%;
      }
+
+     #form-container {
+        background-color: #FDF4EF;
+    }
 
 }

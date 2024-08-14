@@ -177,89 +177,16 @@
 
 <?php include 'regular/includes/header_user.php'; ?>
 
-<nav class="navbar navbar-expand-lg navbar-light flex-column py-0" id="navbar" style="background-color: #527853;">
-    <!-- <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="../asset/Renttrack pro no word.png" class="img-fluid" alt="..." width="120" height="96">
-        </a>
-    </div> -->
-    <div class="container-fluid mb-3 mt-3">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center align-self-stretch" id="navbarSupportedContent">
-            <a class="navbar-brand py-0" href="#">
-                <img src="asset/Renttrack pro no word_2.png" class="img-fluid" alt="..." style="height: 50px;">
-            </a>
-            <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left: 50%;">
-                <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" aria-current="page" href="#">
-                        <p class="mb-0 text-center">Contact</p>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                    <a class="nav-link h-100 d-flex align-items-center" href="users/payments.php">
-                        <p class="mb-0">Payment</p>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="#">
-                    <p class="mb-0">Info</p>
-                  </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="profile_user.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                    </svg>
-                  </a>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="chat_user.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
-                        <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                    </svg>
-                  </a>
-                </li>
-                </li>
-                <li class="nav-item mx-1">
-                  <a class="nav-link h-100 d-flex align-items-center" href="logout.php">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
-                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
-                    </svg>
-                  </a>
-                <li class="d-none nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="d-none nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-
-
-
-<div class="container-fluid">
-    <div class="row mt-5 mx-auto" id="coluserchat" style="height: 60vh;">
+<div class="container-fluid" style="padding: 0;">
+    <div class="row mx-auto w-65 justify-content-center">
+    <div class="row mt-5 mx-0" id="coluserchat" style="height: 60vh;">
         <div class="col-12 col-md-4 pe-0" id="usercol">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #EE7214;">
                     <h5 class="text-center mb-0">Users</h5>
                 </div>
-                <div class="card-body bg-white" id="list" style="overflow-y: auto;">
+                <div class="card-body bg-#F9E8D9" id="list" style="overflow-y: auto;">
                     <ul class="ps-0" style="list-style: none;">
                         <?php foreach ($users as $user): ?>
                             <li>
@@ -279,7 +206,7 @@
                 <div class="card-header">
                     <h5 class="text-center mb-0">Chat</h5>
                 </div>
-                <div class="card-body bg-white h-100" style="overflow-y: auto;">
+                <div class="card-body bg-#F9E8D9 h-100" style="overflow-y: auto;">
                     <div class="messages" style="max-height: 100%;">
                         <?php
                             if ($chat_user_id) {
@@ -520,3 +447,8 @@
     });
 </script> -->
 
+
+
+
+
+<?php include 'regular/includes/footer.php'; ?>
