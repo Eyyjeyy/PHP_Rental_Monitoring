@@ -3,11 +3,11 @@ This repository contains the source code for a Rental Monitoring System, designe
 
 The project is built using PHP, MySQL for database management, and incorporates essential security measures for data integrity and user privacy.
 
-🖥 <strong>Languages:</strong> PHP, Javascript, HTML, CSS 🖥 <br>
-📚 <strong>Libraries:</strong> Chart.js 📚 <br>
-🖼 <strong>Frameworks:</strong> Bootstrap 5 🖼 <br>
-🔨 <strong>Tools:</strong> phpMyAdmin 🔨 <br>
-👨‍💻 <strong>Data Formats:</strong> JSON 👨‍💻 <br>
+🖥 <strong>Languages:</strong> PHP, Javascript, HTML, CSS <br>
+📚 <strong>Libraries:</strong> Chart.js <br>
+🖼 <strong>Frameworks:</strong> Bootstrap 5 <br>
+🔨 <strong>Tools:</strong> phpMyAdmin <br>
+👨‍💻 <strong>Data Formats:</strong> JSON <br>
 
 
 
