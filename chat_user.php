@@ -179,7 +179,7 @@
 
 
 <div class="container-fluid" style="padding: 0;">
-    <div class="row mx-auto w-65 justify-content-center">
+    <div class="row mx-auto w-65 justify-content-center" id="chatwhole">
     <div class="row mt-5 mx-0" id="coluserchat" style="height: 60vh;">
         <div class="col-12 col-md-4 pe-0" id="usercol">
             <div class="card h-100">

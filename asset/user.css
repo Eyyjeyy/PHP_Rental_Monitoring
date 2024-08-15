@@ -6,6 +6,8 @@ a p {
     position: sticky;
     top:0; left:0; right:0;
     z-index: 1000;
+ 
+
 }
 
 .nav-link p, .card-header {
@@ -28,17 +30,17 @@ ul.navbar-nav, .collapse.navbar-collapse {
     display: flex!important; /* Enables flexbox layout */
     align-items: center!important; /* Vertically centers items */
     justify-content: center!important; /* Horizontally centers items */
+    padding-top: 25px;
+    padding-bottom: 25px;
 
     /* Add additional styling as needed */
 }
 
 
 #navbarSupportedContent {
-    margin-top: 25px;
-    margin-bottom: 25px;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    display: flex;
-    justify-content: flex-end; /* Align items to the right */
+    justify-content: end;
+
 }
 
 
@@ -216,8 +218,8 @@ textarea#message-input[name="message"] {
 
 #coluserchat {
    width: 100%;
-   margin-bottom: 40px!important;
-   margin-top: 100px!important;
+   margin-bottom: 100px!important;
+   margin-top: 50px!important;
 }
 
 #btnzone {
@@ -256,10 +258,92 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
 
 
 .w-65 {
-    width: 60% !important;
+    max-width: 60%;
+    min-width: 950px!important;
 }
 /* Media Queries for responsiveness */
 
+#menu-btn{
+    display: none;
+ }
+
+ #icontext {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+ }
+
+ .navbar-toggler {
+    max-width: 50px;
+    max-height: 50px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    justify-content: end;
+ }
+
+ #lastname {
+    width: 50%;
+ }
+
+ #paymentwhole {
+    margin-top: 50px;
+    margin-bottom: 100px;
+ }
+
+ @media (max-width: 990px) {
+
+    .w-65 {
+        min-width: 100% !important;
+    }
+
+    #lastname {
+        width: 100%;
+     }
+
+    #navnav {
+        display: block;
+        flex-direction: column;
+        align-items: end; /* Centers items horizontally within the container */
+        justify-content: end; /* Centers items vertically within the container */
+       
+     }
+
+     /* Ensure dropdown content is hidden by default */
+.dropdown-menu {
+    display: none; /* Hide dropdown menu initially */
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    position: absolute;
+    top: 100%; /* Positions the dropdown menu below the navbar */
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 100%;
+}
+
+.navbar-toggler[aria-expanded="true"] + .dropdown-menu {
+    display: block;
+    opacity: 1;
+    max-height: 300px; /* Adjust based on content */
+}
+
+/* Optional: Style the dropdown items */
+.dropdown-item {
+    padding: 10px 20px;
+    color: #333;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+ }
 
 /* Styles for screens smaller than 600px */
 @media (max-width: 768px) {
@@ -281,7 +365,7 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     }
     
     #chatcol {
-        height: 650px;
+        height: 500px;
     }
 
     #btnzone {
@@ -304,8 +388,18 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
         width: 95%;
      }
 
+     #chatwhole {
+        margin-bottom: 300px;
+     }
+
      #form-container {
         background-color: #FDF4EF;
+    }
+
+     .w-65 {
+        min-width: 100% !important;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 
 }

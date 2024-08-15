@@ -19,7 +19,7 @@
 
 <?php include 'regular/includes/header_user.php'; ?>
 
-<div class="container-fluid" style="margin-top: 100px; margin-bottom: 125px;">
+<div class="container-fluid" style="margin-top: 50px; margin-bottom: 130px;">
     
     <div class="row mt-5 mb-5">
     <div class="row mx-auto w-65 d-flex align-items-center m-0 p-0">
@@ -42,7 +42,7 @@
                             </label>
                             <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
                         </div>
-                        <div class="col-6">
+                        <div class="col-12" id="lastname">
                             <label for="exampleFormControlInput1" class="form-label">
                                 <p class="fs-5 fw-bold mb-0">Last Name</p>
                             </label>
