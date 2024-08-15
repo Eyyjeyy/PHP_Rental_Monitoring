@@ -19,6 +19,64 @@
 
 
     <title><?php echo isset($pageTitle) ? $pageTitle : 'Default Title'; ?></title>
+    <?php
+      if ($page == 'adminexpenses') {
+        echo 
+        '<style>
+          .notifs {
+            right: 40%;
+          }
+          @media (max-width: 748px) {
+            a.nav-link {
+              justify-content: start;
+            }
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 721px) {
+            a.nav-link {
+              justify-content: center;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
+      }
+    ?>
   </head>
   <body>
 

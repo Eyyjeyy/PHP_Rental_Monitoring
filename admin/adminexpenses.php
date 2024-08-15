@@ -80,6 +80,7 @@
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
+    $page = "adminexpenses";
 ?>
 
     <?php include 'includes/header.php'; ?>
@@ -119,12 +120,20 @@
                                     <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0"/>
                                 </svg>
                                 <p>Tenants</p>
+                                <?php
+                                    $users_notTenants = $admin->countUsersNotInTenants();
+                                    echo "<p class='notifs fw-bold position-absolute' style='color: #F28543;'>" . $users_notTenants . "</p>";
+                                ?>
                             </a>
                             <a class="nav-link" href="adminpayments.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-bank2" viewBox="0 0 16 16">
                                     <path d="M8.277.084a.5.5 0 0 0-.554 0l-7.5 5A.5.5 0 0 0 .5 6h1.875v7H1.5a.5.5 0 0 0 0 1h13a.5.5 0 1 0 0-1h-.875V6H15.5a.5.5 0 0 0 .277-.916zM12.375 6v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zM8 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2M.5 15a.5.5 0 0 0 0 1h15a.5.5 0 1 0 0-1z"/>
                                 </svg>
                                 <p>Payments</p>
+                                <?php
+                                    $unapproved_payments = $admin->countPendingApprovals();
+                                    echo "<p class='notifs fw-bold position-absolute' style='color: #F28543;'>" . $unapproved_payments . "</p>";
+                                ?>
                             </a>
                             <a class="nav-link" href="adminpapers.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-clipboard2-fill" viewBox="0 0 16 16">

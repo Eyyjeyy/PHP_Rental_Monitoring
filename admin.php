@@ -1323,13 +1323,45 @@ Class Admin {
     $data = [];
 
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
+      while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
     }
 
     return json_encode($data);
-}
+  }
+
+  public function countPendingApprovals() {
+    // SQL query to count records where the approval is not true or false
+    $sql = "SELECT COUNT(*) as count FROM payments WHERE approval NOT IN ('true', 'false')";
+    
+    // Execute the query
+    $result = $this->conn->query($sql);
+    
+    // Fetch the result
+    if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      return $row['count'];
+    } else {
+      return 0; // No records found
+    }
+  }
+
+  function countUsersNotInTenants() {
+    // SQL query to count users whose id is not in the tenants table
+    $sql = "SELECT COUNT(*) as count FROM users WHERE id NOT IN (SELECT users_id FROM tenants)";
+    
+    // Execute the query
+    $result = $this->conn->query($sql);
+    
+    // Fetch the result
+    if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      return $row['count'];
+    } else {
+      return 0; // No records found
+    }
+  }
 
 
 
