@@ -21,6 +21,8 @@
             FROM history
             LEFT JOIN users ON history.admin_id = users.id;";
     $result = $admin->conn->query($sql);
+
+    $page = "adminhistory";
 ?>
 
     <?php include 'includes/header.php'; ?>
@@ -60,6 +62,10 @@
                                     <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0"/>
                                 </svg>
                                 <p>Tenants</p>
+                                <?php
+                                    $users_notTenants = $admin->countUsersNotInTenants();
+                                    echo "<p class='notifs fw-bold position-absolute' style='color: #F28543;'>" . $users_notTenants . "</p>";
+                                ?>
                             </a>
                             <a class="nav-link" href="adminpayments.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: auto; margin-bottom: auto;" width="24" height="24" fill="currentColor" class="bi bi-bank2" viewBox="0 0 16 16">
@@ -68,7 +74,7 @@
                                 <p>Payments</p>
                                 <?php
                                     $unapproved_payments = $admin->countPendingApprovals();
-                                    echo "<p class= fw-bold' style='color: #F28543;'>" . $unapproved_payments . "</p>";
+                                    echo "<p class='notifs fw-bold position-absolute' style='color: #F28543;'>" . $unapproved_payments . "</p>";
                                 ?>
                             </a>
                             <a class="nav-link" href="adminpapers.php">

@@ -75,6 +75,317 @@
             }
           }
         </style>';
+      } else if ($page == 'admindashboard') {
+        echo 
+        '<style>
+          .notifs {
+            right: 40%;
+          }
+          @media (max-width: 1198px) {
+            div.sidebar {
+              padding: 0;
+              min-width: 250px !important;
+              max-width: none;
+              width: 100%;
+              min-height: 20vh;
+            }
+          }
+          @media (max-width: 748px) {
+            a.nav-link {
+              justify-content: center;
+            }
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 737px) {
+            a.nav-link {
+              justify-content: center;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
+      } else if ($page == 'admincategories') {
+        echo 
+        '<style>
+          .notifs {
+            right: 40%;
+          }
+          @media (max-width: 748px) {
+            div.sidebar {
+              min-height: 100vh;
+            }
+            a.nav-link {
+              justify-content: start;
+            }
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 737px) {
+            
+          }
+          @media (max-width: 555px) {
+            div.sidebar {
+              min-height: 20vh;
+            }
+            a.nav-link {
+              justify-content: center;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
+      } else if ($page == 'adminhouses') {
+        echo 
+        '<style>
+          .notifs {
+            right: 40%;
+          }
+          @media (max-width: 1074px) {
+            div.sidebar {
+              padding: 0;
+              min-width: 250px !important;
+              max-width: none;
+              width: 100%;
+              min-height: 20vh;
+            }
+            .nav-link {
+              justify-content: center;
+            }
+            a p {
+              margin-left: 0px;
+              width: 90px;
+              padding-left: 10px;
+            }
+            .notifs {
+              right: 30%;
+            }
+          }
+          @media (max-width: 748px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
+      } else if ($page == 'adminhistory') {
+        echo 
+        '<style>
+          .notifs {
+            right: 40%;
+          }
+          @media (max-width: 838px) {
+            div.sidebar {
+              padding: 0;
+              min-width: 250px !important;
+              max-width: none;
+              width: 100%;
+              min-height: 20vh;
+            }
+            .nav-link {
+              justify-content: center;
+            }
+            a p {
+              margin-left: 0px;
+              width: 90px;
+              padding-left: 10px;
+            }
+          }
+          @media (max-width: 748px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
+      } else if ($page == "adminpapers") {
+        echo 
+        '<style>
+          .notifs {
+            right: 30%;
+          }
+          @media (max-width: 882px) {
+            div.sidebar {
+              padding: 0;
+              min-width: 250px !important;
+              max-width: none;
+              width: 100%;
+              min-height: 20vh;
+            }
+            .nav-link {
+              justify-content: center;
+            }
+            a p {
+              margin-left: 0px;
+              width: 90px;
+              padding-left: 10px;
+            }
+          }
+          @media (max-width: 748px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 737px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 550px) {
+            .notifs {
+              right: 20%;
+            }
+          }
+          @media (max-width: 480px) {
+            .notifs {
+              right: 10%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 380px) {
+            .notifs {
+              right: 2%;
+            }
+            .nav-link {
+            }
+          }
+          @media (max-width: 300px) {
+            .notifs {
+              right: -5%;
+            }
+            .nav-link {
+            }
+          }
+        </style>';
       }
     ?>
   </head>
