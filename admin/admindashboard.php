@@ -27,6 +27,11 @@
     $userRolesData = $admin->getUserRolePercentage();
     print_r($userRolesData);
 
+    echo "<br><br>";
+
+    $incomeexpenses = $admin->getIncomeExpensesData();
+    print_r($incomeexpenses);
+
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
 ?>
@@ -146,6 +151,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-6 py-md-2">
+                            <div class="card" style="width: 100%;">
+                                <img src="..." class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>   
                 </div>
                              
@@ -205,14 +219,16 @@
             type: 'line', // You can change this to 'bar' if you prefer bar charts
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Monthly Income',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: true
-                }]
+                datasets: [
+                    {
+                        label: 'Monthly Income',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    }
+                ]
             },
             options: {
                 scales: {
@@ -242,19 +258,21 @@
             type: 'pie',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Role Distribution',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.2)', // Blue for Admin
-                        'rgba(255, 99, 132, 0.2)'  // Red for User
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: 'Role Distribution',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)', // Blue for Admin
+                            'rgba(255, 99, 132, 0.2)'  // Red for User
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 responsive: true,
@@ -275,6 +293,51 @@
                 }
             },
             plugins: [ChartDataLabels]
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+        var chartData = <?php echo $incomeexpenses; ?>;
+
+        var labels = chartData.map(function(e) {
+            return e.month;
+        });
+        var incomeData = chartData.map(function(e) {
+            return e.total_income;
+        });
+        var expensesData = chartData.map(function(e) {
+            return e.total_expenses;
+        });
+
+        var incomeExpenseChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: incomeData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expenses',
+                        data: expensesData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         });
     </script>
 

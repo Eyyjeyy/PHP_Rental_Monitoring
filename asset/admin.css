@@ -131,7 +131,7 @@ table.table{
 
 .list {
     background-color: #A9B7C0;
-    height: 100%;
+    min-height: 100%;
 }
 
 /* Chat Section Styling */

@@ -3,6 +3,8 @@ This repository contains the source code for a Rental Monitoring System, designe
 
 The project is built using PHP, MySQL for database management, and incorporates essential security measures for data integrity and user privacy.
 
+<strong>Languages:</strong> PHP, Javascript, HTML, CSS <br>
+
 5/09/24 - Project Start <br>
 6/30/24 - Admin Paper Categories - Realtime Data Fetching using SSE <br><br>
 
@@ -77,3 +79,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
 8/12/24 - Added Expenses Page <br>
 - Created expenses table for phpMyAdmin (MYSQL) <br>
 - Completed, Add, Update and Delete for Expenses <br>
+
+8/15/24 - Added Income Expenses Comparison Chart to Dashboard <br>
+- Created function getIncomeExpensesData for retrieval of Data from MYSQL in admin.php <br>

@@ -18,16 +18,24 @@
         // Get the expenses data from the form
         $expensesname = htmlspecialchars($_POST['expensesname']);
         $infodata = htmlspecialchars($_POST['expensesinfo']);
-        // Call the addExpenses method to add the new expenses
-        $added = $admin->addExpenses($expensesname, $infodata);
-        if($added) {
-            // Expenses added successfully, you can display a success message here if needed
-            // echo "Expenses added successfully.";
-            header("Location: adminexpenses.php?expenses_added=1");
+        $expensesamount = htmlspecialchars($_POST['expensesamount']);
+
+        // Validate that the expenses amount is a valid number (integer or float)
+        if (filter_var($expensesamount, FILTER_VALIDATE_FLOAT) === false || !is_numeric($expensesamount)) {
+            $_SESSION['error_message'] = "Should only be numerical characters";
+            header("Location: adminexpenses.php");
             exit();
         } else {
-            // Error occurred while adding expenses, display an error message or handle as needed
-            echo "Error occurred while adding Expenses.";
+            // Call the addExpenses method to add the new expenses
+            $added = $admin->addExpenses($expensesname, $infodata, $expensesamount);
+            if ($added) {
+                // Expenses added successfully
+                header("Location: adminexpenses.php?expenses_added=1");
+                exit();
+            } else {
+                // Error occurred while adding expenses
+                echo "Error occurred while adding Expenses.";
+            }
         }
     }
 
@@ -35,13 +43,21 @@
         $expensesname = htmlspecialchars($_POST['expensesname']);
         $expensesid = $_POST['expensesid'];
         $expensesinfo = htmlspecialchars($_POST['expensesinfo']);
-        $updated = $admin->updateExpenses($expensesname, $expensesinfo, $expensesid);
-        if($updated) {
+        $expensesamount = htmlspecialchars($_POST['expensesamount']);
+
+        if (filter_var($expensesamount, FILTER_VALIDATE_FLOAT) === false || !is_numeric($expensesamount)) {
+            $_SESSION['error_message_update'] = "Should only be numerical characters";
             header("Location: adminexpenses.php");
             exit();
         } else {
-            echo "Error occurred while updating expenses.";
-        }
+            $updated = $admin->updateExpenses($expensesname, $expensesinfo, $expensesid, $expensesamount);
+            if($updated) {
+                header("Location: adminexpenses.php");
+                exit();
+            } else {
+                echo "Error occurred while updating expenses.";
+            }
+        }    
     }
 
     // Check if the form is submitted for deleting an expense
@@ -165,6 +181,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Info</th>
+                                    <th scope="col">Amount</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -178,6 +195,7 @@
                                         echo "<th scope='row'>" . $row['id'] . "</th>";
                                         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['info']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
@@ -191,7 +209,7 @@
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='expensesid' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-expenses-btn float-xl-start' data-id='" . $row['id'] . "' data-expensesname='" . htmlspecialchars($row['name']) . "'data-expensesinfo='" . htmlspecialchars($row['info']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-expenses-btn float-xl-start' data-id='" . $row['id'] . "' data-expensesname='" . htmlspecialchars($row['name']) . "'data-expensesinfo='" . htmlspecialchars($row['info']) . "'data-expensesamount='" . htmlspecialchars($row['amount']) .  "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -215,6 +233,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <?php
+                                if (isset($_SESSION['error_message']) && !empty($_SESSION['error_message'])) {
+                                    echo '<div class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
+                                    // Unset the error message after displaying it
+                                    echo '<script>var newExpensesModal = new bootstrap.Modal(document.getElementById("newExpensesModal"), { keyboard: false });newExpensesModal.show();</script>';
+                                    unset($_SESSION['error_message']);
+                                }
+                            ?>
                             <form id="newExpensesForm" method="POST" action="adminexpenses.php">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Expense Name</label>
@@ -223,6 +249,10 @@
                             <div class="mb-3">
                                 <label for="username" class="form-label">Expense Info</label>
                                 <input type="text" class="form-control" id="username" name="expensesinfo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Expense Amount</label>
+                                <input type="text" class="form-control" id="username" name="expensesamount" required>
                             </div>
                             <button type="submit" name="add_expenses" class="btn btn-primary">Add Expenses</button>
                             </form>
@@ -239,6 +269,14 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+                                <?php
+                                    if (isset($_SESSION['error_message_update']) && !empty($_SESSION['error_message_update'])) {
+                                        echo '<div class="alert alert-danger">' . $_SESSION['error_message_update'] . '</div>';
+                                        // Unset the error message after displaying it
+                                        echo '<script>var updateExpensesModal = new bootstrap.Modal(document.getElementById("updateExpensesModal"), { keyboard: false });updateExpensesModal.show();</script>';
+                                        unset($_SESSION['error_message_update']);
+                                    }
+                                ?>
                                 <form id="updateExpensesForm" method="POST" action="adminexpenses.php">
                                     <input type="hidden" id="updateExpensesId" name="expensesid">
                                     <div class="mb-3">
@@ -248,6 +286,10 @@
                                     <div class="mb-3">
                                         <label for="updateExpensesinfo" class="form-label">Expenses Info</label>
                                         <input type="text" class="form-control" id="updateExpensesinfo" name="expensesinfo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="updateExpensesamount" class="form-label">Expenses Amount</label>
+                                        <input type="text" class="form-control" id="updateExpensesamount" name="expensesamount" required>
                                     </div>
                                     <button type="submit" name="edit_expenses" class="btn btn-primary">Update Expenses</button>
                                 </form>
@@ -271,11 +313,13 @@
                                 var userId = button.getAttribute('data-id');
                                 var username = button.getAttribute('data-expensesname');
                                 var userinfo = button.getAttribute('data-expensesinfo');
+                                var amount = button.getAttribute('data-expensesamount');
                                 
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateExpensesId').value = userId;
                                 document.getElementById('updateExpensesname').value = username;
                                 document.getElementById('updateExpensesinfo').value = userinfo;
+                                document.getElementById('updateExpensesamount').value = amount;
                                 
                                 var updateExpensesModal = new bootstrap.Modal(document.getElementById('updateExpensesModal'), {
                                     keyboard: false

@@ -1015,10 +1015,10 @@ Class Admin {
   }
 
 
-  public function addExpenses($expensesname, $infodata) {
-    $sql = "INSERT INTO expenses (name, info) VALUES (?, ?)";
+  public function addExpenses($expensesname, $infodata, $expensesamount) {
+    $sql = "INSERT INTO expenses (name, info, amount) VALUES (?, ?, ?)";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("ss", $expensesname, $infodata);
+    $stmt->bind_param("ssd", $expensesname, $infodata, $expensesamount);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
       $newExpensesId = $stmt->insert_id;
@@ -1033,11 +1033,13 @@ Class Admin {
       $expensesRecord = $retrieveResult->fetch_assoc();
       $added_expensesname = $expensesRecord['name'];
       $added_infodata = $expensesRecord['info'];
+      $added_amount = $expensesRecord['amount'];
 
       $logMessage = 
       'Added Expenses, ID: ' . $newExpensesId . '<br>' .
-      'Expenses Name, : ' . $added_expensesname . '<br>' .
-      'Expenses Info, : ' . $added_infodata . '<br>';
+      'Expenses Name : ' . $added_expensesname . '<br>' .
+      'Expenses Info : ' . $added_infodata . '<br>' .
+      'Expenses Amount : ' . $added_amount . '<br>';
 
       $this->History($this->session_id, 'Add', $logMessage);
 
@@ -1047,7 +1049,7 @@ Class Admin {
     }
   }
 
-  public function updateExpenses($expensesname, $expensesinfo, $expensesid) {
+  public function updateExpenses($expensesname, $expensesinfo, $expensesid, $expensesamount) {
     $oldvalsql = "SELECT * FROM expenses WHERE id = ?";
     $oldvalstmt = $this->conn->prepare($oldvalsql);
     $oldvalstmt->bind_param("i", $expensesid);
@@ -1057,20 +1059,23 @@ Class Admin {
     $oldvalRow = $oldvalResult->fetch_assoc();
     $oldval_expensesname = $oldvalRow['name'];
     $oldval_expensesinfo = $oldvalRow['info'];
+    $oldval_expensesamount = $oldvalRow['amount'];
 
     $changes = [];
 
     if ($oldval_expensesname !== $expensesname) {
       $changes[] = 'Expense Name: ' . $oldval_expensesname . ' -> ' . $expensesname;
     }
-
     if ($oldval_expensesinfo !== $expensesinfo) {
       $changes[] = 'Expenses Info: ' . $oldval_expensesinfo . ' -> ' . $expensesinfo;
     }
+    if ($oldval_expensesamount !== $expensesamount) {
+      $changes[] = 'Expenses Amount: ' . $oldval_expensesamount . ' -> ' . $expensesamount;
+    }
 
-    $sql = "UPDATE expenses SET name = ?, info = ? WHERE id = ?";
+    $sql = "UPDATE expenses SET name = ?, info = ?, amount = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("ssi", $expensesname, $expensesinfo, $expensesid);
+    $stmt->bind_param("ssdi", $expensesname, $expensesinfo, $expensesamount, $expensesid);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
       // Combine all changes into a single log message
@@ -1301,6 +1306,31 @@ Class Admin {
 
     return json_encode($data);
   }
+
+  public function getIncomeExpensesData() {
+    $sql = "SELECT 
+            DATE_FORMAT(p.date_payment, '%Y-%m') AS month,
+            SUM(p.amount) AS total_income,
+            (
+                SELECT SUM(e.amount) 
+                FROM expenses e 
+                WHERE DATE_FORMAT(e.date, '%Y-%m') = DATE_FORMAT(p.date_payment, '%Y-%m')
+            ) AS total_expenses
+            FROM payments p
+            GROUP BY month";
+
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    }
+
+    return json_encode($data);
+}
+
 
 
   public function History($admin_id, $action, $details) {
