@@ -170,7 +170,7 @@
         exit;
     }
 
-    $pageTitle = "UserChat Page"; // Change this according to the current page
+    $pageTitle = "Chat Page"; // Change this according to the current page
     // Determine the base URL
     $base_url = dirname($_SERVER['SCRIPT_NAME']) . '/';
 ?>
