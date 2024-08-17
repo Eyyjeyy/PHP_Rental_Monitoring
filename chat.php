@@ -171,6 +171,7 @@
     }
 
     $pageTitle = "Chat Page"; // Change this according to the current page
+    $page = "";
     // Determine the base URL
     $base_url = dirname($_SERVER['SCRIPT_NAME']) . '/';
 ?>
