@@ -263,6 +263,11 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
 }
 /* Media Queries for responsiveness */
 
+.w-75 {
+    max-width: 80%!important;
+    min-width: 1000px!important;
+}
+
 #menu-btn{
     display: none;
  }
@@ -281,6 +286,14 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     justify-content: end;
  }
 
+ .navbar-toggler-icon {
+    filter: invert(79%) sepia(63%) saturate(2999%) hue-rotate(-400deg) brightness(150%) contrast(100%);
+}
+
+
+
+
+
  #lastname {
     width: 50%;
  }
@@ -290,7 +303,34 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     margin-bottom: 100px;
  }
 
+ .row.mb-7 {
+    margin-bottom: 50px !important;
+}
+
+
+.table-container {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;  /* Enables vertical scrolling */
+}
+
+.table-responsive {
+    width: 100%; /* Ensures the table takes the full width of the container */
+}
+
+
  @media (max-width: 990px) {
+
+    #textindex {
+        margin-bottom: 0px!important;
+        margin-top: 20px!important;
+        max-width: 95%;
+    }
+
+    #carousellpics {
+        max-width: 95%!important;
+        margin-left: 2.5%!important;
+        margin-top: 25px!important;
+    }
 
     .w-65 {
         min-width: 100% !important;

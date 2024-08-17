@@ -356,9 +356,10 @@
 </nav>
 
 
-<div class="row mx-auto w-65 d-flex align-items-center col main content px-lg-5">
-    <div class="mx-auto" style="max-width: 900px;"  id="paymentwhole">
-        <div class="card-header text-center">Payment</div>
+<div class="row mx-auto w-65 d-flex align-items-center col main content" id="paymentwhole">
+    <div class="mx-auto">
+    <div class="card-header text-center" style="font-size: 1.2rem; font-weight: bold;">Payment</div>
+
         <div class="card-body">
             <div class="row mb-3">
                 <div class="row">
@@ -376,7 +377,8 @@
                   </div>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-container">
+            <div class="table-responsive"">
                 <table class="table table-striped table-bordered border border-5">
                     <thead class="">
                         <tr>
@@ -396,7 +398,7 @@
                                 echo "<tr>";
                                 echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
                                 echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
-                                echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 200px; height: auto;'></td>";
+                                echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
                                 echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
                                 echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
                                 echo "</tr>";
@@ -471,7 +473,7 @@
     </div>
   </div>
 </div>
-
+          </div>
 <!-- Include jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 

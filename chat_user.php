@@ -184,7 +184,7 @@
         <div class="col-12 col-md-4 pe-0" id="usercol">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #EE7214;">
-                    <h5 class="text-center mb-0">Users</h5>
+                    <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Users</h5>
                 </div>
                 <div class="card-body bg-#F9E8D9" id="list" style="overflow-y: auto;">
                     <ul class="ps-0" style="list-style: none;">
@@ -204,7 +204,7 @@
         <div class="col-12 col-md-8 ps-0" id="chatcol">            
             <div class="card h-100">
                 <div class="card-header">
-                    <h5 class="text-center mb-0">Chat</h5>
+                    <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                 </div>
                 <div class="card-body bg-#F9E8D9 h-100" style="overflow-y: auto;">
                     <div class="messages" style="max-height: 100%;">
