@@ -1363,6 +1363,180 @@ Class Admin {
     }
   }
 
+  public function getUserProfile($userId) {
+    $userId = (int)$userId;
+    $sql = "SELECT users.*, tenants.* 
+            FROM users 
+            LEFT JOIN tenants ON users.id = tenants.users_id 
+            WHERE users.id = $userId";
+    $result = $this->conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      return $result->fetch_assoc();
+    } else {
+      return null;
+    }
+  }
+
+  public function updateUserProfile($userId, $firstName = null, $middleName = null, $lastName = null, $contactNumber = null, $email = null, $password = null) {
+    // Retrieve current user data
+    $currentUser = $this->getUserProfile($userId);
+
+    // Start building the SQL query for the users table
+    $sql = "UPDATE users SET ";
+    $sqlParts = [];
+    $params = [];
+    $types = "";
+
+    // Compare and add fields to the SQL query if they have changed
+    if ($firstName !== null && $firstName !== $currentUser['firstname']) {
+      $sqlParts[] = "firstname = ?";
+      $params[] = $firstName;
+      $types .= "s";
+    }
+    if ($middleName !== null && $middleName !== $currentUser['middlename']) {
+      $sqlParts[] = "middlename = ?";
+      $params[] = $middleName;
+      $types .= "s";
+    }
+    if ($lastName !== null && $lastName !== $currentUser['lastname']) {
+      $sqlParts[] = "lastname = ?";
+      $params[] = $lastName;
+      $types .= "s";
+    }
+    if ($password !== null && $password !== $currentUser['password']) {
+      $sqlParts[] = "password = ?";
+      $params[] = $password;
+      $types .= "s";
+    }
+    if ($email !== null && $email !== $currentUser['email']) {
+      $sqlParts[] = "email = ?";
+      $params[] = $email;
+      $types .= "s";
+    }
+
+    if (empty($sqlParts)) {
+      // No fields to update
+      $_SESSION['success_message'] = "No Changes!";
+      return true;
+    }
+
+    // Join SQL parts with commas and append WHERE clause
+    $sql .= implode(", ", $sqlParts) . " WHERE id = ?";
+    $params[] = $userId;
+    $types .= "i"; // 'i' for integer userId
+
+    // Prepare the statement
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+      die("Error preparing statement: " . $this->conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param($types, ...$params);
+
+    // Execute the statement
+    $result = $stmt->execute();
+    $stmt->close();
+
+    // Update the tenants table with the same userId
+    $tenantUpdateResult = $this->updateTenantProfile($userId, $firstName, $middleName, $lastName, $contactNumber);
+
+    // Update the payments table if tenant information was updated
+    if ($tenantUpdateResult) {
+      $this->updatePaymentsTable($userId, $firstName, $middleName, $lastName);
+    }
+
+    return $result;
+  }
+
+  private function updateTenantProfile($userId, $firstName = null, $middleName = null, $lastName = null, $contactNumber = null) {
+    $retrievesql = "SELECT fname, mname, lname, contact FROM tenants WHERE users_id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $userId);
+    $retrievestmt->execute();
+    $retrieveresult = $retrievestmt->get_result();
+    $retrievetenant = $retrieveresult->fetch_assoc();
+    $retrievestmt->close();
+
+    // Start building the SQL query for the tenants table
+    $sql = "UPDATE tenants SET ";
+    $sqlParts = [];
+    $params = [];
+    $types = "";
+
+    // Compare and add fields to the SQL query if they have changed
+    if ($firstName !== null && $firstName !== $retrievetenant['fname']) {
+      $sqlParts[] = "fname = ?";
+      $params[] = $firstName;
+      $types .= "s";
+    }
+    if ($middleName !== null && $middleName !== $retrievetenant['mname']) {
+      $sqlParts[] = "mname = ?";
+      $params[] = $middleName;
+      $types .= "s";
+    }
+    if ($lastName !== null && $lastName !== $retrievetenant['lname']) {
+      $sqlParts[] = "lname = ?";
+      $params[] = $lastName;
+      $types .= "s";
+    }
+    if ($contactNumber !== null && $contactNumber !== $retrievetenant['contact']) {
+      $sqlParts[] = "contact = ?";
+      $params[] = $contactNumber;
+      $types .= "s";
+    }
+
+    if (empty($sqlParts)) {
+      // No fields to update
+      return false;
+    }
+
+    // Join SQL parts with commas and append WHERE clause
+    $sql .= implode(", ", $sqlParts) . " WHERE users_id = ?";
+    $params[] = $userId;
+    $types .= "i"; // 'i' for integer userId
+
+    // Prepare the statement
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+      die("Error preparing statement: " . $this->conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param($types, ...$params);
+
+    // Execute the statement
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+  }
+
+  private function updatePaymentsTable($userId, $firstName = null, $middleName = null, $lastName = null) {
+    // Start building the SQL query for the payments table
+    $sql = "UPDATE payments p
+            JOIN tenants t ON p.tenants_id = t.id
+            SET p.name = CONCAT(?, ' ', ?, ' ', ?)
+            WHERE t.users_id = ?";
+
+    // Prepare the statement
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+      die("Error preparing statement: " . $this->conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("sssi", $firstName, $middleName, $lastName, $userId);
+
+    // Execute the statement
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+  }
+
+
 
 
   public function History($admin_id, $action, $details) {
