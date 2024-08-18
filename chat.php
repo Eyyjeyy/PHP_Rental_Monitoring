@@ -406,6 +406,89 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        $(document).ready(function() {
+            // Scroll to the bottom when the page loads
+            function scrollToBottom() {
+                $('.messages').scrollTop($('.messages')[0].scrollHeight);
+            }
+
+            // Initially scroll to bottom when page loads
+            scrollToBottom();
+
+            // Set up Server-Sent Events (SSE) to listen for new messages
+            var userId = <?php echo $user_id; ?>;
+            var chatUserId = <?php echo $chat_user_id; ?>;
+            var eventSource = new EventSource('fetch_chat.php?user_id=' + userId + '&chat_user_id=' + chatUserId);
+
+            eventSource.onmessage = function(event) {
+                var messages = JSON.parse(event.data);
+                var html = '';
+                messages.forEach(function(message) {
+                    var sender = (message.sender_id == userId) ? 'You' : message.sender_username;
+                    var classMessage = (message.sender_id == userId) ? 'message-right' : 'message-left';
+                    var imageHTML = '';
+                    if (message.image_path) {
+                        imageHTML = `<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal${message.id}">
+                                        <img src="${message.image_path}" alt="Image">
+                                    </a>
+                                    <div class="modal fade" id="imageModal${message.id}" tabindex="-1" aria-labelledby="imageModalLabel${message.id}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="imageModalLabel${message.id}">Image Preview</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body mx-auto">
+                                                    <img src="${message.image_path}" alt="Image" class="img-fluid">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                    }
+                    html += `<div class="message ${classMessage}">
+                                <p><strong>${sender}:</strong> ${message.message}</p>
+                                ${imageHTML}
+                                <span class="timestamp">${message.timestamp}</span>
+                            </div>`;
+                });
+                $('.messages').html(html);
+            };
+
+            // Handle form submission
+            $('#message-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                $.ajax({
+                    url: 'chat.php?user_id=' + chatUserId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log('Form submitted successfully:', response);
+                        $('#message-input').val('');
+                        $('#image-input').val('');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error submitting form:', textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <script>
         $(document).ready(function(){
             // Fetch messages initially
             function fetchMessages() {
@@ -448,7 +531,7 @@
                 });
             });
         });
-    </script>
+    </script> -->
 
 
 
