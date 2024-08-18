@@ -206,7 +206,7 @@
                 <div class="card-header">
                     <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                 </div>
-                <div class="card-body bg-#F9E8D9 h-100" style="overflow-y: auto;">
+                <div class="card-body bg-#F9E8D9 h-100 chatcontent" style="overflow-y: auto;">
                     <div class="messages" style="max-height: 100%;">
                         <?php
                             if ($chat_user_id) {
@@ -284,6 +284,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        function scrollToBottom() {
+            $('.chatcontent').scrollTop($('.chatcontent')[0].scrollHeight);
+        }
+
         var userId = <?php echo $user_id; ?>; // Assuming $user_id is set in PHP
 
         function initSSE(chatUserId) {
@@ -352,6 +356,10 @@
                 currentSource.close();
             }
             currentSource = initSSE(newChatUserId);
+
+            // Scroll to the bottom when a new user is selected
+            setTimeout(scrollToBottom, 100);  // Add a delay to ensure messages are loaded first
+
             showSendMessageForm(newChatUserId);
         }
 
