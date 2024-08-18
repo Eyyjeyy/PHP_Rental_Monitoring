@@ -293,7 +293,7 @@
 
         <!-- Left-aligned image -->
         <div class="col d-flex align-items-center">
-            <a class="navbar-brand py-0" href="index.php">
+            <a class="navbar-brand py-0" href="../index.php">
                 <img src="../asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
             </a>
         </div>
