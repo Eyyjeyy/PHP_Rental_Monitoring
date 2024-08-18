@@ -14,7 +14,7 @@
         exit();
     }
 
-    $pageTitle = 'Index Page';
+    $pageTitle = 'Home Page';
 ?>
 
 <?php include 'regular/includes/header_user.php'; ?>

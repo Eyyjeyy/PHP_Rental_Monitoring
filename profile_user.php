@@ -58,7 +58,7 @@
         }
     }
 
-    $pageTitle = 'Index Page';
+    $pageTitle = 'Profile Page';
     $userProfile = $admin->getUserProfile($admin->session_id);
 ?>
 

@@ -1379,6 +1379,44 @@ Class Admin {
   }
 
   public function updateUserProfile($userId, $firstName = null, $middleName = null, $lastName = null, $contactNumber = null, $email = null, $password = null) {
+    $oldvalsql = "SELECT users.*, tenants.* 
+                  FROM users 
+                  LEFT JOIN tenants ON users.id = tenants.users_id 
+                  WHERE users.id = ?";
+    $oldvalstmt = $this->conn->prepare($oldvalsql);
+    $oldvalstmt->bind_param("i", $userId);
+    $oldvalstmt->execute();
+    $oldvalResult = $oldvalstmt->get_result();
+    
+    $oldvalRow = $oldvalResult->fetch_assoc();
+    $oldval_firstname = $oldvalRow['firstname'];
+    $oldval_middlename = $oldvalRow['middlename'];
+    $oldval_lastname = $oldvalRow['lastname'];
+    $oldval_contact = $oldvalRow['contact'];
+    $oldval_email = $oldvalRow['email'];
+    $oldval_password = $oldvalRow['password'];
+
+    $changes = [];
+
+    if ($oldval_firstname !== $firstName) {
+      $changes[] = 'Firstname: ' . $oldval_firstname . ' -> ' . $firstName;
+    }
+    if ($oldval_middlename !== $middleName) {
+      $changes[] = 'Middlename : ' . $oldval_middlename . ' -> ' . $middleName;
+    }
+    if ($oldval_lastname !== $lastName) {
+      $changes[] = 'Lastname : ' . $oldval_lastname . ' -> ' . $lastName;
+    }
+    if ($oldval_contact !== $contactNumber) {
+      $changes[] = 'Contact : ' . $oldval_contact . ' -> ' . $contactNumber;
+    }
+    if ($oldval_email !== $email) {
+      $changes[] = 'Email : ' . $oldval_email . ' -> ' . $email;
+    }
+    if ($oldval_password !== $password) {
+      $changes[] = 'Password : ' . $oldval_password . ' -> ' . $password;
+    }
+
     // Retrieve current user data
     $currentUser = $this->getUserProfile($userId);
 
@@ -1437,14 +1475,30 @@ Class Admin {
 
     // Execute the statement
     $result = $stmt->execute();
-    $stmt->close();
 
-    // Update the tenants table with the same userId
-    $tenantUpdateResult = $this->updateTenantProfile($userId, $firstName, $middleName, $lastName, $contactNumber);
+    if ($stmt->affected_rows > 0) {
+      // Combine all changes into a single log message
+      $logMessage = 'Updated User ID: ' . $userId . '<br>' . implode('<br>', $changes);
 
-    // Update the payments table if tenant information was updated
-    if ($tenantUpdateResult) {
-      $this->updatePaymentsTable($userId, $firstName, $middleName, $lastName);
+      // Log the action
+      $this->History($this->session_id, 'Update', $logMessage);
+
+      // Update the tenants table with the same userId
+      $tenantUpdateResult = $this->updateTenantProfile($userId, $firstName, $middleName, $lastName, $contactNumber);
+
+      // Update the payments table if tenant information was updated
+      if ($tenantUpdateResult) {
+        $this->updatePaymentsTable($userId, $firstName, $middleName, $lastName);
+      }
+
+      $stmt->close();
+      return true; // Update successful
+    } else if ($stmt->error) {
+      $stmt->close();
+      return false; // Update failed
+    } else {
+      $stmt->close();
+      return true;
     }
 
     return $result;

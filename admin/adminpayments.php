@@ -45,6 +45,7 @@
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
+    $page = "";
 ?>
 
     <?php include 'includes/header.php'; ?>

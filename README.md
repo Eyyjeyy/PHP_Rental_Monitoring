@@ -88,3 +88,10 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 8/15/24 - Added Income Expenses Comparison Chart to Dashboard <br>
 - Created function getIncomeExpensesData for retrieval of Data from MYSQL in admin.php <br>
+
+8/17/24 - Added Profile Page Backend <br>
+- Created function updateUserProfile, getUserProfile, updateTenantProfile, updatePaymentsTable <br>
+- Utilizes History Function from admin.php <br>
+
+8/18/24 - Added Info Page for Users <br>
+- Info Page retrieves logged in user's account from houseaccounts table. <br>

@@ -170,7 +170,7 @@
         exit;
     }
 
-    $pageTitle = "UserChat Page"; // Change this according to the current page
+    $pageTitle = "Chat Page"; // Change this according to the current page
     // Determine the base URL
     $base_url = dirname($_SERVER['SCRIPT_NAME']) . '/';
 ?>
@@ -297,11 +297,35 @@
                     data.forEach(function(row) {
                         var sender = row.sender_id == userId ? 'You' : row.sender_username;
                         var messageClass = row.sender_id == userId ? 'message-right' : 'message-left';
+
+                        // Generate unique ID for modal based on message ID
+                        var modalId = 'imageModal' + row.id;
+
                         var messageHtml = '<div class="message ' + messageClass + '">';
                         messageHtml += '<p><strong>' + sender + ':</strong> ' + row.message + '</p>';
+
                         if (row.image_path) {
-                            messageHtml += '<img src="' + row.image_path + '" alt="Image">';
+                            // Add link to trigger modal
+                            messageHtml += '<a href="#" data-bs-toggle="modal" data-bs-target="#' + modalId + '">';
+                            messageHtml += '<img src="' + row.image_path + '" alt="Image" class="chat-image" style="max-width: 100px; max-height: 100px; cursor: pointer;">';
+                            messageHtml += '</a>';
+
+                            // Add modal HTML
+                            messageHtml += '<div class="modal fade" id="' + modalId + '" tabindex="-1" aria-labelledby="' + modalId + 'Label" aria-hidden="true">';
+                            messageHtml += '<div class="modal-dialog modal-dialog-centered">';
+                            messageHtml += '<div class="modal-content">';
+                            messageHtml += '<div class="modal-header">';
+                            messageHtml += '<h5 class="modal-title" id="' + modalId + 'Label">Image Preview</h5>';
+                            messageHtml += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+                            messageHtml += '</div>';
+                            messageHtml += '<div class="modal-body mx-auto">';
+                            messageHtml += '<img src="' + row.image_path + '" alt="Image" class="img-fluid" style="max-width: 100%;">';
+                            messageHtml += '</div>';
+                            messageHtml += '</div>';
+                            messageHtml += '</div>';
+                            messageHtml += '</div>';
                         }
+
                         messageHtml += '<span class="timestamp">' + row.timestamp + '</span>';
                         messageHtml += '</div>';
 
