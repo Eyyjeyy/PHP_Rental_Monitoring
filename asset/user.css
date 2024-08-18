@@ -290,9 +290,25 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     filter: invert(79%) sepia(63%) saturate(2999%) hue-rotate(-400deg) brightness(150%) contrast(100%);
 }
 
+#monthly{
+    padding-right: 10px;
+    padding-left: 25px;
+}
 
+#createrec{
+    padding: 0;
+}
 
+#createrecbtn{
+    padding: 0;
+}
 
+@media (max-width: 575px) {
+#createrecbtn{
+    padding: 0;
+    margin-left: 25px;
+}
+}
 
  #lastname {
     width: 50%;
@@ -316,6 +332,106 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
 .table-responsive {
     width: 100%; /* Ensures the table takes the full width of the container */
 }
+
+/* modal */
+.modal-header {
+    background-color: #527853;
+    color: white;
+    font-weight: bold;
+}
+
+#paymentModalLabel {
+    font-weight: bold;
+}
+
+.modal-body {
+    background-color: white;
+}
+
+.modal-footer {
+    background-color: white;
+}
+
+.btn.btn-secondary {
+    background-color: #527853; /* Example background color */
+    border-color: #527853;
+    color: white; /* Example text color */
+    padding: 7.5px 20px; /* Example padding */
+    border-radius: 4px; /* Example border radius */
+}
+
+.btn.btn-secondary:hover {
+    background-color: #3A583C; /* Change color on hover */
+    border-color: #3A583C;
+}
+
+#submitBtn.btn.btn-primary {
+    background-color: #EE7214; /* Example background color */
+    border-color: #EE7214;
+    color: white; /* Example text color */
+    padding: 7.5px 20px; /* Example padding */
+    border-radius: 4px; /* Example border radius */
+}
+
+#submitBtn.btn.btn-primary:hover {
+    background-color: #C95B0E; /* Change color on hover */
+    border-color: #C95B0E;
+}
+
+.btn-close {
+    color: white!important; /* Example color for the close icon */
+    border: none; /* Remove any default border */
+    font-size: 20px; /* Example size of the close icon */
+    padding: 0.5rem; /* Example padding */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.btn-close:hover {
+    color: #ffffff; /* Change color on hover (e.g., red) */
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+.btn-svg {
+    background: none;         /* No background color */
+    border: none;             /* Remove border */
+    padding: 0;               /* Remove padding */
+    margin: 0;                /* Remove margin */
+    cursor: pointer;          /* Show pointer cursor on hover */
+    display: inline-flex;     /* Ensure proper alignment of SVG */
+    align-items: center;      /* Center align SVG */
+    justify-content: center;  /* Center align SVG */
+    width: 24px;              /* Set a fixed width */
+    height: 24px;             /* Set a fixed height */
+    color: white;
+}
+
+.btn-svg:hover {
+    color: #e9e9e9;           /* Change color on hover */
+}
+
+.btn-svg:focus {
+    outline: none;            /* Remove outline */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Add a focus shadow */
+}
+
+.btn-svg svg {
+    width: 100%;              /* Make SVG fit the button */
+    height: 100%;             /* Make SVG fit the button */
+}
+
+/* end of modal */
+
+
+/* footer */
+
+
+
+
+
+
+
+/* footer end */
+
 
 
  @media (max-width: 990px) {

@@ -364,15 +364,15 @@
 
         <div class="card-body">
             <div class="row mb-3">
-                <div class="row">
-                  <div class="col-sm-6">
+                <div class="row" id="createrec">
+                  <div class="col-sm-6" id="monthly">
                     <?php 
                     echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
                     echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
                     echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
                     ?>
                   </div>
-                  <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end">
+                  <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end" id="createrecbtn">
                     <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
                         <i class="fa fa-plus"></i> Create Receipt
                     </button>
@@ -421,8 +421,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="paymentModalLabel">Create Receipt</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="paymentModalLabel" style>Create Receipt</h5>
+         <button type="button" class="btn-svg"  data-bs-dismiss="modal" aria-label="Close"> 
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+    </button>
       </div>
       <form id="paymentForm" method="POST" enctype="multipart/form-data">
         <div class="modal-body">

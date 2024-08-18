@@ -61,7 +61,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <p class="fs-5 mb-0 text-center">Info</p>
+                        <p class="fs-5 mb-0 text-center" style="font-size: 1.2rem; font-weight: bold;">Info</p>
                     </div>
                     <div class="card-body" style="background-color: #F9E8D9;">
                         <form method="POST" action="info.php">

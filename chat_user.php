@@ -320,7 +320,11 @@
                             messageHtml += '<div class="modal-content">';
                             messageHtml += '<div class="modal-header">';
                             messageHtml += '<h5 class="modal-title" id="' + modalId + 'Label">Image Preview</h5>';
-                            messageHtml += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+                            messageHtml += '<button type="button" class="btn-svg"  data-bs-dismiss="modal" aria-label="Close">';
+                            messageHtml +=                '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">';
+                            messageHtml +=                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>';
+                            messageHtml +=                '</svg>';
+                            messageHtml +=         '</button>';
                             messageHtml += '</div>';
                             messageHtml += '<div class="modal-body mx-auto">';
                             messageHtml += '<img src="' + row.image_path + '" alt="Image" class="img-fluid" style="max-width: 100%;">';
