@@ -52,11 +52,27 @@
                     $sender = ($sender_id == $user_id) ? 'You' : $sender_username;
                     $class = ($sender_id == $user_id) ? 'message-right' : 'message-left';
                     $image_path = $row['image_path'];
+                    $message_id = $row['id']; // Unique ID for each message
                     ?>
                     <div class="message <?php echo $class; ?>">
                         <p><strong><?php echo $sender; ?>:</strong> <?php echo $message; ?></p>
                         <?php if ($image_path): ?>
-                            <img src="<?php echo $image_path; ?>" alt="Image">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal<?php echo $message_id; ?>">
+                                <img src="<?php echo $image_path; ?>" alt="Image">
+                            </a>
+                            <div class="modal fade" id="imageModal<?php echo $message_id; ?>" tabindex="-1" aria-labelledby="imageModalLabel<?php echo $message_id; ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel<?php echo $message_id; ?>">Image Preview</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body mx-auto">
+                                            <img src="<?php echo $image_path; ?>" alt="Image" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endif; ?>
                         <span class="timestamp"><?php echo $timestamp; ?></span>
                     </div>
@@ -345,7 +361,22 @@
                                     <div class="message <?php echo $class; ?>">
                                         <p><strong><?php echo $sender; ?>:</strong> <?php echo $message; ?></p>
                                         <?php if ($image_path): ?>
-                                            <img src="<?php echo $image_path; ?>" alt="Image">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal<?php echo $message_id; ?>">
+                                                <img src="<?php echo $image_path; ?>" alt="Image">
+                                            </a>
+                                            <div class="modal fade" id="imageModal<?php echo $message_id; ?>" tabindex="-1" aria-labelledby="imageModalLabel<?php echo $message_id; ?>" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="imageModalLabel<?php echo $message_id; ?>">Image Preview</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body mx-auto">
+                                                            <img src="<?php echo $image_path; ?>" alt="Image" class="img-fluid">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php endif; ?>
                                         <span class="timestamp"><?php echo $timestamp; ?></span>
                                     </div>

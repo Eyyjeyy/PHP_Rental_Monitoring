@@ -249,7 +249,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <?php if ($pageTitle == 'Index Page' || $pageTitle == 'Chat Page'): ?>
+    <?php if ($pageTitle == 'Home Page' || $pageTitle == 'Chat Page'): ?>
         <link rel="stylesheet" href="asset/user.css">
         <link rel="icon" type="image/x-icon" href="asset/Renttrack pro no word.png">
     <?php else: ?>
@@ -367,9 +367,9 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <?php 
-                    echo "<p class='fw-bolder'>Monthly Balance: $" . number_format($monthlyBalance, 2) . "</p>";
-                    echo "<p class='fw-bolder'>Monthly Rent Due: $" . number_format($monthlyRentDue, 2) . "</p>";
-                    echo "<p class='fw-bolder'>Total Payments: $" . number_format($totalPayments, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
                     ?>
                   </div>
                   <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end">
