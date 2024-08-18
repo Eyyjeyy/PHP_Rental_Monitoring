@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-6 d-flex flex-column justify-content-center m-0 p-0" id="textindex">
+            <div class="col-12 col-lg-6 d-flex flex-column justify-content-center m-0 p-0" id="textindex-1">
                 <p class="fs-1 fw-bolder inter-google text-center mb-lg-3 m-0 p-0" style="color: #F28543;">Goals</p>
                 <p class="fs-5 inter-google mx-sm-4 text-center d-lg-none m-0 p-0">
                   RentTrack Pro's goal is to streamline rental management for landlords by optimizing tenant data, simplifying payment processes, 
