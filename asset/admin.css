@@ -228,6 +228,17 @@ button:hover {
     background-color: #EE7214; /* Bright orange color */
 }
 
+.table-buttons-update {
+    color: #fff;
+    background-color: #527853 !important;
+    border-color: #527853 !important;
+}
+.table-buttons-delete {
+    color: #fff;
+    background-color: #EE7214 !important;
+    border-color: #EE7214 !important;
+}
+
 
 
 

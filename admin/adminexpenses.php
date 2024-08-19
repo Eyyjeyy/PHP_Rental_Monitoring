@@ -212,13 +212,13 @@
                                         // Add a form with a delete button for each record
                                         echo "<form method='POST' action='adminexpenses.php' class='float-xl-end align-items-center'>";
                                         echo "<input type='hidden' name='expensesid' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_expenses' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<button type='submit' name='delete_expenses' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='expensesid' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-expenses-btn float-xl-start' data-id='" . $row['id'] . "' data-expensesname='" . htmlspecialchars($row['name']) . "'data-expensesinfo='" . htmlspecialchars($row['info']) . "'data-expensesamount='" . htmlspecialchars($row['amount']) .  "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-expenses-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-expensesname='" . htmlspecialchars($row['name']) . "'data-expensesinfo='" . htmlspecialchars($row['info']) . "'data-expensesamount='" . htmlspecialchars($row['amount']) .  "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
