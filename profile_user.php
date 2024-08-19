@@ -64,9 +64,9 @@
 
 <?php include 'regular/includes/header_user.php'; ?>
 
-<div class="container-fluid" style="margin-top: 50px; margin-bottom: 130px;">
+<div class="container-fluid" style="margin-top: 200px; margin-bottom: 130px;">
     
-    <div class="row mt-5 mb-5">
+    <div class="row">
         <div class="row mx-auto w-65 d-flex align-items-center m-0 p-0">
             <div class="col-12">
                 <div class="card">

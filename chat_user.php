@@ -1,3 +1,6 @@
+
+
+
 <?php
     // error_reporting(E_ALL);
     // ini_set('display_errors', 1);
@@ -180,7 +183,7 @@
 
 <div class="container-fluid" style="padding: 0;">
     <div class="row mx-auto w-65 justify-content-center" id="chatwhole">
-    <div class="row mt-5 mx-0" id="coluserchat" style="height: 60vh;">
+    <div class="row mt-5 mx-0" id="coluserchat">
         <div class="col-12 col-md-4 pe-0" id="usercol">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #EE7214;">
@@ -501,7 +504,6 @@
         });
     });
 </script> -->
-
 
 
 

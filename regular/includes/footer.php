@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Footer Example</title>
     <style>
+        .footerall {
+            width: 100%;
+            position: relative;
+             left: 0;
+             bottom: 0!important;
+             margin-top: 15%;        
+        }
+
         .w-65 {
             width: 60%;
         }
@@ -64,7 +72,7 @@
     </style>
 </head>
 <body>
-
+<div class="footerall">
 <div class="container-fluid w-100" style="background-color: #F28543;" id="bodyfooter">
 
             <div class="row mx-auto w-65" id="bodyfooter">
@@ -135,5 +143,6 @@
                     </d-flex>
                     </div>
                 </div>
+    </div>
     </body>
 </html>

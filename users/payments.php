@@ -380,8 +380,8 @@
                 </div>
             </div>
             <div class="table-container">
-            <div class="table-responsive"">
-                <table class="table table-striped table-bordered border border-5">
+
+                <table class="table table-striped table-bordered border border-5" id="tabletabletable">
                     <thead class="">
                         <tr>
                             <th scope="col">Name</th>
@@ -411,7 +411,7 @@
                     ?>
                     </tbody>
                 </table>
-            </div>
+            
         </div>
     </div>
 </div>

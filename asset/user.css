@@ -3,11 +3,16 @@ a p {
 }
 
 #navbar {
-    position: sticky;
+    position: fixed;
     top:0; left:0; right:0;
     z-index: 1000;
  
 
+}
+
+
+.content {
+    flex: 1;
 }
 
 .nav-link p, .card-header {
@@ -59,6 +64,10 @@ thead {
 }
 
 .table-responsive {
+    background-color: #F9E8D9;
+}
+
+#tabletabletable {
     background-color: #F9E8D9;
 }
 
@@ -170,7 +179,7 @@ thead {
     margin: 2.5px; 
  
 }
-
+mb
 #send-btn:hover {
     background-color: #C95B0E;
     border-color: #C95B0E; 
@@ -218,8 +227,7 @@ textarea#message-input[name="message"] {
 
 #coluserchat {
    width: 100%;
-   margin-bottom: 100px!important;
-   margin-top: 50px!important;
+   margin-top: 200px!important;
 }
 
 #btnzone {
@@ -315,8 +323,7 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
  }
 
  #paymentwhole {
-    margin-top: 50px;
-    margin-bottom: 100px;
+    margin-top: 177.5px;
  }
 
  .row.mb-7 {
@@ -511,7 +518,7 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
  }
 
 /* Styles for screens smaller than 600px */
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     /* Example: further reduce padding and font size */
 
     #list ul li a p {
@@ -526,11 +533,11 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
     }
 
     #usercol {
-        height: 200px;
+        height: 20%;
     }
     
     #chatcol {
-        height: 500px;
+       height: 80%;
     }
 
     #btnzone {
