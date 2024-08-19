@@ -559,7 +559,7 @@
                     <td>${e.name}</td>
                     <td>${e.created_at}</td>
                     <td>
-                        <button class="btn btn-danger btn-delete" name="delete_category" data-id="${e.id}">Delete</button>
+                        <button class="btn btn-danger btn-delete table-buttons-delete" name="delete_category" data-id="${e.id}">Delete</button>
                     </td>
                 </tr>
                 `;
@@ -617,10 +617,10 @@
                             <div class="d-flex justify-content-center">
                                 <div class="row m-0">
                                     <div class="col d-flex justify-content-center px-2">
-                                        <button class="btn btn-danger btn-delete" name="delete_file" data-id="${e_files.file_id}" style="width: 100px;">Delete</button>
+                                        <button class="btn btn-danger btn-delete table-buttons-delete" name="delete_file" data-id="${e_files.file_id}" style="width: 100px;">Delete</button>
                                     </div>
                                     <div class="col d-flex justify-content-center px-2">
-                                        <a href="${e_files.file_url}" class="btn btn-primary btn-download" download="${e_files.file_name}" style="width: 100px; text-align: center;">Download</a>
+                                        <a href="${e_files.file_url}" class="btn btn-primary btn-download table-buttons-update" download="${e_files.file_name}" style="width: 100px; text-align: center;">Download</a>
                                     </div>
                                 </div>
                                 

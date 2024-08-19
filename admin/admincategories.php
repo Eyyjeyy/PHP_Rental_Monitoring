@@ -163,7 +163,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_category"><i class="fa fa-plus"></i> New Category</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_category"><i class="fa fa-plus"></i> New Category</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -189,13 +189,13 @@
                                         // Add a form with a delete button for each record
                                         echo "<form method='POST' action='admincategories.php' class='float-xl-end align-items-center'>";
                                         echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_category' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<button type='submit' name='delete_category' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='categoryid' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-category-btn float-xl-start' data-id='" . $row['id'] . "' data-categoryname='" . htmlspecialchars($row['name']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-category-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-categoryname='" . htmlspecialchars($row['name']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -224,7 +224,7 @@
                                 <label for="username" class="form-label">Category Name</label>
                                 <input type="text" class="form-control" id="username" name="categoryname" required>
                             </div>
-                            <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
+                            <button type="submit" name="add_category" class="btn btn-primary table-buttons-update">Add Category</button>
                             </form>
                         </div>
                         </div>
@@ -245,7 +245,7 @@
                                         <label for="updateCategoryname" class="form-label">Category Name</label>
                                         <input type="text" class="form-control" id="updateCategoryname" name="categoryname" required>
                                     </div>
-                                    <button type="submit" name="edit_category" class="btn btn-primary">Update Category</button>
+                                    <button type="submit" name="edit_category" class="btn btn-primary w-50 align-self-center table-buttons-update">Update Category</button>
                                 </form>
                             </div>
                         </div>

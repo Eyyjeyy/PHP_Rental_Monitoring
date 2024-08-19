@@ -256,7 +256,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_house"><i class="fa fa-plus"></i> New House</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New House</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -295,13 +295,13 @@
                                         // Add a form with a delete button for each record
                                         echo "<form method='POST' action='adminhouses.php' class='float-xxl-end align-items-center'>";
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_house' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<button type='submit' name='delete_house' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xxl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xxl-start' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xxl-start table-buttons-update' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -399,7 +399,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <button type="submit" name="add_house" class="btn btn-primary">Add House</button>
+                                        <button type="submit" name="add_house" class="btn btn-primary table-buttons-update">Add House</button>
                                     </div>
                                 </div>
                             </form>
@@ -477,7 +477,9 @@
                                                 <input type="text" class="form-control" id="update_maynilad_accname" name="maynilad_accname">
                                             </div>
                                         </div>
-                                        <button type="submit" name="edit_house" class="btn btn-primary">Update User</button>
+                                        <div class="col-md-6">
+                                            <button type="submit" name="edit_house" class="btn btn-primary table-buttons-update">Update User</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

@@ -189,7 +189,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_user"><i class="fa fa-plus"></i> New User</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_user"><i class="fa fa-plus"></i> New User</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -225,13 +225,13 @@
                                         // Add a form with a delete button for each record
                                         echo "<form method='POST' action='adminusers.php' class='float-xl-end align-items-center'>";
                                         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='submit' name='delete_user' class='btn btn-danger' style='width: 80px;'>Delete</button>";
+                                        echo "<button type='submit' name='delete_user' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -297,7 +297,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <button type="submit" name="add_user" class="btn btn-primary">Add User</button>
+                                        <button type="submit" name="add_user" class="btn btn-primary table-buttons-update">Add User</button>
                                     </div>
                                 </div>
                             </form>
@@ -357,7 +357,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" name="edit_user" class="btn btn-primary">Update User</button>
+                                            <button type="submit" name="edit_user" class="btn btn-primary table-buttons-update">Update User</button>
                                         </div>
                                     </div>
                                 </form>

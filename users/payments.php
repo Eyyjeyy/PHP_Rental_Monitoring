@@ -359,7 +359,7 @@
 
 
 <div class="row mx-auto w-65 d-flex align-items-center col main content" id="paymentwhole">
-    <div class="mx-auto">
+  <div class="mx-auto">
     <div class="card-header text-center" style="font-size: 1.2rem; font-weight: bold;">Payment</div>
 
         <div class="card-body">
@@ -414,7 +414,10 @@
             
         </div>
     </div>
+  </div>
 </div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
