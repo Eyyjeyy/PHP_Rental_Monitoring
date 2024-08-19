@@ -402,14 +402,11 @@
                                 </div>
                             </div>
                             <div class="col-3 p-0" id="btnzone">
-                          
-                           
-                                    <div class="btn-2">
-                                    <label id="file-name-label">No file selected</label>
-                                    <input type="file" id="file" name="file" style="">
-                                    <button type="submit" style="border-style: none; border-radius: 4px;" id="file-btn" class="btn btn-primary">Upload File</button>
-
-                                <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
+                                <div class="btn-2">
+                                    <label for="file" id="file-name-label" class="btn btn-primary w-100">No file selected</label>
+                                    <input type="file" id="file" name="file" style="display:none;">
+                                    <button type="submit" style="border-style: none; border-radius: 4px;" id="file-btn" class="btn btn-primary mt-2">Upload File</button>
+                                    <button class="btn btn-primary mt-2" id="send-btn" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
                                 </div>
                             </div>
                         </div>
@@ -419,7 +416,11 @@
                 $(document).ready(function() {
                     $('#file').on('change', function() {
                         var fileName = $(this).val().split('\\').pop(); // Get the selected file name
-                        $('#file-name-label').text(fileName ? fileName : 'No file selected'); // Update the label text
+                        if (fileName) {
+                            $('#file-name-label').text(fileName);
+                        } else {
+                            $('#file-name-label').text('No file selected');
+                        }
                     });
                 });
                 $('#form-container').html(formHtml);
@@ -439,6 +440,7 @@
                             console.log('Form submitted successfully:', response);
                             $('#message-input').val('');
                             $('#file').val('');
+                            $('#file-name-label').text('No file selected'); // Reset the file label
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.error('Error submitting form:', textStatus, errorThrown);
