@@ -114,7 +114,9 @@
     // INNER JOIN categories ON houses.category_id = categories.id
     // ";
 
-    $sql = "SELECT * FROM tenants";
+    $sql = "SELECT tenants.*, houses.house_name AS house_name
+            FROM tenants
+            LEFT JOIN houses ON tenants.house_id = houses.id;";
 
     $result = $admin->conn->query($sql);
     // $sql_option = "SELECT houses.id, houses.house_number, categories.name AS category_name FROM houses 
@@ -266,7 +268,7 @@
                                         echo "<td>" . htmlspecialchars($row['lname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['users_username']) . "</td>";
-                                        echo "<td>House ID: " . htmlspecialchars($row['house_id']) . "<br>Category: " . htmlspecialchars($row['house_category']) . "</td>";
+                                        echo "<td>House ID: " . htmlspecialchars($row['house_id']) . "<br>Category: " . htmlspecialchars($row['house_category']) . "<br>House Name: " . htmlspecialchars($row['house_name']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['date_start']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
