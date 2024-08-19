@@ -359,62 +359,64 @@
 
 
 <div class="row mx-auto w-65 d-flex align-items-center col main content" id="paymentwhole">
-    <div class="mx-auto">
+  <div class="mx-auto">
     <div class="card-header text-center" style="font-size: 1.2rem; font-weight: bold;">Payment</div>
-
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="row" id="createrec">
-                  <div class="col-sm-6" id="monthly">
-                    <?php 
-                    echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
-                    echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
-                    echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
-                    ?>
-                  </div>
-                  <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end" id="createrecbtn">
-                    <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                        <i class="fa fa-plus"></i> Create Receipt
-                    </button>
-                  </div>
-                </div>
-            </div>
-            <div class="table-container">
-            <div class="table-responsive"">
-                <table class="table table-striped table-bordered border border-5">
-                    <thead class="">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Approved</th>
-                            <th scope="col">Payment Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        // Check if there are any rows in the result set
-                        if ($result->num_rows > 0) {
-                            // Output data of each row
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
-                                echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
-                                echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
-                                echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
-                                echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='3'>No payments found</td></tr>";
-                        }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="row" id="createrec">
+          <div class="col-sm-6" id="monthly">
+            <?php 
+            echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
+            echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
+            echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
+            ?>
+          </div>
+          <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end" id="createrecbtn">
+            <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
+              <i class="fa fa-plus"></i> Create Receipt
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="table-container">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered border border-5">
+            <thead class="">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Image</th>
+                <th scope="col">Approved</th>
+                <th scope="col">Payment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                // Check if there are any rows in the result set
+                if ($result->num_rows > 0) {
+                  // Output data of each row
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
+                    echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
+                    echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
+                    echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
+                    echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
+                    echo "</tr>";
+                  }
+                } else {
+                  echo "<tr><td colspan='5'>No payments found</td></tr>";
+                }
+              ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
