@@ -73,20 +73,20 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = $_POST['message'] ?? '';
-        $image_path = null;
+        $file_path = null;
     
-        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-            $file_tmp_path = $_FILES['image']['tmp_name'];
-            $file_name = $_FILES['image']['name'];
+        if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+            $file_tmp_path = $_FILES['file']['tmp_name'];
+            $file_name = $_FILES['file']['name'];
             $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif');
+            $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'ogg');
     
             if (in_array($file_extension, $allowed_extensions)) {
                 $upload_file_dir = './uploads/';
                 $dest_path = $upload_file_dir . uniqid() . '.' . $file_extension;
     
                 if (move_uploaded_file($file_tmp_path, $dest_path)) {
-                    $image_path = $dest_path;
+                    $file_path = $dest_path;
                 } else {
                     echo "File could not be uploaded.";
                 }
@@ -95,9 +95,9 @@
             }
         }
     
-        if (!empty($message) || $image_path) {
+        if (!empty($message) || $file_path) {
             $chat_user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
-            $admin->sendMessage($user_id, $chat_user_id, $message, $image_path);
+            $admin->sendMessage($user_id, $chat_user_id, $message, $file_path);
         }
     }
 
@@ -303,35 +303,45 @@
                         var messageClass = row.sender_id == userId ? 'message-right' : 'message-left';
 
                         // Generate unique ID for modal based on message ID
-                        var modalId = 'imageModal' + row.id;
+                        var modalId = 'fileModal' + row.id;
 
                         var messageHtml = '<div class="message ' + messageClass + '">';
                         messageHtml += '<p><strong>' + sender + ':</strong> ' + row.message + '</p>';
 
                         if (row.image_path) {
-                            // Add link to trigger modal
-                            messageHtml += '<a href="#" data-bs-toggle="modal" data-bs-target="#' + modalId + '">';
-                            messageHtml += '<img src="' + row.image_path + '" alt="Image" class="chat-image" style="max-width: 100px; max-height: 100px; cursor: pointer;">';
-                            messageHtml += '</a>';
+                            var fileExtension = row.image_path.split('.').pop().toLowerCase();
 
-                            // Add modal HTML
-                            messageHtml += '<div class="modal fade" id="' + modalId + '" tabindex="-1" aria-labelledby="' + modalId + 'Label" aria-hidden="true">';
-                            messageHtml += '<div class="modal-dialog modal-dialog-centered">';
-                            messageHtml += '<div class="modal-content">';
-                            messageHtml += '<div class="modal-header">';
-                            messageHtml += '<h5 class="modal-title" id="' + modalId + 'Label">Image Preview</h5>';
-                            messageHtml += '<button type="button" class="btn-svg"  data-bs-dismiss="modal" aria-label="Close">';
-                            messageHtml +=                '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">';
-                            messageHtml +=                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>';
-                            messageHtml +=                '</svg>';
-                            messageHtml +=         '</button>';
-                            messageHtml += '</div>';
-                            messageHtml += '<div class="modal-body mx-auto">';
-                            messageHtml += '<img src="' + row.image_path + '" alt="Image" class="img-fluid" style="max-width: 100%;">';
-                            messageHtml += '</div>';
-                            messageHtml += '</div>';
-                            messageHtml += '</div>';
-                            messageHtml += '</div>';
+                            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                                // Add link to trigger modal for image
+                                messageHtml += '<a href="#" data-bs-toggle="modal" data-bs-target="#' + modalId + '">';
+                                messageHtml += '<img src="' + row.image_path + '" alt="Image" class="chat-image" style="max-width: 100px; max-height: 100px; cursor: pointer;">';
+                                messageHtml += '</a>';
+
+                                // Add modal HTML for image
+                                messageHtml += '<div class="modal fade" id="' + modalId + '" tabindex="-1" aria-labelledby="' + modalId + 'Label" aria-hidden="true">';
+                                messageHtml += '<div class="modal-dialog modal-dialog-centered">';
+                                messageHtml += '<div class="modal-content">';
+                                messageHtml += '<div class="modal-header">';
+                                messageHtml += '<h5 class="modal-title" id="' + modalId + 'Label">Image Preview</h5>';
+                                messageHtml += '<button type="button" class="btn-svg" data-bs-dismiss="modal" aria-label="Close">';
+                                messageHtml += '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">';
+                                messageHtml += '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>';
+                                messageHtml += '</svg>';
+                                messageHtml += '</button>';
+                                messageHtml += '</div>';
+                                messageHtml += '<div class="modal-body mx-auto">';
+                                messageHtml += '<img src="' + row.image_path + '" alt="Image" class="img-fluid" style="max-width: 100%;">';
+                                messageHtml += '</div>';
+                                messageHtml += '</div>';
+                                messageHtml += '</div>';
+                                messageHtml += '</div>';
+                            } else if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
+                                // Inline video player
+                                messageHtml += '<video controls class="mw-100">';
+                                messageHtml += '<source src="' + row.image_path + '" type="video/' + fileExtension + '">';
+                                messageHtml += 'Your browser does not support the video tag.';
+                                messageHtml += '</video>';
+                            }
                         }
 
                         messageHtml += '<span class="timestamp">' + row.timestamp + '</span>';
@@ -396,7 +406,7 @@
                            
                                     <div class="btn-2">
                                     <label id="file-name-label">No file selected</label>
-                                    <input type="file" id="file" name="file" style="display:none;">
+                                    <input type="file" id="file" name="file" style="">
                                     <button type="submit" style="border-style: none; border-radius: 4px;" id="file-btn" class="btn btn-primary">Upload File</button>
 
                                 <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px;" type="submit">Send</button>
@@ -405,6 +415,13 @@
                         </div>
                     </form>
                 `;
+                // JavaScript to update the file name label when a file is selected
+                $(document).ready(function() {
+                    $('#file').on('change', function() {
+                        var fileName = $(this).val().split('\\').pop(); // Get the selected file name
+                        $('#file-name-label').text(fileName ? fileName : 'No file selected'); // Update the label text
+                    });
+                });
                 $('#form-container').html(formHtml);
 
                 // Re-bind form submission handler
@@ -421,7 +438,7 @@
                         success: function(response) {
                             console.log('Form submitted successfully:', response);
                             $('#message-input').val('');
-                            $('#image-input').val('');
+                            $('#file').val('');
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.error('Error submitting form:', textStatus, errorThrown);

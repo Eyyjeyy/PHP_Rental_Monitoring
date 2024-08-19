@@ -737,10 +737,10 @@ Class Admin {
     return $users;
   }
   
-  public function sendMessage($sender_id, $receiver_id, $message, $image_path = null) {
+  public function sendMessage($sender_id, $receiver_id, $message, $media_path = null) {
     $sql = "INSERT INTO messages (sender_id, receiver_id, users_id, message, timestamp, image_path) VALUES (?, ?, ?, ?, NOW(), ?)";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("iiiss", $sender_id, $receiver_id, $sender_id, $message, $image_path); // Assuming users_id is the same as sender_id
+    $stmt->bind_param("iiiss", $sender_id, $receiver_id, $sender_id, $message, $media_path); // Assuming users_id is the same as sender_id
 
     $retrievesql = "SELECT * FROM users WHERE id = ?";
     $retrievestmt = $this->conn->prepare($retrievesql);

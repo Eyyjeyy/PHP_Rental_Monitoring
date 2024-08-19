@@ -89,20 +89,20 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = $_POST['message'] ?? '';
-        $image_path = null;
+        $media_path = null;
     
-        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-            $file_tmp_path = $_FILES['image']['tmp_name'];
-            $file_name = $_FILES['image']['name'];
+        if (isset($_FILES['media']) && $_FILES['media']['error'] == UPLOAD_ERR_OK) {
+            $file_tmp_path = $_FILES['media']['tmp_name'];
+            $file_name = $_FILES['media']['name'];
             $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif');
+            $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'ogg');
     
             if (in_array($file_extension, $allowed_extensions)) {
                 $upload_file_dir = './uploads/';
                 $dest_path = $upload_file_dir . uniqid() . '.' . $file_extension;
     
                 if (move_uploaded_file($file_tmp_path, $dest_path)) {
-                    $image_path = $dest_path;
+                    $media_path = $dest_path;
                 } else {
                     echo "File could not be uploaded.";
                 }
@@ -111,9 +111,9 @@
             }
         }
     
-        if (!empty($message) || $image_path) {
+        if (!empty($message) || $media_path) {
             $chat_user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
-            $admin->sendMessage($user_id, $chat_user_id, $message, $image_path);
+            $admin->sendMessage($user_id, $chat_user_id, $message, $media_path);
         }
     }
 
@@ -395,7 +395,7 @@
                     <?php if ($chat_user_id): ?>
                         <form id="message-form" action="chat.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data">
                             <textarea name="message" id="message-input" placeholder="Type your message here..." required></textarea>
-                            <input type="file" name="image" id="image-input" accept="image/*">
+                            <input type="file" name="media" id="media-input" accept="image/*,video/*">
                             <button type="submit">Send</button>
                         </form>
                     <?php endif; ?>
@@ -426,28 +426,38 @@
                 messages.forEach(function(message) {
                     var sender = (message.sender_id == userId) ? 'You' : message.sender_username;
                     var classMessage = (message.sender_id == userId) ? 'message-right' : 'message-left';
-                    var imageHTML = '';
+                    var mediaHTML = '';
                     if (message.image_path) {
-                        imageHTML = `<a href="#" data-bs-toggle="modal" data-bs-target="#imageModal${message.id}">
-                                        <img src="${message.image_path}" alt="Image">
-                                    </a>
-                                    <div class="modal fade" id="imageModal${message.id}" tabindex="-1" aria-labelledby="imageModalLabel${message.id}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="imageModalLabel${message.id}">Image Preview</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body mx-auto">
-                                                    <img src="${message.image_path}" alt="Image" class="img-fluid">
-                                                </div>
-                                            </div>
+                        var fileExtension = message.image_path.split('.').pop().toLowerCase();
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                            mediaHTML = `
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#mediaModal${message.id}">
+                                <img src="${message.image_path}" alt="Image">
+                            </a>
+                            <div class="modal fade" id="mediaModal${message.id}" tabindex="-1" aria-labelledby="mediaModalLabel${message.id}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="mediaModalLabel${message.id}">Image Preview</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                    </div>`;
+                                        <div class="modal-body mx-auto">
+                                            <img src="${message.image_path}" alt="Image" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        } else if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
+                            mediaHTML = `
+                            <video controls class="w-50">
+                                <source src="${message.image_path}" type="video/${fileExtension}">
+                                Your browser does not support the video tag.
+                            </video>`;
+                        }
                     }
                     html += `<div class="message ${classMessage}">
                                 <p><strong>${sender}:</strong> ${message.message}</p>
-                                ${imageHTML}
+                                ${mediaHTML}
                                 <span class="timestamp">${message.timestamp}</span>
                             </div>`;
                 });
@@ -468,7 +478,7 @@
                     success: function(response) {
                         console.log('Form submitted successfully:', response);
                         $('#message-input').val('');
-                        $('#image-input').val('');
+                        $('#media-input').val('');
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.error('Error submitting form:', textStatus, errorThrown);

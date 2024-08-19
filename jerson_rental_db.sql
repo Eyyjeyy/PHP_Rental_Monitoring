@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 12:28 PM
+-- Generation Time: Aug 19, 2024 at 07:27 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -51,6 +51,7 @@ CREATE TABLE `expenses` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `info` varchar(50) NOT NULL,
+  `amount` float NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -58,8 +59,15 @@ CREATE TABLE `expenses` (
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`id`, `name`, `info`, `date`) VALUES
-(1, 'sample', 'yada yada', '2024-08-14');
+INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `date`) VALUES
+(1, 'sample', 'yada yada', 0, '2024-08-14'),
+(4, 'varda', 'gg', 88, '2024-08-15'),
+(5, 'varda', '4324', 90.99, '2024-08-15'),
+(6, 'gg', 'varda', 91, '2024-08-15'),
+(7, 'fdsf', 'vardas', 90.9999, '2024-08-15'),
+(8, 'asdas', 'gg', 91, '2024-08-15'),
+(9, 'ss', 'ss', 23, '2024-08-15'),
+(10, 'aasd', 'asd', 91, '2024-08-15');
 
 -- --------------------------------------------------------
 
@@ -142,7 +150,36 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (60, 40, 'Update', 'Updated Expense, ID: 3<br>Expenses Info: form info_1 1234 -> form info_1 12344', '2024-08-14 10:03:27'),
 (61, 40, 'Update', 'Updated Expense, ID: 3<br>Expenses Info: form info_1 12344 -> form info_1 123', '2024-08-14 10:14:35'),
 (62, 40, 'Delete', 'Deleted Expense, ID: 3<br>Expense Name, : Test form<br>Expense Info, : form info_1 123<br>', '2024-08-14 10:21:02'),
-(63, 40, 'Delete', 'Deleted Expense, ID: 2<br>Expense Name, : mag<br>Expense Info, : asdafds<br>', '2024-08-14 10:21:14');
+(63, 40, 'Delete', 'Deleted Expense, ID: 2<br>Expense Name, : mag<br>Expense Info, : asdafds<br>', '2024-08-14 10:21:14'),
+(64, 40, 'Add', 'Added Expenses, ID: 4<br>Expenses Name, : varda<br>Expenses Info, : gg<br>Expenses Amount, : 88<br>', '2024-08-14 22:25:47'),
+(65, 40, 'Add', 'Added Expenses, ID: 5<br>Expenses Name : varda<br>Expenses Info : 4324<br>Expenses Amount : 90.99<br>', '2024-08-14 22:42:26'),
+(66, 40, 'Add', 'Added Expenses, ID: 6<br>Expenses Name : gg<br>Expenses Info : varda<br>Expenses Amount : 91<br>', '2024-08-14 22:42:34'),
+(67, 40, 'Add', 'Added Expenses, ID: 7<br>Expenses Name : fdsf<br>Expenses Info : vardas<br>Expenses Amount : 90.9999<br>', '2024-08-14 22:43:34'),
+(68, 40, 'Add', 'Added Expenses, ID: 8<br>Expenses Name : asdas<br>Expenses Info : gg<br>Expenses Amount : 91<br>', '2024-08-14 22:44:50'),
+(69, 40, 'Add', 'Added House, ID: 857<br> Housename: asdas2313<br> Category: 65<br> Price: 123<br> Electric Account: asdad (32138)<br> Water Account: asdad (543242)', '2024-08-14 22:48:29'),
+(70, 40, 'Delete', 'Deleted House, ID: 857<br> Housename: asdas2313<br> Category: 093<br> Price: 123', '2024-08-14 22:53:25'),
+(71, 40, 'Add', 'Added Expenses, ID: 9<br>Expenses Name : ss<br>Expenses Info : ss<br>Expenses Amount : 23<br>', '2024-08-14 22:57:36'),
+(72, 40, 'Add', 'Added Expenses, ID: 10<br>Expenses Name : aasd<br>Expenses Info : asd<br>Expenses Amount : 91<br>', '2024-08-14 23:01:46'),
+(73, 41, 'Update', 'Updated User ID: 41<br>Email : 202010108@fit.edu.phhhh -> 202010108@fit.edu.phhhhh', '2024-08-17 11:36:26'),
+(74, 41, 'Update', 'Updated User ID: 41<br>Firstname: Broo -> Broonam<br>Middlename : Mad3434567 -> Mad3434567german<br>Lastname : Good -> Goodasd<br>Contact : 123 -> 123456', '2024-08-17 11:42:02'),
+(75, 41, 'Update', 'Updated User ID: 41<br>Password : 123456 -> 123777', '2024-08-17 11:42:54'),
+(76, 40, 'Message', 'Message, ID: 183<br>Receiver, : aj<br>', '2024-08-18 06:11:14'),
+(77, 40, 'Message', 'Message, ID: 184<br>Receiver, : aj<br>', '2024-08-18 06:13:31'),
+(78, 40, 'Message', 'Message, ID: 185<br>Receiver, : aj<br>', '2024-08-18 06:14:39'),
+(79, 40, 'Message', 'Message, ID: 186<br>Receiver, : aj<br>', '2024-08-18 06:16:09'),
+(80, 40, 'Message', 'Message, ID: 187<br>Receiver, : aj<br>', '2024-08-18 06:17:57'),
+(81, 40, 'Message', 'Message, ID: 196<br>Receiver, : aj<br>', '2024-08-18 07:51:39'),
+(82, 40, 'Message', 'Message, ID: 198<br>Receiver, : aj<br>', '2024-08-18 08:59:25'),
+(83, 40, 'Message', 'Message, ID: 199<br>Receiver, : aj<br>', '2024-08-18 09:16:44'),
+(84, 40, 'Message', 'Message, ID: 200<br>Receiver, : aj<br>', '2024-08-18 09:16:50'),
+(85, 40, 'Message', 'Message, ID: 201<br>Receiver, : aj<br>', '2024-08-18 09:18:21'),
+(86, 40, 'Message', 'Message, ID: 202<br>Receiver, : aj<br>', '2024-08-18 09:20:23'),
+(87, 40, 'Message', 'Message, ID: 203<br>Receiver, : aj<br>', '2024-08-18 09:20:28'),
+(88, 40, 'Message', 'Message, ID: 204<br>Receiver, : aj<br>', '2024-08-18 09:20:36'),
+(89, 40, 'Message', 'Message, ID: 205<br>Receiver, : aj<br>', '2024-08-18 09:29:09'),
+(90, 40, 'Message', 'Message, ID: 206<br>Receiver, : aj<br>', '2024-08-19 01:49:34'),
+(91, 40, 'Message', 'Message, ID: 207<br>Receiver, : aj<br>', '2024-08-19 01:50:50'),
+(92, 40, 'Message', 'Message, ID: 208<br>Receiver, : aj<br>', '2024-08-19 02:21:10');
 
 -- --------------------------------------------------------
 
@@ -351,7 +388,39 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (179, 41, 40, 41, 'a', '2024-08-03 13:05:12', NULL),
 (180, 41, 40, 41, '23', '2024-08-03 13:05:17', NULL),
 (181, 40, 41, 40, 'darci', '2024-08-12 11:44:08', NULL),
-(182, 40, 41, 40, 'lommy', '2024-08-12 12:09:47', NULL);
+(182, 40, 41, 40, 'lommy', '2024-08-12 12:09:47', NULL),
+(183, 40, 41, 40, 'meme', '2024-08-18 14:11:14', './uploads/66c19082b39c2.jpg'),
+(184, 40, 41, 40, 'jeje', '2024-08-18 14:13:31', './uploads/66c1910b00ce2.jpg'),
+(185, 40, 41, 40, 'jeje', '2024-08-18 14:14:39', './uploads/66c1914f347b3.jpg'),
+(186, 40, 41, 40, 'keke', '2024-08-18 14:16:09', './uploads/66c191a908713.gif'),
+(187, 40, 41, 40, 'meme', '2024-08-18 14:17:57', './uploads/66c19215e36dd.gif'),
+(188, 41, 40, 41, 'asdasd', '2024-08-18 14:36:28', NULL),
+(189, 41, 40, 41, 'asd', '2024-08-18 14:36:55', NULL),
+(190, 41, 40, 41, 'sdf', '2024-08-18 14:36:56', NULL),
+(191, 41, 40, 41, 'fdsf', '2024-08-18 14:37:00', NULL),
+(192, 41, 40, 41, 'sdfds', '2024-08-18 14:37:05', NULL),
+(193, 41, 40, 41, 'ajj', '2024-08-18 14:57:15', NULL),
+(194, 41, 40, 41, 'gg', '2024-08-18 14:57:30', NULL),
+(195, 41, 40, 41, 'bababa', '2024-08-18 15:51:30', NULL),
+(196, 40, 41, 40, 'gg', '2024-08-18 15:51:39', NULL),
+(197, 41, 40, 41, 'bootstrap bill', '2024-08-18 16:59:18', NULL),
+(198, 40, 41, 40, 'aj', '2024-08-18 16:59:25', NULL),
+(199, 40, 41, 40, 'mm', '2024-08-18 17:16:44', NULL),
+(200, 40, 41, 40, 'yy', '2024-08-18 17:16:50', NULL),
+(201, 40, 41, 40, 'ee', '2024-08-18 17:18:21', NULL),
+(202, 40, 41, 40, 'kk', '2024-08-18 17:20:23', NULL),
+(203, 40, 41, 40, 'll', '2024-08-18 17:20:28', NULL),
+(204, 40, 41, 40, 'pp', '2024-08-18 17:20:36', NULL),
+(205, 40, 41, 40, 'mm', '2024-08-18 17:29:09', NULL),
+(206, 40, 41, 40, 'kk', '2024-08-19 09:49:34', './uploads/66c2a4aebebe5.png'),
+(207, 40, 41, 40, 'lop', '2024-08-19 09:50:50', './uploads/66c2a4fa13301.mp4'),
+(208, 40, 41, 40, 'lmao', '2024-08-19 10:21:10', './uploads/66c2ac16e4025.jpg'),
+(209, 41, 40, 41, 'gg', '2024-08-19 11:56:47', NULL),
+(210, 41, 40, 41, 'asd', '2024-08-19 11:57:04', NULL),
+(211, 41, 40, 41, 'aa', '2024-08-19 11:57:29', NULL),
+(212, 41, 40, 41, 'gg', '2024-08-19 11:58:38', NULL),
+(213, 41, 40, 41, 'aa', '2024-08-19 12:35:17', NULL),
+(214, 41, 40, 41, 'qq', '2024-08-19 12:44:00', './uploads/66c2cd907d9c0.png');
 
 -- --------------------------------------------------------
 
@@ -431,10 +500,10 @@ INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `file
 (7, 'Lucious Black Gorehound', 0, 63, 847, '../uploads/GAMEPOSTER_666b08e7a6d95.jpg', '2024-06-13', ''),
 (8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13', ''),
 (9, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/received_993104588452786_666b0958540c1.jpeg', '2024-06-14', ''),
-(10, 'Mad3434 Good', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
-(11, 'Mad3434 Good', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
-(12, 'Mad3434 Good', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'true'),
-(13, 'Mad3434 Good', 5, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false');
+(10, 'Broonam Mad3434567german Goodasd', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
+(11, 'Broonam Mad3434567german Goodasd', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
+(12, 'Broonam Mad3434567german Goodasd', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'true'),
+(13, 'Broonam Mad3434567german Goodasd', 500, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false');
 
 -- --------------------------------------------------------
 
@@ -462,7 +531,7 @@ CREATE TABLE `tenants` (
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(61, ' NeloAngelo', 'Mad3434', 'Good', '123', '41', 'aj', 846, '093', '2024-05-09', NULL, NULL),
+(61, 'Broonam', 'Mad3434567german', 'Goodasd', '123456', '41', 'aj', 846, '093', '2024-05-09', NULL, NULL),
 (62, 'John', 'Payo', 'Junio', '0983', '69', 'aj', 839, '09', '2024-06-09', NULL, NULL),
 (63, 'Lucious', 'Black', 'Gorehound', '093414', '70', 'OuterHeaven', 847, '093', '2024-05-01', NULL, '2024-05-01'),
 (66, 'Romeo', 'Juliet', 'Echo', '123', '71', 'Bad', 847, '093', '2024-05-01', NULL, '2024-05-01'),
@@ -494,7 +563,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`) VALUES
 (40, 'admin12', '', '', '', '123', '', 'admin', '2024-05-25 18:51:47'),
-(41, 'aj', ' ', 'Mad3434', 'Good', '123', '', 'user', '2024-05-25 18:52:14'),
+(41, 'aj', 'Broonam', 'Mad3434567german', 'Goodasd', '123777', '202010108@fit.edu.phhhhh', 'user', '2024-05-25 18:52:14'),
 (46, 'Mad Max1', 'as12', 'saasasa34', 'ddasasas56', 'lastname_murder', '', 'admin', '2024-06-02 22:18:16'),
 (50, 'asd_1', 'asd', 'asd', 'asd', 'sdf', '', 'admin', '2024-06-03 17:42:54'),
 (51, 'asd_ ', 'asd', 'asd', 'asd', 'asd', '', 'admin', '2024-06-03 17:43:08'),
@@ -597,31 +666,31 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=857;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=858;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`
