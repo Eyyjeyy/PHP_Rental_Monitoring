@@ -273,8 +273,8 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Paper Name</th>
+                                    <th scope="col" class="sortable" data-column="file_id" data-direction="asc">#</th>
+                                    <th scope="col" class="sortable" data-column="file_name" data-direction="asc">Paper Name</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Created At</th>
                                     <th scope="col">Actions</th>
@@ -317,9 +317,21 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Paper Type</th>
-                                    <th scope="col">Created At</th>
+                                    <th scope="col">
+                                        <a href="#" onclick="handleSort('id')" class="text-decoration-none" style="color: #212529;">
+                                            # <span id="sortIconId"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" onclick="handleSort('name')" class="text-decoration-none" style="color: #212529;">
+                                            Paper Type <span id="sortIconName"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" onclick="handleSort('created_at')" class="text-decoration-none" style="color: #212529;">
+                                            Created At <span id="sortIconCreatedAt"></span>
+                                        </a>
+                                    </th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -549,6 +561,127 @@
         });
     </script>
     <script>
+        var sortColumnType = 'id';
+        var sortDirectionType = 'asc';
+        var arrayData = [];
+
+        var source = new EventSource("../fetch_papers.php");
+        source.onmessage = function(event) {
+            arrayData = JSON.parse(event.data);
+            renderTableType();
+            updateDropdown();
+        };
+
+        function renderTableType() {
+            var dataContainer = document.querySelector('tbody#result');
+            dataContainer.innerHTML = '';
+
+            arrayData.sort(function(a, b) {
+                var aValueType = a[sortColumnType];
+                var bValueType = b[sortColumnType];
+
+                if (sortColumnType === 'id') {
+                    aValueType = parseInt(aValueType, 10);
+                    bValueType = parseInt(bValueType, 10);
+                    return sortDirectionType === 'asc' ? aValueType - bValueType : bValueType - aValueType;
+                } else {
+                    aValueType = aValueType.toString().toLowerCase();
+                    bValueType = bValueType.toString().toLowerCase();
+                    if (aValueType < bValueType) {
+                        return sortDirectionType === 'asc' ? -1 : 1;
+                    }
+                    if (aValueType > bValueType) {
+                        return sortDirectionType === 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                }
+            });
+
+            arrayData.forEach(e => {
+                dataContainer.innerHTML += `
+                    <tr>
+                        <td>${e.id}</td>
+                        <td>${e.name}</td>
+                        <td>${e.created_at}</td>
+                        <td>
+                            <button class="btn btn-danger btn-delete table-buttons-delete" name="delete_category" data-id="${e.id}">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', function() {
+                    var id = this.getAttribute('data-id');
+                    deleteCategory(id);
+                });
+            });
+
+            updateSortIcons();
+        }
+
+        function handleSort(column) {
+            if (sortColumnType === column) {
+                sortDirectionType = sortDirectionType === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumnType = column;
+                sortDirectionType = 'asc';
+            }
+
+            renderTableType();
+        }
+
+        function updateSortIcons() {
+            document.getElementById('sortIconId').textContent = '';
+            document.getElementById('sortIconName').textContent = '';
+            document.getElementById('sortIconCreatedAt').textContent = '';
+
+            let icon = sortDirectionType === 'asc' ? '↑' : '↓';
+            if (sortColumnType === 'id') {
+                document.getElementById('sortIconId').textContent = icon;
+            } else if (sortColumnType === 'name') {
+                document.getElementById('sortIconName').textContent = icon;
+            } else if (sortColumnType === 'created_at') {
+                document.getElementById('sortIconCreatedAt').textContent = icon;
+            }
+        }
+
+        function updateDropdown() {
+            var paperCategorySelect = document.getElementById('paperCategory');
+            paperCategorySelect.innerHTML = '';
+
+            arrayData.forEach(function(category) {
+                var option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                paperCategorySelect.appendChild(option);
+            });
+        }
+
+        function deleteCategory(id) {
+            var formData = new FormData();
+            formData.append('delete_category', 'true');
+            formData.append('id', id);
+
+            fetch('adminpapers.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.includes('success')) {
+                    arrayData = arrayData.filter(item => item.id != id);
+                    renderTableType();
+                }
+            });
+        }
+    </script>
+
+
+    <!-- <script>
+        var sortColumn = 'id'; // Default sort column
+        var sortDirection = 'asc'; // Default sort direction
+
         var source = new EventSource("../fetch_papers.php");
         source.onmessage = function(event) {
             // document.getElementById("result").innerHTML += event.data + "<br>";
@@ -580,7 +713,7 @@
                 paperCategorySelect.appendChild(option);
             });
         }
-    </script>
+    </script> -->
 
     <script>
         var allDataFiles = [];
@@ -603,12 +736,30 @@
             }
         };
 
+        
+
+        var sortColumn = 'file_id'; // Default sort column
+        var sortDirection = 'asc'; // Default sort direction
+
         function renderTable() {
             var dataContainer_files = document.querySelector('tbody#papertable');
             dataContainer_files.innerHTML = '';
+
             var startIndex = (currentPage - 1) * itemsPerPage;
             var endIndex = startIndex + itemsPerPage;
             var paginatedData = allDataFiles.slice(startIndex, endIndex);
+
+            // Render the table headers with sort arrows
+            var tableHeaders = `
+                <tr>
+                    <th scope="col"><a href="#" onclick="sortTable('file_id')" class="text-decoration-none" style="color: #212529;"># ${sortColumn === 'file_id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</a></th>
+                    <th scope="col"><a href="#" onclick="sortTable('file_name')" class="text-decoration-none" style="color: #212529;">File Name ${sortColumn === 'file_name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</a></th>
+                    <th scope="col"><a href="#" onclick="sortTable('category_name')" class="text-decoration-none" style="color: #212529;">Category ${sortColumn === 'category_name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</a></th>
+                    <th scope="col"><a href="#" onclick="sortTable('uploaded_at')" class="text-decoration-none" style="color: #212529;">Uploaded At ${sortColumn === 'uploaded_at' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</a></th>
+                    <th scope="col">Actions</th>
+                </tr>
+            `;
+            document.querySelector('thead').innerHTML = tableHeaders;
 
             paginatedData.forEach(e_files => {
                 dataContainer_files.innerHTML += `
@@ -642,6 +793,36 @@
                     deleteFile(id);
                 });
             });
+        }
+
+        function sortData(column, direction) {
+            allDataFiles.sort(function(a, b) {
+                let aValue = column === 'file_id' ? parseInt(a[column], 10) : a[column];
+                let bValue = column === 'file_id' ? parseInt(b[column], 10) : b[column];
+
+                if (aValue < bValue) {
+                    return direction === 'asc' ? -1 : 1;
+                } else if (aValue > bValue) {
+                    return direction === 'asc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+
+            // Sort allDataFiles based on the selected column and direction
+            sortData(sortColumn, sortDirection);
+
+            renderTable(); // Re-render the table with the sorted data
+            updatePaginationControls(); // Update pagination
         }
 
         function deleteFile(id) {

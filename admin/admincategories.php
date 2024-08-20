@@ -57,8 +57,24 @@
             echo "Error occurred while deleting category.";
         }
     }
+
+    // Get sort column and direction from query parameters
+    $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'id';
+    $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
+
+    // Ensure the sort column is one of the allowed columns to prevent SQL injection
+    $allowedColumns = ['id', 'name'];
+    if (!in_array($sortColumn, $allowedColumns)) {
+        $sortColumn = 'id';
+    }
+
+    // Determine the next sort direction
+    $nextSortDirection = $sortDirection === 'ASC' ? 'desc' : 'asc';
+
+    // Determine the arrow symbol based on the current sort direction
+    $arrow = $sortDirection === 'ASC' ? '↑' : '↓';
     
-    $sql = "SELECT * FROM categories";
+    $sql = "SELECT * FROM categories ORDER BY $sortColumn $sortDirection";
     $result = $admin->conn->query($sql);
 
     // Set the title for this page
@@ -170,8 +186,18 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Apartment Type</th>
+                                    <th scope="col">
+                                        <a href="?column=id&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            #
+                                            <?php echo $sortColumn === 'id' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=name&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Apartment Type
+                                            <?php echo $sortColumn === 'name' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>

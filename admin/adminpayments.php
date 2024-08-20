@@ -45,10 +45,16 @@
     $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
 
     // Ensure the sort column is one of the allowed columns to prevent SQL injection
-    $allowedColumns = ['id', 'tenant', 'amount', 'receipt', 'date_payment'];
+    $allowedColumns = ['id', 'name', 'amount', 'date_payment'];
     if (!in_array($sortColumn, $allowedColumns)) {
         $sortColumn = 'date_payment';
     }
+
+    // Determine the next sort direction
+    $nextSortDirection = $sortDirection === 'ASC' ? 'desc' : 'asc';
+
+    // Determine the arrow symbol based on the current sort direction
+    $arrow = $sortDirection === 'ASC' ? '↑' : '↓';
 
     $sql = "SELECT * FROM payments ORDER BY $sortColumn $sortDirection";
     $result = $admin->conn->query($sql);
@@ -158,11 +164,29 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col"><a href="?column=id&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">#</a></th>
-                                    <th scope="col"><a href="?column=tenant&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Tenant</a></th>
-                                    <th scope="col"><a href="?column=amount&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Amount</a></th>
+                                    <th scope="col">
+                                        <a href="?column=id&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            #
+                                            <?php echo $sortColumn === 'id' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=name&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Tenant
+                                            <?php echo $sortColumn === 'name' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=amount&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529; min-width: 100px;">
+                                            Amount <?php echo $sortColumn === 'amount' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
                                     <th scope="col">Receipt</th>
-                                    <th scope="col"><a href="?column=date_payment&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Date</a></th>
+                                    <th scope="col">
+                                        <a href="?column=date_payment&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none" style="color: #212529;">
+                                            Date <?php echo $sortColumn === 'date_payment' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
 
                                     <!-- <th scope="col">
                                         <a href="#" id="sortPaymentDate" data-sort="asc" class="text-decoration-none" style="color: #212529;">Payment Date <span id="sortIndicator">▲</span></a>

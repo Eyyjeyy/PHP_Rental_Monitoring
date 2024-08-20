@@ -114,9 +114,28 @@
     // INNER JOIN categories ON houses.category_id = categories.id
     // ";
 
+
+
+    // Get sort column and direction from query parameters
+    $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'id';
+    $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
+
+    // Ensure the sort column is one of the allowed columns to prevent SQL injection
+    $allowedColumns = ['id', 'fname', 'mname', 'lname', 'users_username', 'house_category', 'date_start'];
+    if (!in_array($sortColumn, $allowedColumns)) {
+        $sortColumn = 'id';
+    }
+
+    // Determine the next sort direction
+    $nextSortDirection = $sortDirection === 'ASC' ? 'desc' : 'asc';
+
+    // Determine the arrow symbol based on the current sort direction
+    $arrow = $sortDirection === 'ASC' ? '↑' : '↓';
+
     $sql = "SELECT tenants.*, houses.house_name AS house_name
             FROM tenants
-            LEFT JOIN houses ON tenants.house_id = houses.id;";
+            LEFT JOIN houses ON tenants.house_id = houses.id
+            ORDER BY $sortColumn $sortDirection;";
 
     $result = $admin->conn->query($sql);
     // $sql_option = "SELECT houses.id, houses.house_number, categories.name AS category_name FROM houses 
@@ -247,13 +266,43 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Firstname</th>
-                                    <th scope="col">Middlename</th>
-                                    <th scope="col">Lastname</th>
+                                    <th scope="col">
+                                        <a href="?column=fname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Firstname
+                                            <?php echo $sortColumn === 'fname' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=mname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Middlename
+                                            <?php echo $sortColumn === 'mname' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=lname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Lastname
+                                            <?php echo $sortColumn === 'lname' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
                                     <th scope="col">Contact</th>
-                                    <th scope="col">Username</th>
-                                    <th scope="col">House</th>
-                                    <th scope="col">Date</th>
+                                    <th scope="col">
+                                        <a href="?column=users_username&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Username
+                                            <?php echo $sortColumn === 'users_username' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=house_category&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            House
+                                            <?php echo $sortColumn === 'house_category' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="?column=date_start&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Date
+                                            <?php echo $sortColumn === 'date_start' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -268,7 +317,7 @@
                                         echo "<td>" . htmlspecialchars($row['lname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['users_username']) . "</td>";
-                                        echo "<td>House ID: " . htmlspecialchars($row['house_id']) . "<br>Category: " . htmlspecialchars($row['house_category']) . "<br>House Name: " . htmlspecialchars($row['house_name']) . "</td>";
+                                        echo "<td>Category: " . htmlspecialchars($row['house_category']) . "<br>House Name: " . htmlspecialchars($row['house_name']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['date_start']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
