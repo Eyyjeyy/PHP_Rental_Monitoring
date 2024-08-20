@@ -243,17 +243,86 @@ button:hover {
 
 
 
+/* edit header/navbar */
+
+#navbarNav {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    justify-content: end;
+
+}
+
+ .navbar-toggler {
+    max-width: 50px;
+    max-height: 50px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 10px;
+    justify-content: end;
+ 
+ }
+
+ .navbar-toggler:hover {
+    background-color: #3A583C;
+}
+
+.navbar-toggler-icon {
+    justify-content: center;
+    padding: 10px;
+    filter: invert(80%) sepia(45%) saturate(686%) hue-rotate(330deg) brightness(105%) contrast(103%);
+}
+
+/* Apply the filter effect to the icon when the navbar-toggler is hovered */
+.navbar-toggler:hover .navbar-toggler-icon {
+    filter: invert(22%) sepia(92%) saturate(2000%) hue-rotate(357deg) brightness(220%) contrast(105%);
+
+}
 
 
 
 
+#navbarbar {
+    display: flex!important; /* Enables flexbox layout */
+    align-items: center!important; /* Vertically centers items */
+    justify-content: center!important; /* Horizontally centers items */
+    padding-top: 25px;
+    padding-bottom: 25px;
+
+    /* Add additional styling as needed */
+}
 
 
+.hover-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.my-svg-icon {
+    margin-top: auto;
+    margin-bottom: auto;
+    color: white;
+}
+
+.hover-container:hover svg {
+    fill: #F7B787; /* Change to your desired hover color for the SVG */
+}
+
+.hover-container:hover p {
+    color: #F7B787; /* Change to your desired hover color for the text */ /* Slightly enlarges the text on hover */
+}
 
 
+@media (min-width: 991px) {
+    #navbar {
+        display: none;
+    }
 
-
-
+    .navcontainer {
+        display: none;
+    }
+}
 
 
 
@@ -273,14 +342,20 @@ button:hover {
     }
 }
 
-@media only screen and (max-width: 748px) {
+@media only screen and (max-width: 990px) {
     div.sidebar {
         padding: 0;
+        align-items: center;
+        justify-content: center;
         min-width: 250px !important; 
         max-width: none;
         width: 100%;
-        min-height: 20vh;
+        min-height: 132px;
+        position: fixed;
+        top:0; left:0; right:0;
+        z-index: 800;
         /* display: flex; */
+        display: none;
     }
     a p{
         margin-left: 0px;
@@ -290,4 +365,158 @@ button:hover {
     a.nav-link {
         justify-content: center;
     }
+
+}
+
+
+
+@media (max-width: 990px) {
+
+    #textindex {
+        margin-bottom: 0px!important;
+        margin-top: 20px!important;
+        max-width: 95%;
+        justify-content: center!important;
+    }
+
+    #textindex-1 {
+        margin-bottom: 0px!important;
+        margin-top: 20px!important;
+        max-width: 95%;
+        margin-left: 2.5%!important;
+        justify-content: center!important;
+    }
+
+    #carousellpics {
+        max-width: 95%!important;
+        margin-left: 2.5%!important;
+        margin-top: 25px!important;
+    }
+
+    .w-65 {
+        min-width: 100% !important;
+    }
+
+    #lastname {
+        width: 100%;
+     }
+
+    #navnav {
+        display: block;
+        flex-direction: column;
+        align-items: end; /* Centers items horizontally within the container */
+        justify-content: end; /* Centers items vertically within the container */
+        height: 100%;
+       
+     }
+
+     /* Ensure dropdown content is hidden by default */
+.dropdown-menu {
+    display: none; /* Hide dropdown menu initially */
+    opacity: 0;
+    min-height: 575px;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    position: absolute;
+    top: 100%; /* Positions the dropdown menu below the navbar */
+    left: 0;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 100%;
+    border: none!important;
+}
+
+.navbar-toggler[aria-expanded="true"] + .dropdown-menu {
+    display: block;
+    opacity: 1;
+    max-height: 300px; /* Adjust based on content */
+    border: none!important;
+}
+
+/* Optional: Style the dropdown items */
+.dropdown-item {
+    padding: 10px 20px;
+    color: #333;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+ }
+
+/* Styles for screens smaller than 600px */
+@media (max-width: 769px) {
+    /* Example: further reduce padding and font size */
+
+    #list ul li a p {
+        padding: 3px;
+        padding-left: 5px;
+        padding-bottom: 5px;
+        font-size: 18px!important; 
+    }
+
+    .message img, .message video {
+        max-width: 100px; /* Adjusted size for smaller screens */
+    }
+
+    #usercol {
+        height: 20%;
+    }
+    
+    #chatcol {
+       height: 80%;
+    }
+
+    #btnzone {
+        display: flex;
+        flex-direction: row; /* Stack items vertically within the row */
+    }
+
+    #textbtnzone {
+        display: flex;
+        flex-direction: row; /* Stack items vertically within the row */
+        justify-content: center; /* Center horizontally */
+    }
+
+    textarea#message-input[name="message"] {
+        min-width: 100%;
+        margin-bottom: 5px;
+    }
+
+    #coluserchat {
+        width: 95%;
+     }
+
+     #chatwhole {
+        margin-bottom: 300px;
+     }
+
+     #form-container {
+        background-color: #FDF4EF;
+    }
+
+     .w-65 {
+        min-width: 100% !important;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #navbar {
+        display: block;
+        position: fixed;
+        top:0; left:0; right:0;
+        z-index: 1000;
+        
+    }
+
+    .navcontainer {
+        padding: 0!important;
+        margin: 0;
+        margin-bottom: 132px;
+     
+    }
+
 }
