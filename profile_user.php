@@ -136,7 +136,7 @@
                             </div>
                             <div class="row justify-content-center justify-content-md-end">
                                 <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mb-3 mt-3 px-4" style="background-color: #527853; border-color: #527853;">Update</button>
+                                    <button type="submit" class="btn btn-primary mb-3 mt-3 px-4" id="submitbtn">Update</button>
                                 </div>
                             </div>
                         </form>

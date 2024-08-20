@@ -318,12 +318,12 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
                     <li class="nav-item mx-1">
                         <a class="nav-link h-100 d-flex align-items-center" id="icontext" href="payments.php">
-                            <p class="mb-0">Payment</p>
+                            <p class="mb-0" id="linknav">Payment</p>
                         </a>
                     </li>
                     <li class="nav-item mx-1">
                         <a class="nav-link h-100 d-flex align-items-center" id="icontext" href="../info.php">
-                            <p class="mb-0">Info</p>
+                            <p class="mb-0" id="linknav">Info</p>
                         </a>
                     </li>
                     <li class="nav-item mx-1">

@@ -15,6 +15,18 @@ a p {
     flex: 1;
 }
 
+#linknav {
+    text-decoration: none; /* Removes underline */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Smooth transition */
+    color: white; 
+     text-decoration: none;
+}
+
+#linknav:hover {
+    color: #F7B787; /* Change color on hover */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow effect */
+}
+
 .nav-link p, .card-header {
     color: #fff;
 }
@@ -77,9 +89,16 @@ thead {
 }
 
 .btn.receipt {
-    color: #fff;
-    background-color: #527853;
+    background-color: #527853; /* Example background color */
     border-color: #527853;
+    color: white; /* Example text color */
+    padding: 7.5px 20px; /* Example padding */
+    border-radius: 4px; /* Example border radius */
+}
+
+.btn.receipt:hover {
+    background-color: #3A583C; /* Change color on hover */
+    border-color: #3A583C;
 }
 
 #form-container {
@@ -179,10 +198,24 @@ thead {
     margin: 2.5px; 
  
 }
-mb
+
 #send-btn:hover {
     background-color: #C95B0E;
     border-color: #C95B0E; 
+    color: white; 
+}
+
+#submitbtn {
+    background-color: #527853;
+    border-color: #527853;
+    width: 106px;
+    margin: 2.5px; 
+ 
+}
+
+#submitbtn:hover {
+    background-color: #3A583C;
+    border-color: #3A583C; 
     color: white; 
 }
 
@@ -281,8 +314,12 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
  }
 
  #icontext {
-    display: flex;
-    justify-content: flex-end; /* Align items to the right */
+    color:#F7B787;
+ }
+
+ #icontext:hover svg{
+    color: #F28543; /* Change color on hover */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow effect */
  }
 
  .navbar-toggler {

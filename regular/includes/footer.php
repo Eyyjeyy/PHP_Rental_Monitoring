@@ -37,6 +37,22 @@
             margin-left: 25%;
         }
 
+        #linklink {
+    margin-left: 10px;
+    text-decoration: none; /* Removes underline */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Smooth transition */
+    color: #F9E8D9; 
+    margin-left: 10px;
+     text-decoration: none;
+}
+
+#linklink:hover {
+    color: #F7B787; /* Change color on hover */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow effect */
+}
+
+
+
 
             @media (max-width: 780px) {
 
@@ -111,25 +127,25 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-envelope" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
-                        <a class="mb-2" style="color: #F9E8D9; margin-left: 10px; text-decoration: none;" href="chat_user.php">Payment</a>
+                        <a class="mb-2" href="chat_user.php" id="linklink">Payment</a>
                     </div>
                     <div class="d-flex" id="linkcontact">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
-                        <a class="mb-2" style="color: #F9E8D9; margin-left: 10px; text-decoration: none;" href="chat_user.php">Info</a>
+                        <a class="mb-2" href="chat_user.php" id="linklink">Info</a>
                     </div>
                     <div class="d-flex" id="linkcontact">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
-                        <a class="mb-2" style="color: #F9E8D9; margin-left: 10px; text-decoration: none;" href="chat_user.php">Profile</a>
+                        <a class="mb-2" href="chat_user.php" id="linklink">Profile</a>
                     </div>
                     <div class="d-flex" id="linkcontact">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
-                        <a class="mb-1" style="color: #F9E8D9; margin-left: 10px; text-decoration: none;" href="chat_user.php">Chat</a>
+                        <a class="mb-1" href="chat_user.php" id="linklink">Chat</a>
                     </div>
                 </div>
             </div>
