@@ -84,10 +84,15 @@
           @media (max-width: 1198px) {
             div.sidebar {
               padding: 0;
-              min-width: 250px !important;
+              min-width: 100% !important;
               max-width: none;
               width: 100%;
               min-height: 20vh;
+            }
+            .navbar-expand .navbar-toggler {
+              display: inline-block;
+            }
+            .navbar-expand .navbar-collapse {
             }
           }
           @media (max-width: 748px) {

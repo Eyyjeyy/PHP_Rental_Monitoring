@@ -180,7 +180,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -263,7 +263,9 @@
                                 <label for="username" class="form-label">Expense Amount</label>
                                 <input type="text" class="form-control" id="username" name="expensesamount" required>
                             </div>
-                            <button type="submit" name="add_expenses" class="btn btn-primary">Add Expenses</button>
+                            <div class="col-12">
+                                <button type="submit" name="add_expenses" class="btn btn-primary table-buttons-update">Add Expenses</button>
+                            </div>
                             </form>
                         </div>
                         </div>
@@ -300,7 +302,9 @@
                                         <label for="updateExpensesamount" class="form-label">Expenses Amount</label>
                                         <input type="text" class="form-control" id="updateExpensesamount" name="expensesamount" required>
                                     </div>
-                                    <button type="submit" name="edit_expenses" class="btn btn-primary">Update Expenses</button>
+                                    <div class="col-12">
+                                        <button type="submit" name="edit_expenses" class="btn btn-primary table-buttons-update">Update Expenses</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

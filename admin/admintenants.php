@@ -239,7 +239,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_tenant"><i class="fa fa-plus"></i> New Tenant</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_tenant"><i class="fa fa-plus"></i> New Tenant</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -409,7 +409,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <button type="submit" name="add_tenant" class="btn btn-primary">Add Tenant</button>
+                                        <button type="submit" name="add_tenant" class="btn btn-primary table-buttons-update">Add Tenant</button>
                                     </div>
                                 </div>
                             </form>
@@ -491,7 +491,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" name="edit_tenant" class="btn btn-primary">Update User</button>
+                                            <button type="submit" name="edit_tenant" class="btn btn-primary table-buttons-update">Update User</button>
                                         </div>
                                     </div>
                                 </form>

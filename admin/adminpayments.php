@@ -40,7 +40,17 @@
         }
     }
 
-    $sql = "SELECT * FROM payments";
+    // Get sort column and direction from query parameters
+    $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'date_payment';
+    $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
+
+    // Ensure the sort column is one of the allowed columns to prevent SQL injection
+    $allowedColumns = ['id', 'tenant', 'amount', 'receipt', 'date_payment'];
+    if (!in_array($sortColumn, $allowedColumns)) {
+        $sortColumn = 'date_payment';
+    }
+
+    $sql = "SELECT * FROM payments ORDER BY $sortColumn $sortDirection";
     $result = $admin->conn->query($sql);
 
     // Set the title for this page
@@ -140,22 +150,27 @@
             <div class="col main content">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-12">
+                        <!-- <div class="col-lg-12">
                             <button class="btn btn-primary float-end" id="new_category"><i class="fa fa-plus"></i> New Category</button>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Tenant</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col"><a href="?column=id&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">#</a></th>
+                                    <th scope="col"><a href="?column=tenant&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Tenant</a></th>
+                                    <th scope="col"><a href="?column=amount&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Amount</a></th>
                                     <th scope="col">Receipt</th>
+                                    <th scope="col"><a href="?column=date_payment&direction=<?php echo $sortDirection === 'ASC' ? 'desc' : 'asc'; ?>" class="text-decoration-none" style="color: #212529;">Date</a></th>
+
+                                    <!-- <th scope="col">
+                                        <a href="#" id="sortPaymentDate" data-sort="asc" class="text-decoration-none" style="color: #212529;">Payment Date <span id="sortIndicator">▲</span></a>
+                                    </th> -->
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="paymentTableBody">
                                 <?php
                                 if ($result->num_rows > 0) {
                                     // Output data of each row
@@ -186,6 +201,7 @@
                                             </div>
                                         </div>";
 
+                                        echo "<td>" . htmlspecialchars($row['date_payment']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
                                         echo "<div class='col-xxl-6 px-2'>";

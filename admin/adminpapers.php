@@ -266,7 +266,7 @@
                     </div> -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -310,7 +310,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-primary float-end" id="new_category"><i class="fa fa-plus"></i> New Category</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_category"><i class="fa fa-plus"></i> New Category</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -354,7 +354,9 @@
                                     <label for="username" class="form-label">Category Name</label>
                                     <input type="text" class="form-control" id="username" name="categoryname" required>
                                 </div>
-                                <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
+                                <div class="col-12">
+                                    <button type="submit" name="add_category" class="btn btn-primary table-buttons-update">Add Category</button>
+                                </div>
                             </form>
                         </div>
                         </div>
@@ -397,7 +399,9 @@
                                         <label for="paperFile" class="form-label">Upload File</label>
                                         <input type="file" class="form-control" id="paperFile" name="paper_file" required>
                                     </div>
-                                    <button type="submit" name="add_category" class="btn btn-primary">Add Papers</button>
+                                    <div class="col-12">
+                                        <button type="submit" name="add_category" class="btn btn-primary table-buttons-update">Add Papers</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -699,6 +703,15 @@
 
                 li.appendChild(button);
                 paginationControls.appendChild(li);
+            }
+
+            // Inline Style to the direct descendant of the active class
+            var activeElement = document.querySelector('.page-item.active');
+            if (activeElement) {
+                var directDescendant = activeElement.querySelector('.page-link');
+                if (directDescendant) {
+                    directDescendant.style.backgroundColor = '#527853';
+                }
             }
         }
 
