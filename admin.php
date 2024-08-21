@@ -1331,6 +1331,35 @@ Class Admin {
     return json_encode($data);
   }
 
+  public function getYearlyIncomeData($year = null) {
+    if ($year === null) {
+      $year = date('Y'); // Default to the current year if no year is provided
+    }
+
+    $sql = "SELECT 
+                YEAR(date_payment) as year, 
+                SUM(amount) as total_income 
+            FROM payments 
+            GROUP BY YEAR(date_payment) 
+            ORDER BY YEAR(date_payment) ASC";
+
+    $result = $this->conn->query($sql);
+
+    $incomeData = [];
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+          $incomeData[] = [
+            'year' => $row['year'],
+            'total_income' => $row['total_income']
+          ];
+      }
+    }
+
+    return json_encode($incomeData);
+
+  }
+
   public function countPendingApprovals() {
     // SQL query to count records where the approval is not true or false
     $sql = "SELECT COUNT(*) as count FROM payments WHERE approval NOT IN ('true', 'false')";
