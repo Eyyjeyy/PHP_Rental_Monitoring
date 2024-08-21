@@ -1015,10 +1015,17 @@ Class Admin {
   }
 
 
-  public function addExpenses($expensesname, $infodata, $expensesamount) {
-    $sql = "INSERT INTO expenses (name, info, amount) VALUES (?, ?, ?)";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("ssd", $expensesname, $infodata, $expensesamount);
+  public function addExpenses($expensesname, $infodata, $expensesamount, $house) {
+    if (!empty($house)) {
+      $sql = "INSERT INTO expenses (name, info, amount, house_id) VALUES (?, ?, ?, ?)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("ssdi", $expensesname, $infodata, $expensesamount, $house);
+    } else {
+      $sql = "INSERT INTO expenses (name, info, amount) VALUES (?, ?, ?)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("ssd", $expensesname, $infodata, $expensesamount);
+    }
+
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
       $newExpensesId = $stmt->insert_id;
@@ -1040,6 +1047,11 @@ Class Admin {
       'Expenses Name : ' . $added_expensesname . '<br>' .
       'Expenses Info : ' . $added_infodata . '<br>' .
       'Expenses Amount : ' . $added_amount . '<br>';
+
+      // Add house ID to log if applicable
+      if (!empty($house)) {
+        $logMessage .= 'House ID: ' . $house . '<br>';
+      }
 
       $this->History($this->session_id, 'Add', $logMessage);
 
@@ -1324,6 +1336,26 @@ Class Admin {
 
     if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
+    }
+
+    return json_encode($data);
+  }
+
+  public function getExpensesPerApartmentData() {
+    $sql = "SELECT 
+            h.house_name,
+            SUM(e.amount) AS total_expenses
+            FROM expenses e
+            LEFT JOIN houses h ON e.house_id = h.id
+            GROUP BY h.house_name";
+
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
         $data[] = $row;
       }
     }

@@ -19,6 +19,7 @@
         $expensesname = htmlspecialchars($_POST['expensesname']);
         $infodata = htmlspecialchars($_POST['expensesinfo']);
         $expensesamount = htmlspecialchars($_POST['expensesamount']);
+        $house = htmlspecialchars($_POST['house']);
 
         // Validate that the expenses amount is a valid number (integer or float)
         if (filter_var($expensesamount, FILTER_VALIDATE_FLOAT) === false || !is_numeric($expensesamount)) {
@@ -27,7 +28,7 @@
             exit();
         } else {
             // Call the addExpenses method to add the new expenses
-            $added = $admin->addExpenses($expensesname, $infodata, $expensesamount);
+            $added = $admin->addExpenses($expensesname, $infodata, $expensesamount, $house);
             if ($added) {
                 // Expenses added successfully
                 header("Location: adminexpenses.php?expenses_added=1");
@@ -75,8 +76,16 @@
         }
     }
 
-    $sql = "SELECT * FROM expenses";
+    // $sql = "SELECT * FROM expenses";
+    $sql = "SELECT expenses.*, houses.house_name, houses.id AS housingid
+            FROM expenses
+            LEFT JOIN houses ON expenses.house_id = houses.id;";
     $result = $admin->conn->query($sql);
+
+    $sql_option = "SELECT expenses.*, houses.house_name, houses.id AS housingid
+            FROM expenses
+            LEFT JOIN houses ON expenses.house_id = houses.id;";
+    $result_option = $admin->conn->query($sql_option);
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -175,6 +184,25 @@
                             <div class="mb-3">
                                 <label for="username" class="form-label">Expense Amount</label>
                                 <input type="text" class="form-control" id="username" name="expensesamount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="role" class="form-label">House</label>
+                                <select class="form-select" id="role" name="house">
+                                    <!-- Empty option as default -->
+                                    <option value="" selected disabled hidden>Select an expense</option>
+                                    <?php
+                                        // Check if results exist
+                                        if ($result_option->num_rows > 0) {
+                                            // Output options for each expense amount
+                                            while ($row_option = $result_option->fetch_assoc()) {
+                                                if($row_option['housingid'] != null || !empty($row_option['housingid']))
+                                                echo "<option value='" . $row_option['housingid'] . "'>" . $row_option['house_name'] . "</option>";
+                                            }
+                                        } else {
+                                            echo "<option value=''>No categories found</option>";
+                                        }
+                                    ?>
+                                </select>
                             </div>
                             <div class="col-12">
                                 <button type="submit" name="add_expenses" class="btn btn-primary table-buttons-update">Add Expenses</button>

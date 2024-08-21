@@ -37,6 +37,10 @@
     $yearlyIncomeData = $admin->getYearlyIncomeData(); // Fetch the yearly income data for the current year
     print_r($yearlyIncomeData);
 
+    echo "<br><br>";
+    $expenseperhouseData = $admin->getExpensesPerApartmentData();
+    print_r($expenseperhouseData);
+
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -141,7 +145,6 @@
                     <div class="row">
                         <div class="col-xl-4 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                                     <canvas id="myChart" width="400" height="200"></canvas>
@@ -150,7 +153,6 @@
                         </div>
                         <div class="col-xl-4 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                                     <canvas id="incomeChart" width="400" height="200"></canvas>
@@ -159,7 +161,6 @@
                         </div>
                         <div class="col-xl-4 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                                     <canvas id="roleChart" width="400" height="200"></canvas>
@@ -168,16 +169,15 @@
                         </div>
                         <div class="col-xl-6 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <button id="toggleView" class="btn btn-primary">Show Expenses per Apartment</button>
                                     <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <p class="card-text">Yearly Income Chart</p>
                                     <canvas id="yearlyIncomeChart" width="400" height="200"></canvas>
@@ -324,34 +324,32 @@
     </script>
 
     <script>
+        // Initialize the chart with default data
         var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
-        var chartData = <?php echo $incomeexpenses; ?>;
+        
+        var initialData = <?php echo ($incomeexpenses); ?>;
+        var expensePerHouseData = <?php echo ($expenseperhouseData); ?>;
 
-        var labels = chartData.map(function(e) {
-            return e.month;
-        });
-        var incomeData = chartData.map(function(e) {
-            return e.total_income;
-        });
-        var expensesData = chartData.map(function(e) {
-            return e.total_expenses;
+        // Filter out entries with null house_name
+        expensePerHouseData = expensePerHouseData.filter(function(e) {
+            return e.house_name !== null;
         });
 
-        var incomeExpenseChart = new Chart(ctx, {
+        var chart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: initialData.map(e => e.month),
                 datasets: [
                     {
                         label: 'Income',
-                        data: incomeData,
+                        data: initialData.map(e => e.total_income),
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Expenses',
-                        data: expensesData,
+                        data: initialData.map(e => e.total_expenses),
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
@@ -366,6 +364,89 @@
                 }
             }
         });
+
+        document.getElementById('toggleView').addEventListener('click', function() {
+            var button = this;
+            var isExpensesView = button.textContent.includes('Expenses per Apartment');
+            
+            if (isExpensesView) {
+                // Toggle to expenses per apartment view
+                chart.data.labels = expensePerHouseData.map(e => e.house_name);
+                chart.data.datasets = [{
+                    label: 'Expenses per Apartment',
+                    data: expensePerHouseData.map(e => e.total_expenses),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }];
+                chart.update(); // Refresh the chart
+                button.textContent = 'Show Income and Expenses'; // Update button text
+            } else {
+                // Toggle back to income and expenses view
+                chart.data.labels = initialData.map(e => e.month);
+                chart.data.datasets = [
+                    {
+                        label: 'Income',
+                        data: initialData.map(e => e.total_income),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expenses',
+                        data: initialData.map(e => e.total_expenses),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ];
+                chart.update(); // Refresh the chart
+                button.textContent = 'Show Expenses per Apartment'; // Update button text
+            }
+        });
+
+        // var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+        // var chartData = <?php echo $incomeexpenses; ?>;
+
+        // var labels = chartData.map(function(e) {
+        //     return e.month;
+        // });
+        // var incomeData = chartData.map(function(e) {
+        //     return e.total_income;
+        // });
+        // var expensesData = chartData.map(function(e) {
+        //     return e.total_expenses;
+        // });
+
+        // var incomeExpenseChart = new Chart(ctx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: labels,
+        //         datasets: [
+        //             {
+        //                 label: 'Income',
+        //                 data: incomeData,
+        //                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        //                 borderColor: 'rgba(75, 192, 192, 1)',
+        //                 borderWidth: 1
+        //             },
+        //             {
+        //                 label: 'Expenses',
+        //                 data: expensesData,
+        //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        //                 borderColor: 'rgba(255, 99, 132, 1)',
+        //                 borderWidth: 1
+        //             }
+        //         ]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
     </script>
     <script>
         var ctx = document.getElementById('yearlyIncomeChart').getContext('2d');
@@ -380,7 +461,7 @@
         });
 
         var yearlyIncomeChart = new Chart(ctx, {
-            type: 'bar', // You can change this to 'line' if you prefer a line chart
+            type: 'line', // Changed from 'bar' to 'line'
             data: {
                 labels: labels,
                 datasets: [
@@ -389,8 +470,8 @@
                         data: data,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        fill: true
+                        borderWidth: 2, // Made the border width a bit thicker for visibility
+                        fill: false // Fill the area under the line
                     }
                 ]
             },
@@ -406,6 +487,7 @@
             }
         });
     </script>
+
 
 
 
