@@ -37,19 +37,29 @@
             margin-left: 25%;
         }
 
-        #linklink {
+       /* Initial Styles */
+.phone-icon {
+    fill: #C95B0E; /* Initial color */
+    transition: fill 0.3s ease; /* Smooth transition */
+}
+
+#linklink {
+    color: #F9E8D9; 
     margin-left: 10px;
     text-decoration: none; /* Removes underline */
     transition: color 0.3s ease, text-shadow 0.3s ease; /* Smooth transition */
-    color: #F9E8D9; 
-    margin-left: 10px;
-     text-decoration: none;
 }
 
-#linklink:hover {
+/* Hover Effects when either element is hovered */
+.hover-wrapper:hover .phone-icon {
+    fill: #F7B787; /* Hover color */
+}
+
+.hover-wrapper:hover #linklink {
     color: #F7B787; /* Change color on hover */
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow effect */
 }
+
 
 
 
@@ -122,31 +132,39 @@
                     <p class="fs-3" style="color: #F9E8D9; font-weight: bold" id="titlefooter">
                             Links
                         </p>
-                
+                        <div class="hover-wrapper">
                     <div class="d-flex" id="linkcontact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-envelope" viewBox="0 0 16 16">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="bi bi-envelope phone-icon" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <a class="mb-2" href="chat_user.php" id="linklink">Payment</a>
                     </div>
+    </div>
+    <div class="hover-wrapper">
                     <div class="d-flex" id="linkcontact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"" class="bi bi-telephone-fill phone-icon" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <a class="mb-2" href="chat_user.php" id="linklink">Info</a>
                     </div>
+    </div>
+    <div class="hover-wrapper">
                     <div class="d-flex" id="linkcontact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="bi bi-telephone-fill phone-icon" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <a class="mb-2" href="chat_user.php" id="linklink">Profile</a>
                     </div>
+    </div>
+    <div class="hover-wrapper">
                     <div class="d-flex" id="linkcontact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#C95B0E" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="bi bi-telephone-fill phone-icon" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <a class="mb-1" href="chat_user.php" id="linklink">Chat</a>
                     </div>
+    </div>
                 </div>
             </div>
         </div>

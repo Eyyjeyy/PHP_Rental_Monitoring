@@ -49,11 +49,7 @@
 
     <div class="container-fluid mb-3 mt-3" id="navbarbar">
     <div class="row mx-auto w-65 d-flex align-items-center">
-    
-    
-
-
-
+        
 
         <!-- Left-aligned image -->
         <div class="col d-flex align-items-center">
@@ -75,7 +71,7 @@
         <a class="dropdown-item" href="profile_user.php">Profile</a>
         <a class="dropdown-item" href="chat_user.php">Chat</a>
         <a class="dropdown-item" href="logout.php">Log Out</a>
-    </div>
+        </div>
 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
