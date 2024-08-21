@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 19, 2024 at 07:57 AM
+-- Generation Time: Aug 21, 2024 at 01:48 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -52,6 +52,7 @@ CREATE TABLE `expenses` (
   `name` varchar(50) NOT NULL,
   `info` varchar(50) NOT NULL,
   `amount` float NOT NULL,
+  `house_id` int(11) DEFAULT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -59,15 +60,19 @@ CREATE TABLE `expenses` (
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `date`) VALUES
-(1, 'sample', 'yada yada', 0, '2024-08-14'),
-(4, 'varda', 'gg', 88, '2024-08-15'),
-(5, 'varda', '4324', 90.99, '2024-08-15'),
-(6, 'gg', 'varda', 91, '2024-08-15'),
-(7, 'fdsf', 'vardas', 90.9999, '2024-08-15'),
-(8, 'asdas', 'gg', 91, '2024-08-15'),
-(9, 'ss', 'ss', 23, '2024-08-15'),
-(10, 'aasd', 'asd', 91, '2024-08-15');
+INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `house_id`, `date`) VALUES
+(1, 'sample', 'yada yada', 5000, 838, '2024-08-14'),
+(4, 'varda', 'gg', 88, 55, '2024-08-15'),
+(5, 'varda', '4324', 90.99, NULL, '2024-08-15'),
+(6, 'gg', 'varda', 91, NULL, '2024-08-15'),
+(7, 'fdsf', 'vardas', 90.9999, NULL, '2024-08-15'),
+(8, 'asdas', 'gg', 91, NULL, '2024-08-15'),
+(9, 'ss', 'ss', 23, NULL, '2024-08-15'),
+(10, 'aasd', 'asd', 91, NULL, '2024-08-15'),
+(11, 'bbg', 'sprt', 9000, NULL, '2024-08-21'),
+(12, 'testtt', 'yadgdggf', 777, 838, '2024-08-21'),
+(13, 'uygh', 'gffdfg', 10000, NULL, '2024-08-21'),
+(14, 'yada', 'asddf', 2000, 840, '2024-08-21');
 
 -- --------------------------------------------------------
 
@@ -179,7 +184,12 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (89, 40, 'Message', 'Message, ID: 205<br>Receiver, : aj<br>', '2024-08-18 09:29:09'),
 (90, 40, 'Message', 'Message, ID: 206<br>Receiver, : aj<br>', '2024-08-19 01:49:34'),
 (91, 40, 'Message', 'Message, ID: 207<br>Receiver, : aj<br>', '2024-08-19 01:50:50'),
-(92, 40, 'Message', 'Message, ID: 208<br>Receiver, : aj<br>', '2024-08-19 02:21:10');
+(92, 40, 'Message', 'Message, ID: 208<br>Receiver, : aj<br>', '2024-08-19 02:21:10'),
+(93, 40, 'Add', 'Added Paper Category, ID: 88<br>Category Name, : testgg<br>', '2024-08-20 12:47:49'),
+(94, 40, 'Delete', 'Deleted Paper Category, ID: 88<br>Category Name, : testgg<br>', '2024-08-20 12:48:10'),
+(95, 40, 'Add', 'Added Expenses, ID: 11<br>Expenses Name : bbg<br>Expenses Info : sprt<br>Expenses Amount : 9000<br>', '2024-08-21 00:36:59'),
+(96, 40, 'Add', 'Added Expenses, ID: 12<br>Expenses Name : testtt<br>Expenses Info : yadgdggf<br>Expenses Amount : 777<br>House ID: 838<br>', '2024-08-21 09:08:32'),
+(97, 40, 'Add', 'Added Expenses, ID: 13<br>Expenses Name : uygh<br>Expenses Info : gffdfg<br>Expenses Amount : 767687<br>', '2024-08-21 10:00:31');
 
 -- --------------------------------------------------------
 
@@ -434,7 +444,11 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (225, 41, 40, 41, 'gg', '2024-08-19 13:53:26', './uploads/66c2ddd63a3fb.jpg'),
 (226, 41, 40, 41, 'gg', '2024-08-19 13:54:07', NULL),
 (227, 41, 40, 41, 'tt', '2024-08-19 13:54:18', './uploads/66c2de0a83049.jpg'),
-(228, 41, 40, 41, 'yy', '2024-08-19 13:54:23', NULL);
+(228, 41, 40, 41, 'yy', '2024-08-19 13:54:23', NULL),
+(229, 41, 40, 41, 'gg', '2024-08-19 13:59:17', './uploads/66c2df352d77f.mp4'),
+(230, 41, 40, 41, 'tt', '2024-08-19 13:59:24', NULL),
+(231, 41, 40, 41, 'tt', '2024-08-19 13:59:32', './uploads/66c2df44603c2.mp4'),
+(232, 41, 40, 41, 'tt', '2024-08-19 13:59:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -517,7 +531,9 @@ INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `file
 (10, 'Broonam Mad3434567german Goodasd', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
 (11, 'Broonam Mad3434567german Goodasd', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
 (12, 'Broonam Mad3434567german Goodasd', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'true'),
-(13, 'Broonam Mad3434567german Goodasd', 500, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false');
+(13, 'Broonam Mad3434567german Goodasd', 500, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false'),
+(15, 'test testsdfds', 8000, 0, 0, '', '2025-10-08', ''),
+(16, 'tsdfsdfx', 10000, 87, 243, '', '2022-05-03', '');
 
 -- --------------------------------------------------------
 
@@ -680,13 +696,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -704,13 +720,13 @@ ALTER TABLE `houses`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`
 --
 ALTER TABLE `paper_categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `paper_files`
@@ -722,7 +738,7 @@ ALTER TABLE `paper_files`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tenants`
