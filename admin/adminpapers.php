@@ -176,11 +176,11 @@
                         </form>
                     </div> -->
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" id="tableheader">
                             <button class="btn btn-primary float-end table-buttons-update" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>

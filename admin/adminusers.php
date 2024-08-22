@@ -117,13 +117,13 @@
         <div class="row">
             <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body"  id="userbody">
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" id="tableheader">
                             <button class="btn btn-primary float-end table-buttons-update" id="new_user"><i class="fa fa-plus"></i> New User</button>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="tablelimiter">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>

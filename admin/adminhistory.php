@@ -33,7 +33,7 @@
 
             <div class="col main content">
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
