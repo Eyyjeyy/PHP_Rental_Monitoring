@@ -39,7 +39,7 @@
             </div>
             <div class="col-12 col-lg-6 m-0 p-0" id="carousellpics">
                 <div class="row m-0 h-100 justify-content-center p-0">
-                    <div id="carouselExampleControls" class="carousel slide align-self-center m-0 p-0" data-bs-ride="">
+                    <!-- <div id="carouselExampleControls_1" class="carousel slide align-self-center m-0 p-0" data-bs-ride="carousel">
                         <div class="carousel-inner m-0 p-0">
                             <div class="carousel-item active m-0 p-0">
                                 <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; width: 100%; height: 300px;" class="mx-auto d-block" alt="...">
@@ -49,6 +49,27 @@
                             </div>
                             <div class="carousel-item m-0 p-0">
                                 <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; width: 100%; height: 300px;" class="mx-auto d-block" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_1" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_1" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div> -->
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-pause="true" style="max-width: 500px;">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="asset/blackbasin-warm-5987.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -71,7 +92,7 @@
          
             <div class="col-12 col-lg-6 m-0 p-0" id="carousellpics">
                 <div class="row m-0 h-100 justify-content-center p-0">
-                    <div id="carouselExampleControls" class="carousel slide align-self-center m-0 p-0" data-bs-ride="">
+                    <!-- <div id="carouselExampleControls" class="carousel slide align-self-center m-0 p-0" data-bs-ride="">
                         <div class="carousel-inner m-0 p-0">
                             <div class="carousel-item active m-0 p-0">
                                 <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; width: 100%; height: 300px;" class="mx-auto d-block" alt="...">
@@ -88,6 +109,27 @@
                             <span class="visually-hidden">Previous</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div> -->
+                    <div id="carouselExampleControlsII" class="carousel slide" data-bs-pause="true" style="max-width: 500px;">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="asset/blackbasin-warm-5987.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsII" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsII" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>

@@ -81,7 +81,19 @@
                             <div class="card" style="width: 100%;">
                                 <div class="card-body">
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <button id="toggleView" class="btn btn-primary">Show Expenses per Apartment</button>
+                                    <!-- Dropdown to switch views -->
+                                    <div class="mb-3">
+                                        <select id="chartViewSelect" class="form-select w-auto mw-100">
+                                            <option value="incomeExpenses">Show Income and Expenses</option>
+                                            <option value="expensesPerApartment">Show Expenses per Apartment</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <select id="houseSelect" class="form-select w-auto mw-100" style="display: none;">
+                                            <option value="">All Houses</option>
+                                            <!-- Options will be dynamically populated by JavaScript -->
+                                        </select>
+                                    </div>
                                     <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
@@ -200,14 +212,15 @@
                         label: 'Role Distribution',
                         data: data,
                         backgroundColor: [
-                            'rgba(54, 162, 235, 0.2)', // Blue for Admin
-                            'rgba(255, 99, 132, 0.2)'  // Red for User
+                            'rgb(54, 162, 235)', // Blue for Admin
+                            'rgb(255, 205, 86)'  // Red for User
                         ],
                         borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 99, 132, 1)'
+                            'rgba(255, 255, 255)',
+                            'rgba(255, 255, 255)'
                         ],
-                        borderWidth: 1
+                        hoverOffset: 40,
+                        borderWidth: 3
                     }
                 ]
             },
@@ -236,13 +249,23 @@
     <script>
         // Initialize the chart with default data
         var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
-        
+
         var initialData = <?php echo ($incomeexpenses); ?>;
         var expensePerHouseData = <?php echo ($expenseperhouseData); ?>;
 
         // Filter out entries with null house_name
         expensePerHouseData = expensePerHouseData.filter(function(e) {
             return e.house_name !== null;
+        });
+
+        // Populate house names in the second dropdown
+        var houseSelect = document.getElementById('houseSelect');
+        var uniqueHouseNames = [...new Set(expensePerHouseData.map(e => e.house_name))];
+        uniqueHouseNames.forEach(function(house) {
+            var option = document.createElement('option');
+            option.value = house;
+            option.textContent = house;
+            houseSelect.appendChild(option);
         });
 
         var chart = new Chart(ctx, {
@@ -275,24 +298,60 @@
             }
         });
 
-        document.getElementById('toggleView').addEventListener('click', function() {
-            var button = this;
-            var isExpensesView = button.textContent.includes('Expenses per Apartment');
-            
-            if (isExpensesView) {
-                // Toggle to expenses per apartment view
-                chart.data.labels = expensePerHouseData.map(e => e.house_name);
-                chart.data.datasets = [{
-                    label: 'Expenses per Apartment',
-                    data: expensePerHouseData.map(e => e.total_expenses),
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }];
-                chart.update(); // Refresh the chart
-                button.textContent = 'Show Income and Expenses'; // Update button text
+        document.getElementById('chartViewSelect').addEventListener('change', function() {
+            var selectedView = this.value;
+
+            if (selectedView === 'expensesPerApartment') {
+                // // Show the house select dropdown
+                // houseSelect.style.display = 'block';
+
+                // // Default view to show all houses
+                // chart.data.labels = expensePerHouseData.map(e => e.house_name);
+                // chart.data.datasets = [{
+                //     label: 'Expenses per Apartment',
+                //     data: expensePerHouseData.map(e => e.total_expenses),
+                //     backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                //     borderColor: 'rgba(255, 99, 132, 1)',
+                //     borderWidth: 1
+                // }];
+
+
+                // Show the house select dropdown
+                houseSelect.style.display = 'block';
+
+                // Get the selected house
+                var selectedHouse = houseSelect.value;
+
+                if (selectedHouse === '') {
+                    // Show all houses if no specific house is selected
+                    chart.data.labels = expensePerHouseData.map(e => e.house_name);
+                    chart.data.datasets = [{
+                        label: 'Expenses per Apartment',
+                        data: expensePerHouseData.map(e => e.total_expenses),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }];
+                } else {
+                    // Filter data to show only the selected house
+                    var filteredData = expensePerHouseData.filter(function(e) {
+                        return e.house_name === selectedHouse;
+                    });
+
+                    chart.data.labels = filteredData.map(e => e.house_name);
+                    chart.data.datasets = [{
+                        label: 'Expenses per Apartment',
+                        data: filteredData.map(e => e.total_expenses),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }];
+                }
             } else {
-                // Toggle back to income and expenses view
+                // Hide the house select dropdown
+                houseSelect.style.display = 'none';
+
+                // Switch back to income and expenses view
                 chart.data.labels = initialData.map(e => e.month);
                 chart.data.datasets = [
                     {
@@ -310,9 +369,30 @@
                         borderWidth: 1
                     }
                 ];
-                chart.update(); // Refresh the chart
-                button.textContent = 'Show Expenses per Apartment'; // Update button text
             }
+
+            chart.update(); // Refresh the chart with new data
+        });
+
+        // Event listener for house-specific filtering
+        houseSelect.addEventListener('change', function() {
+            var selectedHouse = this.value;
+
+            if (selectedHouse === '') {
+                // Show all houses if no specific house is selected
+                chart.data.labels = expensePerHouseData.map(e => e.house_name);
+                chart.data.datasets[0].data = expensePerHouseData.map(e => e.total_expenses);
+            } else {
+                // Filter data to show only the selected house
+                var filteredData = expensePerHouseData.filter(function(e) {
+                    return e.house_name === selectedHouse;
+                });
+
+                chart.data.labels = filteredData.map(e => e.house_name);
+                chart.data.datasets[0].data = filteredData.map(e => e.total_expenses);
+            }
+
+            chart.update(); // Refresh the chart with filtered data
         });
 
         // var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
