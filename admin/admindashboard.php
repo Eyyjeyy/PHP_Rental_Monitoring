@@ -58,7 +58,7 @@
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per House</p>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body mt-2">
                                     <canvas id="myChart"></canvas>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body mt-2">
                                     <canvas id="incomeChart"></canvas>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin to User Ratio</p>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body mt-2">
                                     <canvas id="roleChart"></canvas>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Profit and Losses</p>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body mt-2">
                                     <!-- Dropdown to switch views -->
                                     <div class="mb-3">
                                         <select id="chartViewSelect" class="form-select w-auto mw-100">
@@ -111,7 +111,7 @@
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body mt-2">
                                     <p class="card-text">Yearly Income Chart</p>
                                     <canvas id="yearlyIncomeChart"></canvas>
                                 </div>
