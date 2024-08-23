@@ -106,14 +106,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-12 py-md-2">
+                        <div class="col-xl-8 py-md-2 mx-auto">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
                                 </div>
-                                <div class="card-body mt-2">
-                                    <p class="card-text">Yearly Income Chart</p>
-                                    <canvas id="yearlyIncomeChart"></canvas>
+                                <div class="card-body mt-2 position-relative">
+                                    <!-- <p class="card-text">Yearly Income Chart</p> -->
+                                    <canvas id="yearlyIncomeChart" class="mx-auto w-75" style="max-height: 450px;"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -146,8 +146,8 @@
                 datasets: [{
                     label: 'Tenant Count',
                     data: data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(82, 120, 83)',
+                    borderColor: 'rgba(82, 120, 83)',
                     borderWidth: 1
                 }]
             },
