@@ -54,17 +54,17 @@
                 <div class="card-body bg-transparent">
                     <div class="row">
                         <div class="col-xl-6 py-md-2">
-                            <div class="card" style="width: 100%;">
+                            <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per House</p>
                                 </div>
-                                <div class="card-body mt-2">
-                                    <canvas id="myChart"></canvas>
+                                <div class="card-body mt-2 position-relative">
+                                    <canvas id="myChart" style="min-height: 250px; max-height: 100%;"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2">
-                            <div class="card" style="width: 100%;">
+                            <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
                                 </div>
@@ -74,21 +74,21 @@
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2">
-                            <div class="card" style="width: 100%;">
+                            <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin to User Ratio</p>
                                 </div>
-                                <div class="card-body mt-2">
-                                    <canvas id="roleChart"></canvas>
+                                <div class="card-body mt-2 position-relative">
+                                    <canvas id="roleChart" style="max-height: 100%;"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2">
-                            <div class="card" style="width: 100%;">
+                            <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Profit and Losses</p>
                                 </div>
-                                <div class="card-body mt-2">
+                                <div class="card-body mt-2 position-relative">
                                     <!-- Dropdown to switch views -->
                                     <div class="mb-3">
                                         <select id="chartViewSelect" class="form-select w-auto mw-100">
@@ -102,12 +102,12 @@
                                             <!-- Options will be dynamically populated by JavaScript -->
                                         </select>
                                     </div>
-                                    <canvas id="incomeExpenseChart"></canvas>
+                                    <canvas id="incomeExpenseChart" style="max-height: 100%;"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-12 py-md-2">
-                            <div class="card" style="width: 100%;">
+                            <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #F28543;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
                                 </div>
@@ -152,6 +152,8 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -195,6 +197,8 @@
                 ]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -241,6 +245,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
                         color: '#000000',
