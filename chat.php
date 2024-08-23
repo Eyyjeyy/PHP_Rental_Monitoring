@@ -375,17 +375,17 @@
 
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="admindashboard.php">Dashboard</a>
-        <a class="dropdown-item" href="adminusers.php">Users</a>
-        <a class="dropdown-item" href="adminhouses.php">Apartments</a>
-        <a class="dropdown-item" href="admincategories.php">Categories</a>
-        <a class="dropdown-item" href="admintenants.php">Tenants</a>
-        <a class="dropdown-item" href="adminpayments.php">Payments</a>
-        <a class="dropdown-item" href="adminpapers.php">Papers</a>
-        <a class="dropdown-item" href="adminexpenses.php">Expenses</a>
-        <a class="dropdown-item" href="../chat.php">Chat</a>
+        <a class="dropdown-item" href="admin/admindashboard.php">Dashboard</a>
+        <a class="dropdown-item" href="admin/adminusers.php">Users</a>
+        <a class="dropdown-item" href="admin/adminhouses.php">Apartments</a>
+        <a class="dropdown-item" href="admin/admincategories.php">Categories</a>
+        <a class="dropdown-item" href="admin/admintenants.php">Tenants</a>
+        <a class="dropdown-item" href="admin/adminpayments.php">Payments</a>
+        <a class="dropdown-item" href="admin/adminpapers.php">Papers</a>
+        <a class="dropdown-item" href="admin/adminexpenses.php">Expenses</a>
+        <a class="dropdown-item" href="chat.php">Chat</a>
         <a class="dropdown-item" href="adminhistory.php">History</a>
-        <a class="dropdown-item" href="../logout.php">Logout</a>
+        <a class="dropdown-item" href="logout.php">Logout</a>
         </div>
     </div>
     </div>
@@ -425,8 +425,82 @@
                     <button type="submit">Send</button>
                 </form>
             </div> -->
+            <div class="col main content">
+                <div class="row mt-5 mx-0 mx-auto" id="coluserchat">
+                    <div class="col-12 col-md-4 pe-md-0" id="usercol">
+                        <div class="card h-100">
+                            <div class="card-header" style="background-color: #EE7214;">
+                                <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Users</h5>
+                            </div>
+                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto;">
+                                <ul class="ps-0 h-100" style="list-style: none;">
+                                    <?php foreach ($users as $user): ?>
+                                        <li>
+                                            <a href="chat.php?user_id=<?php echo $user['id']; ?>" class="text-decoration-none" style="color: #2C3E50;">
+                                                <p class="fs-5 mb-2 pt-0 w-auto" style="font-weight: 400; padding-bottom: 10px; text-align: left;
+                                                padding: 5px;
+                                                padding-left: 10px;
+                                                padding-bottom: 10px;
+                                                border-radius: 5px;
+                                                font-weight: 400;
+                                                font-size: 30px;">
+                                                    <?php echo htmlspecialchars($user['username']); ?>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 ps-md-0" id="chatcol">    
+                        <div class="card h-100">
+                            <div class="card-header" style="background-color: #527853;">
+                                <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
+                            </div>
+                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto;">
+                                <div class="messages p-0" style="background-color: transparent; border: none; max-height: 100%; overflow-y: visible">
+                                    <?php
+                                        if ($chat_user_id) {
 
-            <div class="col chatflex">
+                                        } else {
+                                            echo "<p>Select a user to start chatting.</p>";
+                                        }
+                                    ?>
+                                </div>
+                                
+                            </div>
+                            <div id="form-container" style="background-color: #FDF4EF;">
+                                <?php if ($chat_user_id): ?>
+                                    <form id="message-form" action="chat_user.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data">
+                                        <div class="row h-100 m-0" id="textbtnzone">
+                                            <div class="col" style="margin-top: 7px;">
+                                                <div class="textzone-2">
+                                                    <div class="row m-0" id="textzone">
+                                                        <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col p-0" style="margin-top: 7px; min-width: 200px;" id="btnzone">
+                                        
+                                                <div class="btn-2">
+                                                    <label id="file-name-label" class="btn btn-primary w-100 mx-auto">No file selected</label>
+                                                    <input type="file" id="file" name="media" accept="image/*,video/*" style="display:none;">
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <label for="file" style="border-style: none; border-radius: 4px; width: 100px; margin-right: 20px;" id="file-btn" class="btn btn-primary">Upload</label>
+                                                        <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px; width: 100px;" type="submit">Send</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col chatflex d-none">
                 <!-- User List -->
                 <div class="user-list">
                     <div class="list">
@@ -559,7 +633,7 @@
                             </div>`;
                         } else if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
                             mediaHTML = `
-                            <video controls class="w-50">
+                            <video controls class="mw-100">
                                 <source src="${message.image_path}" type="video/${fileExtension}">
                                 Your browser does not support the video tag.
                             </video>`;
@@ -573,6 +647,18 @@
                 });
                 $('.messages').html(html);
             };
+
+            // JavaScript to update the file name label when a file is selected
+            $(document).ready(function() {
+                $('#file').on('change', function() {
+                    var fileName = $(this).val().split('\\').pop(); // Get the selected file name
+                    if (fileName) {
+                        $('#file-name-label').text(fileName);
+                    } else {
+                        $('#file-name-label').text('No file selected');
+                    }
+                });
+            });
 
             // Handle form submission
             $('#message-form').on('submit', function(e) {
@@ -588,7 +674,8 @@
                     success: function(response) {
                         console.log('Form submitted successfully:', response);
                         $('#message-input').val('');
-                        $('#media-input').val('');
+                        $('#file').val('');
+                        $('#file-name-label').text('No file selected');
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.error('Error submitting form:', textStatus, errorThrown);

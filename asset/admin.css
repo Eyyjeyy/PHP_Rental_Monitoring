@@ -147,6 +147,13 @@ table.table{
     background-color: #F9E8D9; /* Light cream color */
 }
 
+#coluserchat.row {
+    max-width: 80%;
+}
+
+#usercol, #chatcol {
+    height: 700px;
+}
 
 .messages {
     flex: 1;
@@ -166,6 +173,8 @@ table.table{
     word-wrap: break-word; /* Ensure long words break to prevent overflow */
     word-break: break-word; /* Ensure long words break to prevent overflow */
     hyphens: auto; /* Ensure hyphenation where appropriate */
+    clear: both;
+    max-width: 50%;
 }
 
 .message img {
@@ -176,15 +185,19 @@ table.table{
 }
 
 .message-left {
-    background-color: #527853; /* Dark green color */
-    color: #F9E8D9; /* Light cream color */
+    background-color: #F7B787;
     align-self: flex-start;
+    font-size: 13px;
+    float: left;
+    /* align-self: flex-start; */
 }
 
 .message-right {
-    background-color: #EE7214; /* Bright orange color */
-    color: #ffffff;
-    align-self: flex-end;
+    background-color: #8DA58D;
+    font-size: 13px;
+    float: right;
+    /* color: #ffffff; */
+    /* align-self: flex-end; */
 }
 
 .message-right img {
@@ -226,6 +239,36 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+#file-name-label {
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
+    display: block;
+    font-size: 12px;
+    color: #333;
+    background-color: #fff;
+    padding: 7.5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    word-wrap: break-word;
+    max-height: 50px;
+    min-width: none;
+    max-width: 220px;
+    overflow: hidden;
+}
+
+#file-btn {
+    background-color: #527853;
+    border-color: #527853;
+    width: 106px;
+    margin: 2.5px;
+}
+#send-btn {
+    background-color: #EE7214;
+    border-color: #EE7214;
+    width: 106px;
+    margin: 2.5px;
 }
 
 button:hover {
@@ -495,7 +538,7 @@ table {
     }
     
     #chatcol {
-       height: 80%;
+       /* height: 80%; */
     }
 
     #btnzone {
@@ -547,4 +590,20 @@ table {
      
     }
 
+}
+
+@media (max-width: 1400px) {
+    #coluserchat.row {
+        max-width: 80%;
+    }
+}
+@media (max-width: 1200px) {
+    #coluserchat.row {
+        max-width: 90%;
+    }
+}
+@media (max-width: 992px) {
+    #coluserchat.row {
+        max-width: 100%;
+    }
 }
