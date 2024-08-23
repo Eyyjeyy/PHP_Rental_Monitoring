@@ -1280,7 +1280,8 @@ Class Admin {
   public function getMonthlyIncome() {
     $sql = "SELECT 
                 DATE_FORMAT(date_payment, '%Y-%m') AS month, 
-                SUM(amount) AS total_income 
+                SUM(amount) AS total_income,
+                approval
             FROM payments 
             GROUP BY DATE_FORMAT(date_payment, '%Y-%m')
             ORDER BY date_payment ASC";

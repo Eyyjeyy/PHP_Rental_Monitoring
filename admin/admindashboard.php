@@ -15,31 +15,31 @@
     }
     
     $data = $admin->getTenantCountByApartment();
-    print_r($data);
+    // print_r($data);
 
-    echo "<br><br>";
+    // echo "<br><br>";
     
     $incomedata = $admin->getMonthlyIncome();
-    print_r($incomedata);
+    // print_r($incomedata);
 
-    echo "<br><br>";
+    // echo "<br><br>";
 
     $userRolesData = $admin->getUserRolePercentage();
-    print_r($userRolesData);
+    // print_r($userRolesData);
 
-    echo "<br><br>";
+    // echo "<br><br>";
 
     $incomeexpenses = $admin->getIncomeExpensesData();
-    print_r($incomeexpenses);
+    // print_r($incomeexpenses);
 
-    echo "<br><br>";
+    // echo "<br><br>";
 
     $yearlyIncomeData = $admin->getYearlyIncomeData(); // Fetch the yearly income data for the current year
-    print_r($yearlyIncomeData);
+    // print_r($yearlyIncomeData);
 
-    echo "<br><br>";
+    // echo "<br><br>";
     $expenseperhouseData = $admin->getExpensesPerApartmentData();
-    print_r($expenseperhouseData);
+    // print_r($expenseperhouseData);
 
 
     // Set the title for this page
@@ -51,36 +51,44 @@
         <div class="row">
         <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body bg-transparent">
                     <div class="row">
-                        <div class="col-xl-4 py-md-2">
+                        <div class="col-xl-6 py-md-2">
                             <div class="card" style="width: 100%;">
-                                <div class="card-body">
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <canvas id="myChart" width="400" height="200"></canvas>
+                                <div class="card-header p-3" style="background-color: #F28543;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per House</p>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 py-md-2">
-                            <div class="card" style="width: 100%;">
                                 <div class="card-body">
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <canvas id="incomeChart" width="400" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 py-md-2">
-                            <div class="card" style="width: 100%;">
-                                <div class="card-body">
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <canvas id="roleChart" width="400" height="200"></canvas>
+                                    <canvas id="myChart"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2">
                             <div class="card" style="width: 100%;">
+                                <div class="card-header p-3" style="background-color: #F28543;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
+                                </div>
                                 <div class="card-body">
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <canvas id="incomeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 py-md-2">
+                            <div class="card" style="width: 100%;">
+                                <div class="card-header p-3" style="background-color: #F28543;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin to User Ratio</p>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="roleChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 py-md-2">
+                            <div class="card" style="width: 100%;">
+                                <div class="card-header p-3" style="background-color: #F28543;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Profit and Losses</p>
+                                </div>
+                                <div class="card-body">
                                     <!-- Dropdown to switch views -->
                                     <div class="mb-3">
                                         <select id="chartViewSelect" class="form-select w-auto mw-100">
@@ -94,15 +102,18 @@
                                             <!-- Options will be dynamically populated by JavaScript -->
                                         </select>
                                     </div>
-                                    <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
+                                    <canvas id="incomeExpenseChart"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 py-md-2">
+                        <div class="col-xl-12 py-md-2">
                             <div class="card" style="width: 100%;">
+                                <div class="card-header p-3" style="background-color: #F28543;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
+                                </div>
                                 <div class="card-body">
                                     <p class="card-text">Yearly Income Chart</p>
-                                    <canvas id="yearlyIncomeChart" width="400" height="200"></canvas>
+                                    <canvas id="yearlyIncomeChart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -157,10 +168,14 @@
         var ctx = document.getElementById('incomeChart').getContext('2d');
         var chartData = <?php echo $incomedata; ?>;
 
-        var labels = chartData.map(function(e) {
+        // Filter the data to include only approved payments
+        var filteredData = chartData.filter(function(e) {
+            return e.approval === 'true';
+        });
+        var labels = filteredData.map(function(e) {
             return e.month;
         });
-        var data = chartData.map(function(e) {
+        var data = filteredData.map(function(e) {
             return e.total_income;
         });
 
