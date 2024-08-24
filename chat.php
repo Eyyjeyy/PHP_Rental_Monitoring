@@ -364,7 +364,7 @@
 
                 <div class="col d-flex align-items-center">
             <a class="navbar-brand py-0" href="admindashboard.php">
-                <img src="../asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                <img src="asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
             </a>
         </div>
 
@@ -425,14 +425,15 @@
                     <button type="submit">Send</button>
                 </form>
             </div> -->
-            <div class="col main content">
-                <div class="row mt-4 mx-0 mx-auto" id="coluserchat">
-                    <div class="col-12 col-md-4 pe-md-0" id="usercol">
+            <div class="col main content" style="margin: 0; padding: 0; justify-content: center;">
+            <div class="row mx-auto" style="height: 100%; width: 100%; justify-content: center;">
+
+                    <div class="col-12 col-md-5 pe-md-0" id="usercol">
                         <div class="card h-100">
                             <div class="card-header" style="background-color: #EE7214;">
                                 <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Users</h5>
                             </div>
-                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto;">
+                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto; height: 80%;">
                                 <ul class="ps-0 h-100" style="list-style: none;">
                                     <?php foreach ($users as $user): ?>
                                         <li>
@@ -453,7 +454,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-8 ps-md-0" id="chatcol">    
+                    <div class="col-12 col-md-7 ps-md-0" id="chatcol">    
                         <div class="card h-100">
                             <div class="card-header" style="background-color: #527853;">
                                 <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>

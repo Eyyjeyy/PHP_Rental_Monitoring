@@ -147,12 +147,20 @@ table.table{
     background-color: #F9E8D9; /* Light cream color */
 }
 
-#coluserchat.row {
-    max-width: 70%;
+#coluserchat {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+
+
 }
 
 #usercol, #chatcol {
-    height: 700px;
+    min-height: 100vh;  /* Minimum height set to the viewport height */
+    max-height: 100vh;  /* Prevents the height from exceeding the viewport */
+    padding: 0;
+    overflow-y: auto;   /* Ensures scrollability if content exceeds the height */
 }
 
 .messages {
@@ -211,7 +219,7 @@ table.table{
 .timestamp {
     display: block;
     font-size: 0.8em;
-    color: #7f8c8d;
+    color: white;
     margin-top: 5px;
 }
 
@@ -229,7 +237,6 @@ textarea {
     resize: none;
     height: 80px;
     background-color: #ffffff; /* White background for textarea */
-    color: #527853; /* Dark green text color */
 }
 
 button {
@@ -437,9 +444,30 @@ table {
         justify-content: center;
     }
 
+    #usercol, #chatcol {
+        min-height: 86.5vh;  /* Minimum height set to the viewport height */
+        max-height: 86.5vh;  /* Prevents the height from exceeding the viewport */
+        padding: 0;
+        overflow-y: auto;   /* Ensures scrollability if content exceeds the height */
+    }
+
 }
 
+@media (max-width: 767px) {
+    #usercol {
+        min-height: 16vh;  /* Minimum height set to the viewport height */
+        max-height: 16vh;  /* Prevents the height from exceeding the viewport */
+        padding: 0;
+        overflow-y: auto;   /* Ensures scrollability if content exceeds the height */
+    }
 
+    #chatcol {
+        min-height: 69.5vh;  /* Minimum height set to the viewport height */
+        max-height: 69.5vh;  /* Prevents the height from exceeding the viewport */
+        padding: 0;
+        overflow-y: auto;   /* Ensures scrollability if content exceeds the height */
+    }
+}
 
 @media (max-width: 990px) {
 
@@ -589,6 +617,8 @@ table {
         margin-bottom: 132px;
      
     }
+
+    
 
 }
 
