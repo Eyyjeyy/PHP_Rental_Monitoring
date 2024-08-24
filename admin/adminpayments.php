@@ -61,7 +61,7 @@
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
-    $page = "";
+    $page = "adminpayments";
 ?>
 
 

@@ -187,7 +187,7 @@
     }
 
     $pageTitle = "Chat Page"; // Change this according to the current page
-    $page = "";
+    $page = "adminchat";
     // Determine the base URL
     $base_url = dirname($_SERVER['SCRIPT_NAME']) . '/';
 ?>
@@ -263,7 +263,7 @@
                             </a>
                              </div>
                              <div class="hover-container">
-                            <a class="nav-link active" aria-current="page" href="admin/adminhouses.php">
+                            <a class="nav-link" aria-current="page" href="admin/adminhouses.php">
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chat-left-text-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
                                     <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5M4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5"/>
                                 </svg>
@@ -321,7 +321,7 @@
                             </a>
     </div>
     <div class="hover-container">
-                            <a class="nav-link" href="chat.php">
+                            <a class="nav-link <?= $page == 'adminchat' ? 'active' : '' ?>" href="chat.php">
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chat-left-text-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
                                 </svg>
