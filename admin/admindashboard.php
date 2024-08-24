@@ -53,9 +53,9 @@
             <div class="col main content">
                 <div class="card-body bg-transparent">
                     <div class="row">
-                        <div class="col-xl-6 py-md-2">
+                        <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #F28543;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per House</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
@@ -63,9 +63,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 py-md-2">
+                        <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #F28543;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
                                 </div>
                                 <div class="card-body mt-2">
@@ -73,9 +73,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 py-md-2">
+                        <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #F28543;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin to User Ratio</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
@@ -83,9 +83,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 py-md-2">
+                        <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #F28543;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Profit and Losses</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
@@ -106,9 +106,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-8 py-md-2 mx-auto">
+                        <div class="col-xl-8 py-md-2 mx-auto mb-3">
                             <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #F28543;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
                                     <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
@@ -146,8 +146,8 @@
                 datasets: [{
                     label: 'Tenant Count',
                     data: data,
-                    backgroundColor: 'rgba(82, 120, 83)',
-                    borderColor: 'rgba(82, 120, 83)',
+                    backgroundColor: '#F9E8D9',
+                    borderColor: '#F28543',
                     borderWidth: 1
                 }]
             },
@@ -189,8 +189,8 @@
                     {
                         label: 'Monthly Income',
                         data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: '#F9E8D9',
+                        borderColor: '#F28543',
                         borderWidth: 1,
                         fill: true
                     }
@@ -231,12 +231,12 @@
                         label: 'Role Distribution',
                         data: data,
                         backgroundColor: [
-                            'rgb(54, 162, 235)', // Blue for Admin
-                            'rgb(255, 205, 86)'  // Red for User
+                            '#8DA58D', // Blue for Admin
+                            '#F9E8D9'  // Red for User
                         ],
                         borderColor: [
-                            'rgba(255, 255, 255)',
-                            'rgba(255, 255, 255)'
+                            '#527853',
+                            '#F28543'
                         ],
                         hoverOffset: 40,
                         borderWidth: 3
@@ -478,8 +478,8 @@
                     {
                         label: 'Yearly Income',
                         data: data,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: '#F9E8D9',
+                        borderColor: '#F28543',
                         borderWidth: 2, // Made the border width a bit thicker for visibility
                         fill: false // Fill the area under the line
                     }
