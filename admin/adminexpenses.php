@@ -112,6 +112,7 @@
                                     <th scope="col" onclick="handleSort('info')">Info <span id="sortIconInfo"></span></th>
                                     <th scope="col" onclick="handleSort('amount')">Amount <span id="sortIconAmount"></span></th>
                                     <th scope="col" onclick="handleSort('date')">Date <span id="sortIconDate"></span></th>
+                                    <th scope="col">House <span id="sortIconHouse"></span></th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -127,6 +128,7 @@
                                         echo "<td>" . htmlspecialchars($row['info']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['house_name']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
                                         echo "<div class='col-xl-6 px-2'>";
@@ -316,6 +318,7 @@
                                     <td>${e.info}</td>
                                     <td>${e.amount}</td>
                                     <td>${e.date}</td>
+                                    <td>${e.house_name ? e.house_name: 'N/A'}</td>
                                     <td class='justify-content-center text-center align-middle'>
                                         <div class='row justify-content-center m-0'>
                                             <div class='col-xl-6 px-2'>

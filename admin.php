@@ -1332,6 +1332,15 @@ Class Admin {
             FROM payments p
             GROUP BY month";
 
+    $sql = "SELECT month,
+        SUM(total_income) AS total_income,
+        SUM(total_expenses) AS total_expenses
+        FROM (SELECT DATE_FORMAT(p.date_payment, '%Y-%m') AS month, SUM(p.amount) AS total_income, 0 AS total_expenses FROM payments p GROUP BY month UNION ALL
+          SELECT DATE_FORMAT(e.date, '%Y-%m') AS month, 0 AS total_income, SUM(e.amount) AS total_expenses FROM expenses e GROUP BY month) AS combined
+        GROUP BY month
+        ORDER BY month
+    ";
+
     $result = $this->conn->query($sql);
     $data = [];
 
@@ -1343,6 +1352,47 @@ Class Admin {
 
     return json_encode($data);
   }
+
+  public function getIncomeExpensesDataFiltered() {
+    $sql = "SELECT 
+                month,
+                house_id,
+                SUM(total_income) AS total_income,
+                SUM(total_expenses) AS total_expenses
+            FROM (
+                SELECT 
+                    DATE_FORMAT(p.date_payment, '%Y-%m') AS month,
+                    p.houses_id AS house_id,
+                    SUM(p.amount) AS total_income,
+                    0 AS total_expenses
+                FROM payments p
+                GROUP BY month, p.houses_id
+                
+                UNION ALL
+                
+                SELECT 
+                    DATE_FORMAT(e.date, '%Y-%m') AS month,
+                    e.house_id AS house_id,
+                    0 AS total_income,
+                    SUM(e.amount) AS total_expenses
+                FROM expenses e
+                GROUP BY month, e.house_id
+            ) AS combined
+            GROUP BY month, house_id
+            ORDER BY month, house_id";
+
+    $result = $this->conn->query($sql);
+    $data = [];
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
+    }
+
+    return json_encode($data);
+  }
+
 
   public function getExpensesPerApartmentData() {
     $sql = "SELECT 

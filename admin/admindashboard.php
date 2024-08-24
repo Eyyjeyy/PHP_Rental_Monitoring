@@ -34,6 +34,11 @@
 
     // echo "<br><br>";
 
+    $incomeexpensesfiltered = $admin->getIncomeExpensesDataFiltered();
+    print_r($incomeexpensesfiltered);
+
+    echo "<br><br>";
+
     $yearlyIncomeData = $admin->getYearlyIncomeData(); // Fetch the yearly income data for the current year
     // print_r($yearlyIncomeData);
 
@@ -90,14 +95,14 @@
                                 </div>
                                 <div class="card-body mt-2 position-relative">
                                     <!-- Dropdown to switch views -->
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <select id="chartViewSelect" class="form-select w-auto mw-100">
                                             <option value="incomeExpenses">Show Income and Expenses</option>
                                             <option value="expensesPerApartment">Show Expenses per Apartment</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3">
-                                        <select id="houseSelect" class="form-select w-auto mw-100" style="display: none;">
+                                        <select id="houseSelect" class="form-select w-auto mw-100">
                                             <option value="">All Houses</option>
                                             <!-- Options will be dynamically populated by JavaScript -->
                                         </select>
@@ -114,6 +119,17 @@
                                 <div class="card-body mt-2 position-relative">
                                     <!-- <p class="card-text">Yearly Income Chart</p> -->
                                     <canvas id="yearlyIncomeChart" class="mx-auto w-75" style="max-height: 450px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 py-md-2 mx-auto mb-3">
+                            <div class="card h-100" style="width: 100%;">
+                                <div class="card-header p-3" style="background-color: #527853; color: white;">
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
+                                </div>
+                                <div class="card-body mt-2 position-relative">
+                                    <!-- <p class="card-text">Yearly Income Chart</p> -->
+                                    <canvas id="filteredincomeexpenses" class="mx-auto w-75" style="max-height: 450px;"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -269,23 +285,19 @@
     <script>
         // Initialize the chart with default data
         var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
-
         var initialData = <?php echo ($incomeexpenses); ?>;
-        var expensePerHouseData = <?php echo ($expenseperhouseData); ?>;
 
-        // Filter out entries with null house_name
-        expensePerHouseData = expensePerHouseData.filter(function(e) {
-            return e.house_name !== null;
-        });
-
-        // Populate house names in the second dropdown
+        // Populate house names in the dropdown using house_id as the value
         var houseSelect = document.getElementById('houseSelect');
-        var uniqueHouseNames = [...new Set(expensePerHouseData.map(e => e.house_name))];
-        uniqueHouseNames.forEach(function(house) {
-            var option = document.createElement('option');
-            option.value = house;
-            option.textContent = house;
-            houseSelect.appendChild(option);
+        var uniqueHouses = Array.from(new Set(initialData.map(e => e.house_id && e.house_name ? { id: e.house_id, name: e.house_name } : null).filter(Boolean)));
+
+        uniqueHouses.forEach(function(house) {
+            if (house) {  // Only add non-null house names
+                var option = document.createElement('option');
+                option.value = house.id;
+                option.textContent = house.name;
+                houseSelect.appendChild(option);
+            }
         });
 
         var chart = new Chart(ctx, {
@@ -318,101 +330,27 @@
             }
         });
 
-        document.getElementById('chartViewSelect').addEventListener('change', function() {
-            var selectedView = this.value;
-
-            if (selectedView === 'expensesPerApartment') {
-                // // Show the house select dropdown
-                // houseSelect.style.display = 'block';
-
-                // // Default view to show all houses
-                // chart.data.labels = expensePerHouseData.map(e => e.house_name);
-                // chart.data.datasets = [{
-                //     label: 'Expenses per Apartment',
-                //     data: expensePerHouseData.map(e => e.total_expenses),
-                //     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                //     borderColor: 'rgba(255, 99, 132, 1)',
-                //     borderWidth: 1
-                // }];
-
-
-                // Show the house select dropdown
-                houseSelect.style.display = 'block';
-
-                // Get the selected house
-                var selectedHouse = houseSelect.value;
-
-                if (selectedHouse === '') {
-                    // Show all houses if no specific house is selected
-                    chart.data.labels = expensePerHouseData.map(e => e.house_name);
-                    chart.data.datasets = [{
-                        label: 'Expenses per Apartment',
-                        data: expensePerHouseData.map(e => e.total_expenses),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }];
-                } else {
-                    // Filter data to show only the selected house
-                    var filteredData = expensePerHouseData.filter(function(e) {
-                        return e.house_name === selectedHouse;
-                    });
-
-                    chart.data.labels = filteredData.map(e => e.house_name);
-                    chart.data.datasets = [{
-                        label: 'Expenses per Apartment',
-                        data: filteredData.map(e => e.total_expenses),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }];
-                }
-            } else {
-                // Hide the house select dropdown
-                houseSelect.style.display = 'none';
-
-                // Switch back to income and expenses view
-                chart.data.labels = initialData.map(e => e.month);
-                chart.data.datasets = [
-                    {
-                        label: 'Income',
-                        data: initialData.map(e => e.total_income),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Expenses',
-                        data: initialData.map(e => e.total_expenses),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ];
-            }
-
-            chart.update(); // Refresh the chart with new data
-        });
-
         // Event listener for house-specific filtering
         houseSelect.addEventListener('change', function() {
-            var selectedHouse = this.value;
+            var selectedHouseId = this.value;
 
-            if (selectedHouse === '') {
-                // Show all houses if no specific house is selected
-                chart.data.labels = expensePerHouseData.map(e => e.house_name);
-                chart.data.datasets[0].data = expensePerHouseData.map(e => e.total_expenses);
+            var filteredData;
+            if (selectedHouseId === '') {
+                // Show data for all houses
+                filteredData = initialData;
             } else {
-                // Filter data to show only the selected house
-                var filteredData = expensePerHouseData.filter(function(e) {
-                    return e.house_name === selectedHouse;
+                // Filter data by selected house_id
+                filteredData = initialData.filter(function(e) {
+                    return e.house_id == selectedHouseId;
                 });
-
-                chart.data.labels = filteredData.map(e => e.house_name);
-                chart.data.datasets[0].data = filteredData.map(e => e.total_expenses);
             }
 
-            chart.update(); // Refresh the chart with filtered data
+            // Update the chart with filtered data
+            chart.data.labels = filteredData.map(e => e.month);
+            chart.data.datasets[0].data = filteredData.map(e => e.total_income);
+            chart.data.datasets[1].data = filteredData.map(e => e.total_expenses);
+
+            chart.update(); // Refresh the chart with new data
         });
 
         // var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
@@ -480,6 +418,69 @@
                         data: data,
                         backgroundColor: '#F9E8D9',
                         borderColor: '#F28543',
+                        borderWidth: 2, // Made the border width a bit thicker for visibility
+                        fill: false // Fill the area under the line
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1000 // Adjust the step size as needed
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Initialize the canvas context
+        var ctx = document.getElementById('filteredincomeexpenses').getContext('2d');
+        
+        // Get the chart data from PHP
+        var chartData = <?php echo $incomeexpensesfiltered; ?>;
+
+        // Define the specific house_id to filter
+        var specificHouseId = '846'; // Change this to the desired house_id
+
+        // Filter data for the specific house_id
+        var filteredData = chartData.filter(function(e) {
+            return e.house_id === specificHouseId;
+        });
+
+        // Extract labels and data from the filtered data
+        var labels = filteredData.map(function(e) {
+            return e.month;
+        });
+
+        var data = filteredData.map(function(e) {
+            return e.total_income;
+        });
+
+        var datasecond = filteredData.map(function(e) {
+            return e.total_expenses;
+        });
+
+        var yearlyIncomeChart = new Chart(ctx, {
+            type: 'bar', // Changed from 'bar' to 'line'
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Yearly Income',
+                        data: data,
+                        backgroundColor: '#F9E8D9',
+                        borderColor: '#F28543',
+                        borderWidth: 2, // Made the border width a bit thicker for visibility
+                        fill: false // Fill the area under the line
+                    },
+                    {
+                        label: 'Yearly Expense',
+                        data: datasecond,
+                        backgroundColor: '#527853',
+                        borderColor: '#527853',
                         borderWidth: 2, // Made the border width a bit thicker for visibility
                         fill: false // Fill the area under the line
                     }
