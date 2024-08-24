@@ -426,7 +426,7 @@
                 </form>
             </div> -->
             <div class="col main content">
-                <div class="row mt-5 mx-0 mx-auto" id="coluserchat">
+                <div class="row mt-4 mx-0 mx-auto" id="coluserchat">
                     <div class="col-12 col-md-4 pe-md-0" id="usercol">
                         <div class="card h-100">
                             <div class="card-header" style="background-color: #EE7214;">
@@ -481,14 +481,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col p-0" style="margin-top: 7px; min-width: 200px;" id="btnzone">
+                                            <div class="col-3 p-0" style="margin-top: 7px; min-width: 200px; margin: 5px;" id="btnzone">
                                         
-                                                <div class="btn-2">
+                                                <div class="btn-2 mw-100">
                                                     <label id="file-name-label" class="btn btn-primary w-100 mx-auto">No file selected</label>
                                                     <input type="file" id="file" name="media" accept="image/*,video/*" style="display:none;">
                                                     <div class="d-flex justify-content-center mt-2">
-                                                        <label for="file" style="border-style: none; border-radius: 4px; width: 100px; margin-right: 20px;" id="file-btn" class="btn btn-primary">Upload</label>
-                                                        <button class="btn btn-primary" id="send-btn" style="border-style: none; border-radius: 4px; width: 100px;" type="submit">Send</button>
+                                                        <label for="file" style="border-style: none; border-radius: 4px; width: 100px;" id="file-btn" class="btn btn-primary ms-0">Upload</label>
+                                                        <button class="btn btn-primary me-0" id="send-btn" style="border-style: none; border-radius: 4px; width: 100px;" type="submit">Send</button>
                                                     </div>
                                                 </div>
                                             </div>
