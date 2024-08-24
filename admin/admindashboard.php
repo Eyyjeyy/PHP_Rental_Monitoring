@@ -30,12 +30,12 @@
     // echo "<br><br>";
 
     $incomeexpenses = $admin->getIncomeExpensesData();
-    // print_r($incomeexpenses);
+    print_r($incomeexpenses);
 
     // echo "<br><br>";
 
     $incomeexpensesfiltered = $admin->getIncomeExpensesDataFiltered();
-    print_r($incomeexpensesfiltered);
+    // print_r($incomeexpensesfiltered);
 
     echo "<br><br>";
 
@@ -119,17 +119,6 @@
                                 <div class="card-body mt-2 position-relative">
                                     <!-- <p class="card-text">Yearly Income Chart</p> -->
                                     <canvas id="yearlyIncomeChart" class="mx-auto w-75" style="max-height: 450px;"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-8 py-md-2 mx-auto mb-3">
-                            <div class="card h-100" style="width: 100%;">
-                                <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
-                                </div>
-                                <div class="card-body mt-2 position-relative">
-                                    <!-- <p class="card-text">Yearly Income Chart</p> -->
-                                    <canvas id="filteredincomeexpenses" class="mx-auto w-75" style="max-height: 450px;"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -287,19 +276,25 @@
         var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
         var initialData = <?php echo ($incomeexpenses); ?>;
 
-        // Populate house names in the dropdown using house_id as the value
+        // Populate house names in the dropdown using both house_id and house_name as unique combinations
         var houseSelect = document.getElementById('houseSelect');
-        var uniqueHouses = Array.from(new Set(initialData.map(e => e.house_id && e.house_name ? { id: e.house_id, name: e.house_name } : null).filter(Boolean)));
+        var uniqueHouses = new Map();
 
-        uniqueHouses.forEach(function(house) {
-            if (house) {  // Only add non-null house names
-                var option = document.createElement('option');
-                option.value = house.id;
-                option.textContent = house.name;
-                houseSelect.appendChild(option);
+        initialData.forEach(function(e) {
+            if (e.house_id && e.house_name) {
+                uniqueHouses.set(e.house_id, e.house_name);
             }
         });
 
+        // Populate dropdown options based on unique house_id and house_name pairs
+        uniqueHouses.forEach(function(name, id) {
+            var option = document.createElement('option');
+            option.value = id;
+            option.textContent = name;
+            houseSelect.appendChild(option);
+        });
+
+        // Chart initialization
         var chart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -352,6 +347,8 @@
 
             chart.update(); // Refresh the chart with new data
         });
+
+
 
         // var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
         // var chartData = <?php echo $incomeexpenses; ?>;
@@ -435,69 +432,7 @@
             }
         });
     </script>
-    <script>
-        // Initialize the canvas context
-        var ctx = document.getElementById('filteredincomeexpenses').getContext('2d');
-        
-        // Get the chart data from PHP
-        var chartData = <?php echo $incomeexpensesfiltered; ?>;
-
-        // Define the specific house_id to filter
-        var specificHouseId = '846'; // Change this to the desired house_id
-
-        // Filter data for the specific house_id
-        var filteredData = chartData.filter(function(e) {
-            return e.house_id === specificHouseId;
-        });
-
-        // Extract labels and data from the filtered data
-        var labels = filteredData.map(function(e) {
-            return e.month;
-        });
-
-        var data = filteredData.map(function(e) {
-            return e.total_income;
-        });
-
-        var datasecond = filteredData.map(function(e) {
-            return e.total_expenses;
-        });
-
-        var yearlyIncomeChart = new Chart(ctx, {
-            type: 'bar', // Changed from 'bar' to 'line'
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Yearly Income',
-                        data: data,
-                        backgroundColor: '#F9E8D9',
-                        borderColor: '#F28543',
-                        borderWidth: 2, // Made the border width a bit thicker for visibility
-                        fill: false // Fill the area under the line
-                    },
-                    {
-                        label: 'Yearly Expense',
-                        data: datasecond,
-                        backgroundColor: '#527853',
-                        borderColor: '#527853',
-                        borderWidth: 2, // Made the border width a bit thicker for visibility
-                        fill: false // Fill the area under the line
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1000 // Adjust the step size as needed
-                        }
-                    }
-                }
-            }
-        });
-    </script>
+    
 
 
 
