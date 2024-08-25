@@ -437,7 +437,7 @@
                                 <ul class="ps-0 h-100" style="list-style: none;">
                                     <?php foreach ($users as $user): ?>
                                         <li>
-                                            <a href="chat.php?user_id=<?php echo $user['id']; ?>" class="text-decoration-none" style="color: #2C3E50;">
+                                            <a href="chat.php?user_id=<?php echo $user['id']; ?>" class="text-decoration-none" onclick="scrollToBottom()" style="color: #2C3E50;">
                                                 <p class="fs-5 mb-2 pt-0 w-auto" style="font-weight: 400; padding-bottom: 10px; text-align: left;
                                                 padding: 5px;
                                                 padding-left: 10px;
@@ -459,7 +459,7 @@
                             <div class="card-header" style="background-color: #527853;">
                                 <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                             </div>
-                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto;">
+                            <div class="card-body mt-0" id="messagecard" style="background-color: #F9F3EE; overflow-y: auto;">
                                 <div class="messages p-0" style="background-color: transparent; border: none; max-height: 100%; overflow-y: visible">
                                     <?php
                                         if ($chat_user_id) {
@@ -594,7 +594,7 @@
         $(document).ready(function() {
             // Scroll to the bottom when the page loads
             function scrollToBottom() {
-                $('.messages').scrollTop($('.messages')[0].scrollHeight);
+                $('#messagecard').scrollTop($('#messagecard')[0].scrollHeight);
             }
 
             // Initially scroll to bottom when page loads
@@ -647,6 +647,8 @@
                             </div>`;
                 });
                 $('.messages').html(html);
+                
+                scrollToBottom();
             };
 
             // JavaScript to update the file name label when a file is selected

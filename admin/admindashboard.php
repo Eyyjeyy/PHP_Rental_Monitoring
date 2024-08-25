@@ -303,15 +303,15 @@
                     {
                         label: 'Income',
                         data: initialData.map(e => e.total_income),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: '#8DA58D',
+                        borderColor: '#527853',
                         borderWidth: 1
                     },
                     {
                         label: 'Expenses',
                         data: initialData.map(e => e.total_expenses),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: '#F9E8D9',
+                        borderColor: '#F28543',
                         borderWidth: 1
                     }
                 ]

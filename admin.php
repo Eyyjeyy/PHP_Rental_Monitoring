@@ -1374,29 +1374,13 @@ $sql = "SELECT
         h.house_name,
         COALESCE(SUM(combined.total_income), 0) AS total_income,
         COALESCE(SUM(combined.total_expenses), 0) AS total_expenses
-    FROM (
-        SELECT 
-            DATE_FORMAT(p.date_payment, '%Y-%m') AS month,
-            p.houses_id,
-            SUM(p.amount) AS total_income,
-            0 AS total_expenses
-        FROM payments p
-        GROUP BY month, p.houses_id
-        
+        FROM (SELECT DATE_FORMAT(p.date_payment, '%Y-%m') AS month, p.houses_id, SUM(p.amount) AS total_income, 0 AS total_expenses FROM payments p WHERE p.approval = 'true' GROUP BY month, p.houses_id
         UNION ALL
-        
-        SELECT 
-            DATE_FORMAT(e.date, '%Y-%m') AS month,
-            e.house_id AS houses_id,
-            0 AS total_income,
-            SUM(e.amount) AS total_expenses
-        FROM expenses e
-        GROUP BY month, e.house_id
-    ) AS combined
-    LEFT JOIN houses h ON combined.houses_id = h.id
-    GROUP BY combined.month, combined.houses_id, h.house_name
-    ORDER BY combined.month, combined.houses_id
-";
+        SELECT DATE_FORMAT(e.date, '%Y-%m') AS month, e.house_id AS houses_id, 0 AS total_income, SUM(e.amount) AS total_expenses FROM expenses e GROUP BY month, e.house_id) 
+        AS combined
+        LEFT JOIN houses h ON combined.houses_id = h.id
+        GROUP BY combined.month, combined.houses_id, h.house_name
+        ORDER BY combined.month, combined.houses_id";
 
     $result = $this->conn->query($sql);
     $data = [];
