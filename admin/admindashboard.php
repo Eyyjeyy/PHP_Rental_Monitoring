@@ -20,7 +20,7 @@
     // echo "<br><br>";
     
     $incomedata = $admin->getMonthlyIncome();
-    // print_r($incomedata);
+    print_r($incomedata);
 
     // echo "<br><br>";
 
@@ -184,36 +184,24 @@
         var filteredData = chartData.filter(function(e) {
             return e.approval === 'true';
         });
-        // Extract unique years for the dropdown
+
+        // Extract unique years from the data
         var years = [...new Set(filteredData.map(function(e) {
-            return e.year;
+            return e.month.split('-')[0]; // Extract the year from the 'month' string
         }))];
 
         // Populate the dropdown with the years
-        var yearDropdown = $('#yearDropdown');
+        var yearDropdown = document.getElementById('yearDropdown');
         years.forEach(function(year) {
-            yearDropdown.append(new Option(year, year));
+            var option = document.createElement('option');
+            option.value = year;
+            option.text = year;
+            yearDropdown.appendChild(option);
         });
 
-        // Function to update the chart based on the selected year
-        function updateChart(selectedYear) {
-            var filteredByYear = filteredData.filter(function(e) {
-                return e.year == selectedYear;
-            });
-            var labels = filteredByYear.map(function(e) {
-                return e.month;
-            });
-            var data = filteredByYear.map(function(e) {
-                return e.total_income;
-            });
-
-            incomeChart.data.labels = labels;
-            incomeChart.data.datasets[0].data = data;
-            incomeChart.update();
-        }
-
+        // Initialize the chart with empty data
         var incomeChart = new Chart(ctx, {
-            type: 'line', // You can change this to 'bar' if you prefer bar charts
+            type: 'line', // Change this to 'bar' if you prefer bar charts
             data: {
                 labels: [],
                 datasets: [
@@ -238,12 +226,41 @@
             }
         });
 
+        // Function to update the chart based on the selected year
+        function updateChart(selectedYear) {
+            // Filter data for the selected year
+            var filteredByYear = filteredData.filter(function(e) {
+                return e.month.split('-')[0] === selectedYear;
+            });
+
+            // Extract months and income data for the selected year
+            var labels = filteredByYear.map(function(e) {
+                return e.month.split('-')[1]; // Extract the month
+            });
+            var data = filteredByYear.map(function(e) {
+                return e.total_income;
+            });
+
+            // Update the chart data
+            incomeChart.data.labels = labels;
+            incomeChart.data.datasets[0].data = data;
+            incomeChart.update();
+        }
+
         // Handle year selection from the dropdown
-        yearDropdown.on('change', function() {
-            var selectedYear = $(this).val();
+        yearDropdown.addEventListener('change', function() {
+            var selectedYear = this.value;
             updateChart(selectedYear);
         });
+
+        // Automatically select the first year and display its data
+        if (years.length > 0) {
+            yearDropdown.value = years[0];
+            updateChart(years[0]);
+        }
     </script>
+
+
 
     <script>
         var ctx = document.getElementById('roleChart').getContext('2d');
