@@ -189,7 +189,7 @@
                 <div class="card-header" style="background-color: #EE7214;">
                     <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Users</h5>
                 </div>
-                <div class="card-body bg-#F9E8D9" id="list" style="overflow-y: auto;">
+                <div class="card-body bg-#F9E8D9" id="list" style="overflow-y: auto; height: 80%;">
                     <ul class="ps-0" style="list-style: none;">
                         <?php foreach ($users as $user): ?>
                             <li>
@@ -209,7 +209,7 @@
                 <div class="card-header">
                     <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                 </div>
-                <div class="card-body bg-#F9E8D9 h-100 chatcontent" style="overflow-y: auto;">
+                <div class="card-body bg-#F9E8D9 h-100 chatcontent" style="overflow-y: auto; max-height: 45vh;">
                     <div class="messages" style="max-height: 100%;">
                         <?php
                             if ($chat_user_id) {

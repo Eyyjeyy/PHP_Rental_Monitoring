@@ -487,6 +487,12 @@ svg.bi.bi-chat-dots-fill, svg.bi.bi-person-circle {
 
 
 
+@media (max-width: 769px) {
+    #usercol {
+        min-height: 25vh;
+        max-height: 25vh;
+    }
+}
 
 
 

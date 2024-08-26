@@ -30,14 +30,14 @@
     // echo "<br><br>";
 
     $incomeexpenses = $admin->getIncomeExpensesData();
-    print_r($incomeexpenses);
+    // print_r($incomeexpenses);
 
     // echo "<br><br>";
 
     $incomeexpensesfiltered = $admin->getIncomeExpensesDataFiltered();
     // print_r($incomeexpensesfiltered);
 
-    echo "<br><br>";
+    // echo "<br><br>";
 
     $yearlyIncomeData = $admin->getYearlyIncomeData(); // Fetch the yearly income data for the current year
     // print_r($yearlyIncomeData);
@@ -61,7 +61,7 @@
                         <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per House</p>
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Tenants Per Apartment</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
                                     <canvas id="myChart" style="min-height: 250px; max-height: 100%;"></canvas>
@@ -71,17 +71,22 @@
                         <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income</p>
                                 </div>
-                                <div class="card-body mt-2">
-                                    <canvas id="incomeChart"></canvas>
+                                <div class="card-body mt-2 position-relative">
+                                    <div class="mb-3">
+                                        <select id="yearDropdown" class="form-select w-auto mw-100">
+                                            <option value="" disabled selected>Select Year</option>
+                                        </select>
+                                    </div>
+                                    <canvas id="incomeChart" style="max-height: 450px;"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin to User Ratio</p>
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Admin and User Count</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
                                     <canvas id="roleChart" style="max-height: 100%;"></canvas>
@@ -179,21 +184,42 @@
         var filteredData = chartData.filter(function(e) {
             return e.approval === 'true';
         });
-        var labels = filteredData.map(function(e) {
-            return e.month;
+        // Extract unique years for the dropdown
+        var years = [...new Set(filteredData.map(function(e) {
+            return e.year;
+        }))];
+
+        // Populate the dropdown with the years
+        var yearDropdown = $('#yearDropdown');
+        years.forEach(function(year) {
+            yearDropdown.append(new Option(year, year));
         });
-        var data = filteredData.map(function(e) {
-            return e.total_income;
-        });
+
+        // Function to update the chart based on the selected year
+        function updateChart(selectedYear) {
+            var filteredByYear = filteredData.filter(function(e) {
+                return e.year == selectedYear;
+            });
+            var labels = filteredByYear.map(function(e) {
+                return e.month;
+            });
+            var data = filteredByYear.map(function(e) {
+                return e.total_income;
+            });
+
+            incomeChart.data.labels = labels;
+            incomeChart.data.datasets[0].data = data;
+            incomeChart.update();
+        }
 
         var incomeChart = new Chart(ctx, {
             type: 'line', // You can change this to 'bar' if you prefer bar charts
             data: {
-                labels: labels,
+                labels: [],
                 datasets: [
                     {
                         label: 'Monthly Income',
-                        data: data,
+                        data: [],
                         backgroundColor: '#F9E8D9',
                         borderColor: '#F28543',
                         borderWidth: 1,
@@ -210,6 +236,12 @@
                     }
                 }
             }
+        });
+
+        // Handle year selection from the dropdown
+        yearDropdown.on('change', function() {
+            var selectedYear = $(this).val();
+            updateChart(selectedYear);
         });
     </script>
 
