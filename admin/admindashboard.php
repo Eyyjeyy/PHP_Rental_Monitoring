@@ -71,7 +71,7 @@
                         <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income</p>
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income Per Month</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
                                     <div class="mb-3">
