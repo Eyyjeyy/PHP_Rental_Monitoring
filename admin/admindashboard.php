@@ -119,10 +119,16 @@
                         <div class="col-xl-8 py-md-2 mx-auto mb-3">
                             <div class="card h-100" style="width: 100%;">
                                 <div class="card-header p-3" style="background-color: #527853; color: white;">
-                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Annual Revenue</p>
+                                    <p class="fs-4 fw-bolder text-center text-uppercase mb-0">Income per Year</p>
                                 </div>
                                 <div class="card-body mt-2 position-relative">
                                     <!-- <p class="card-text">Yearly Income Chart</p> -->
+                                    <div class="mb-3 mx-auto w-75">
+                                        <select id="yearlyincomeSelect" class="form-select w-auto mw-100">
+                                            <option value="">All Years</option>
+                                            <!-- Options will be dynamically populated by JavaScript -->
+                                        </select>
+                                    </div>
                                     <canvas id="yearlyIncomeChart" class="mx-auto w-75" style="max-height: 450px;"></canvas>
                                 </div>
                             </div>
@@ -443,43 +449,97 @@
         // });
     </script>
     <script>
-        var ctx = document.getElementById('yearlyIncomeChart').getContext('2d');
-        var chartData = <?php echo $yearlyIncomeData; ?>;
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('yearlyIncomeChart').getContext('2d');
+            var chartData = <?php echo $yearlyIncomeData; ?>;
 
-        var labels = chartData.map(function(e) {
-            return e.year;
-        });
+            // Get all unique years from the data
+            var years = chartData.map(function(e) {
+                return parseInt(e.year);
+            });
 
-        var data = chartData.map(function(e) {
-            return e.total_income;
-        });
+            // Determine the min and max year in the data
+            var minYear = Math.min.apply(null, years);
+            var maxYear = Math.max.apply(null, years);
 
-        var yearlyIncomeChart = new Chart(ctx, {
-            type: 'line', // Changed from 'bar' to 'line'
-            data: {
-                labels: labels,
-                datasets: [
-                    {
+            // Populate the dropdown with 5-year intervals
+            var select = document.getElementById('yearlyincomeSelect');
+            for (var startYear = minYear; startYear <= maxYear; startYear += 5) {
+                var endYear = startYear + 4;
+                var option = document.createElement('option');
+                option.value = startYear + '-' + endYear;
+                option.textContent = startYear + ' - ' + endYear;
+                select.appendChild(option);
+            }
+
+            // Initialize the chart
+            var yearlyIncomeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Initially empty
+                    datasets: [{
                         label: 'Yearly Income',
-                        data: data,
+                        data: [],
                         backgroundColor: '#F9E8D9',
                         borderColor: '#F28543',
-                        borderWidth: 2, // Made the border width a bit thicker for visibility
-                        fill: false // Fill the area under the line
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1000 // Adjust the step size as needed
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1000 // Adjust step size as needed
+                            }
                         }
                     }
                 }
+            });
+
+            // Function to update the chart
+            function updateChart(selectedRange) {
+                var [startYear, endYear] = selectedRange.split('-').map(Number);
+                var filteredData = chartData.filter(function(e) {
+                    var year = parseInt(e.year);
+                    return year >= startYear && year <= endYear;
+                });
+
+                var labels = filteredData.map(function(e) {
+                    return e.year;
+                });
+                var data = filteredData.map(function(e) {
+                    return e.total_income;
+                });
+
+                yearlyIncomeChart.data.labels = labels;
+                yearlyIncomeChart.data.datasets[0].data = data;
+                yearlyIncomeChart.update();
             }
+
+            // Event listener for dropdown selection
+            select.addEventListener('change', function() {
+                var selectedValue = select.value;
+                if (selectedValue) {
+                    updateChart(selectedValue);
+                } else {
+                    // If 'All Years' is selected, show data for all years
+                    yearlyIncomeChart.data.labels = chartData.map(function(e) {
+                        return e.year;
+                    });
+                    yearlyIncomeChart.data.datasets[0].data = chartData.map(function(e) {
+                        return e.total_income;
+                    });
+                    yearlyIncomeChart.update();
+                }
+            });
+
+            // Automatically show all years data on load
+            select.value = '';
+            select.dispatchEvent(new Event('change'));
         });
+
     </script>
     
 
