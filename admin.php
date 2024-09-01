@@ -104,7 +104,8 @@ Class Admin {
   public function registerUser($username, $firstname, $middlename, $lastname, $password, $email) {
     // Validate input
     if (empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
-      return "All fields are required.";
+      $_SESSION['message'] = "Fill up all fields";
+      return false;
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       $_SESSION['message'] = "Invalid Email";

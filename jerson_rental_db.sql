@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2024 at 01:48 PM
+-- Generation Time: Sep 01, 2024 at 03:15 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -72,7 +72,8 @@ INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `house_id`, `date`) VALU
 (11, 'bbg', 'sprt', 9000, NULL, '2024-08-21'),
 (12, 'testtt', 'yadgdggf', 777, 838, '2024-08-21'),
 (13, 'uygh', 'gffdfg', 10000, NULL, '2024-08-21'),
-(14, 'yada', 'asddf', 2000, 840, '2024-08-21');
+(14, 'yada', 'asddf', 2000, 840, '2024-08-21'),
+(15, 'fdsg', 'asda', 200, 846, '2024-08-24');
 
 -- --------------------------------------------------------
 
@@ -189,7 +190,33 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (94, 40, 'Delete', 'Deleted Paper Category, ID: 88<br>Category Name, : testgg<br>', '2024-08-20 12:48:10'),
 (95, 40, 'Add', 'Added Expenses, ID: 11<br>Expenses Name : bbg<br>Expenses Info : sprt<br>Expenses Amount : 9000<br>', '2024-08-21 00:36:59'),
 (96, 40, 'Add', 'Added Expenses, ID: 12<br>Expenses Name : testtt<br>Expenses Info : yadgdggf<br>Expenses Amount : 777<br>House ID: 838<br>', '2024-08-21 09:08:32'),
-(97, 40, 'Add', 'Added Expenses, ID: 13<br>Expenses Name : uygh<br>Expenses Info : gffdfg<br>Expenses Amount : 767687<br>', '2024-08-21 10:00:31');
+(97, 40, 'Add', 'Added Expenses, ID: 13<br>Expenses Name : uygh<br>Expenses Info : gffdfg<br>Expenses Amount : 767687<br>', '2024-08-21 10:00:31'),
+(98, 40, 'Message', 'Message, ID: 233<br>Receiver, : aj<br>', '2024-08-22 15:26:09'),
+(99, 40, 'Message', 'Message, ID: 234<br>Receiver, : admin12<br>', '2024-08-23 02:31:42'),
+(100, 40, 'Message', 'Message, ID: 236<br>Receiver, : aj<br>', '2024-08-23 03:46:41'),
+(101, 40, 'Message', 'Message, ID: 237<br>Receiver, : aj<br>', '2024-08-23 03:48:25'),
+(102, 40, 'Message', 'Message, ID: 238<br>Receiver, : aj<br>', '2024-08-23 03:48:33'),
+(103, 40, 'Message', 'Message, ID: 239<br>Receiver, : aj<br>', '2024-08-23 03:56:19'),
+(104, 40, 'Message', 'Message, ID: 240<br>Receiver, : aj<br>', '2024-08-23 03:57:33'),
+(105, 40, 'Message', 'Message, ID: 241<br>Receiver, : aj<br>', '2024-08-23 03:59:39'),
+(106, 40, 'Message', 'Message, ID: 242<br>Receiver, : aj<br>', '2024-08-23 03:59:45'),
+(107, 40, 'Message', 'Message, ID: 243<br>Receiver, : aj<br>', '2024-08-23 04:00:33'),
+(108, 40, 'Message', 'Message, ID: 244<br>Receiver, : aj<br>', '2024-08-23 04:00:41'),
+(109, 40, 'Message', 'Message, ID: 245<br>Receiver, : aj<br>', '2024-08-23 04:00:52'),
+(110, 40, 'Message', 'Message, ID: 246<br>Receiver, : aj<br>', '2024-08-23 04:01:09'),
+(111, 40, 'Message', 'Message, ID: 247<br>Receiver, : aj<br>', '2024-08-23 04:01:20'),
+(112, 40, 'Message', 'Message, ID: 248<br>Receiver, : aj<br>', '2024-08-23 04:01:51'),
+(113, 40, 'Message', 'Message, ID: 249<br>Receiver, : aj<br>', '2024-08-23 04:02:23'),
+(114, 40, 'Message', 'Message, ID: 250<br>Receiver, : aj<br>', '2024-08-23 04:02:29'),
+(115, 40, 'Message', 'Message, ID: 251<br>Receiver, : aj<br>', '2024-08-23 04:03:58'),
+(116, 40, 'Message', 'Message, ID: 252<br>Receiver, : aj<br>', '2024-08-23 04:04:10'),
+(117, 40, 'Message', 'Message, ID: 253<br>Receiver, : aj<br>', '2024-08-25 06:53:30'),
+(118, 40, 'Message', 'Message, ID: 254<br>Receiver, : aj<br>', '2024-08-25 07:09:57'),
+(119, 40, 'Message', 'Message, ID: 255<br>Receiver, : aj<br>', '2024-08-25 07:10:03'),
+(120, 40, 'Message', 'Message, ID: 256<br>Receiver, : aj<br>', '2024-08-25 07:10:07'),
+(121, 40, 'Message', 'Message, ID: 257<br>Receiver, : aj<br>', '2024-08-25 07:10:13'),
+(122, 40, 'Message', 'Message, ID: 258<br>Receiver, : aj<br>', '2024-08-26 11:19:01'),
+(123, 40, 'Message', 'Message, ID: 259<br>Receiver, : aj<br>', '2024-08-26 11:19:24');
 
 -- --------------------------------------------------------
 
@@ -448,7 +475,38 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (229, 41, 40, 41, 'gg', '2024-08-19 13:59:17', './uploads/66c2df352d77f.mp4'),
 (230, 41, 40, 41, 'tt', '2024-08-19 13:59:24', NULL),
 (231, 41, 40, 41, 'tt', '2024-08-19 13:59:32', './uploads/66c2df44603c2.mp4'),
-(232, 41, 40, 41, 'tt', '2024-08-19 13:59:41', NULL);
+(232, 41, 40, 41, 'tt', '2024-08-19 13:59:41', NULL),
+(233, 40, 41, 40, 'lol', '2024-08-22 23:26:09', NULL),
+(234, 40, 40, 40, 'gg', '2024-08-23 10:31:42', NULL),
+(235, 41, 40, 41, 'luper', '2024-08-23 11:34:41', NULL),
+(236, 40, 41, 40, 'gg', '2024-08-23 11:46:41', NULL),
+(237, 40, 41, 40, 'gg', '2024-08-23 11:48:25', './uploads/66c8068910225.jpg'),
+(238, 40, 41, 40, 'tt', '2024-08-23 11:48:33', './uploads/66c80691be2c3.jpg'),
+(239, 40, 41, 40, 'yy', '2024-08-23 11:56:19', './uploads/66c80863d669d.png'),
+(240, 40, 41, 40, 'aa', '2024-08-23 11:57:33', './uploads/66c808ad4091e.png'),
+(241, 40, 41, 40, 'sad', '2024-08-23 11:59:39', './uploads/66c8092b8250c.png'),
+(242, 40, 41, 40, 'ee', '2024-08-23 11:59:45', NULL),
+(243, 40, 41, 40, 'test', '2024-08-23 12:00:33', NULL),
+(244, 40, 41, 40, 'test', '2024-08-23 12:00:41', './uploads/66c80969372de.jpg'),
+(245, 40, 41, 40, 'uu', '2024-08-23 12:00:52', './uploads/66c8097400584.jpg'),
+(246, 40, 41, 40, 'yy', '2024-08-23 12:01:09', './uploads/66c809853fa07.jpeg'),
+(247, 40, 41, 40, 'uu', '2024-08-23 12:01:20', NULL),
+(248, 40, 41, 40, 'yy', '2024-08-23 12:01:50', './uploads/66c809aeecc6a.png'),
+(249, 40, 41, 40, 'gg', '2024-08-23 12:02:23', './uploads/66c809cfc527f.png'),
+(250, 40, 41, 40, 'uu', '2024-08-23 12:02:29', NULL),
+(251, 40, 41, 40, 'yy', '2024-08-23 12:03:58', NULL),
+(252, 40, 41, 40, 'yy', '2024-08-23 12:04:10', './uploads/66c80a3a718fb.png'),
+(253, 40, 41, 40, 'yy', '2024-08-25 14:53:30', NULL),
+(254, 40, 41, 40, 'tt', '2024-08-25 15:09:57', NULL),
+(255, 40, 41, 40, 'uu', '2024-08-25 15:10:03', NULL),
+(256, 40, 41, 40, 'kk', '2024-08-25 15:10:07', NULL),
+(257, 40, 41, 40, 'q', '2024-08-25 15:10:13', NULL),
+(258, 40, 41, 40, 'aa', '2024-08-26 19:19:01', NULL),
+(259, 40, 41, 40, 'aaa', '2024-08-26 19:19:24', './uploads/66cc64bc3eda4.mp4'),
+(260, 41, 41, 41, 'g', '2024-08-26 20:07:43', './uploads/66cc700f102b7.mp4'),
+(261, 41, 41, 41, 'g', '2024-08-26 20:08:00', './uploads/66cc702001736.png'),
+(262, 41, 41, 41, 'assssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssa', '2024-08-26 20:10:35', NULL),
+(263, 41, 41, 41, 'assssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaasssssss', '2024-08-26 20:10:42', NULL);
 
 -- --------------------------------------------------------
 
@@ -526,14 +584,15 @@ CREATE TABLE `payments` (
 
 INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
 (7, 'Lucious Black Gorehound', 0, 63, 847, '../uploads/GAMEPOSTER_666b08e7a6d95.jpg', '2024-06-13', ''),
-(8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13', ''),
+(8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13', 'true'),
 (9, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/received_993104588452786_666b0958540c1.jpeg', '2024-06-14', ''),
 (10, 'Broonam Mad3434567german Goodasd', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
 (11, 'Broonam Mad3434567german Goodasd', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
 (12, 'Broonam Mad3434567german Goodasd', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'true'),
 (13, 'Broonam Mad3434567german Goodasd', 500, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false'),
-(15, 'test testsdfds', 8000, 0, 0, '', '2025-10-08', ''),
-(16, 'tsdfsdfx', 10000, 87, 243, '', '2022-05-03', '');
+(15, 'test testsdfds', 8000, 0, 0, '', '2025-10-08', 'true'),
+(16, 'tsdfsdfx', 10000, 87, 243, '', '2022-05-03', ''),
+(17, 'asdasd', 4000, 8768, 847456, '', '2028-06-02', 'true');
 
 -- --------------------------------------------------------
 
@@ -608,7 +667,10 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `p
 (72, 'testing1', 'test fname', 'testmiddle', 'testlastname', '123', 'redrider0939@gmail.com', 'user', '2024-07-07 19:19:18'),
 (73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52'),
 (74, 'test39099', 'fnm', 'mnm', 'lnm', '123', '', 'user', '2024-07-18 15:55:16'),
-(80, 'cancerarty', 'asd', 'fac', 'dsdsds', '12', '', 'admin', '2024-08-09 01:49:01');
+(80, 'cancerarty', 'asd', 'fac', 'dsdsds', '12', '', 'admin', '2024-08-09 01:49:01'),
+(81, 'asd', 'asd', 'asd', 'asd', '123', 'asd@gmail.com', 'user', '2024-09-01 19:15:20'),
+(82, 'asd', 'asd', 'asd', 'asd', '123', 'fsdf@gmail.com', 'user', '2024-09-01 19:17:42'),
+(83, 'asd', 'asd', 'asd', 'asd', '123', 'Asd@gmail.com', 'user', '2024-09-01 19:20:44');
 
 --
 -- Indexes for dumped tables
@@ -696,13 +758,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -720,7 +782,7 @@ ALTER TABLE `houses`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=264;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`
@@ -738,7 +800,7 @@ ALTER TABLE `paper_files`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `tenants`
@@ -750,7 +812,7 @@ ALTER TABLE `tenants`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- Constraints for dumped tables
