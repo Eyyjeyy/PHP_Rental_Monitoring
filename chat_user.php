@@ -209,7 +209,7 @@
                 <div class="card-header">
                     <h5 class="text-center mb-0" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                 </div>
-                <div class="card-body bg-#F9E8D9 h-100 chatcontent" style="overflow-y: auto; max-height: 45vh;">
+                <div class="card-body bg-#F9E8D9 h-100 chatcontent" style="overflow-y: auto; max-height: 60vh;">
                     <div class="messages" style="max-height: 100%;">
                         <?php
                             if ($chat_user_id) {
@@ -256,7 +256,7 @@
                     </div>
                 </div>
                 <!-- Send Message Form -->
-                <div id="form-container">
+                <div id="form-container" class="flex-grow-1">
                     <?php if ($chat_user_id): ?>
                         <form id="message-form" action="chat_user.php?user_id=<?php echo $chat_user_id; ?>" method="POST" enctype="multipart/form-data" style="height: 15%;">
                             <div class="row h-100 m-0" id="textbtnzone">

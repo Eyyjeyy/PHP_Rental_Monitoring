@@ -37,6 +37,12 @@
     background-color: #527853;
 }
 
+a[name="login"] {
+    background-color: #527853;
+    border-color: #527853;
+    border-radius: 20px;
+    width: 100px;
+}
 
 button[name="login"] {
     background-color: #527853;
@@ -84,7 +90,7 @@ button[name="register"]:hover {
 .userform {
     position: relative;
 }
-.bi-people-fill, .bi-key-fill {
+.bi-people-fill, .bi-key-fill, .bi-envelope-fill {
     position: absolute;
     top: 25%;
     left: 2%;
@@ -157,6 +163,11 @@ input::placeholder {
         margin-bottom: 10px;
     }
 
+    a[name="login"] {
+        width: 80px; /* Further adjust button width for smaller screens */
+        margin-bottom: 10px;
+    }
+
     .bi-people-fill, .bi-key-fill {
         top: 35%;
         left: 8%; /* Further adjust icon position for smaller screens */
@@ -182,5 +193,17 @@ input::placeholder {
         position: absolute;
         top: 30%;
         left: 2%;
+    }
+
+    .img-fluid.register {
+        max-width: 60%;
+        min-width: 150px;
+    }
+}
+
+
+@media (min-width: 1001px) {
+    .row.w-100 {
+        margin-bottom: 20px;
     }
 }

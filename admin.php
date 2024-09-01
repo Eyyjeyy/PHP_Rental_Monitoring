@@ -101,7 +101,7 @@ Class Admin {
   }
 
   // Function to register a user
-  public function registerUser($firstname, $middlename, $lastname, $password, $email, $role) {
+  public function registerUser($username, $firstname, $middlename, $lastname, $password, $email) {
     // Validate input
     if (empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
       return "All fields are required.";
@@ -110,13 +110,16 @@ Class Admin {
       return "Invalid email format.";
     }
     
+    $role = 'user';
+
     // Prepare the SQL statement to insert the new user
     $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, middlename, lastname, password, email, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssss", $firstname, $lastname, $email, $password);
+    $stmt->bind_param("sssssss", $username, $firstname, $middlename, $lastname, $password, $email, $role);
 
     // Execute the statement and check if the user was added successfully
     if ($stmt->execute()) {
-      return false;
+      $stmt->close();
+      return true;
     } else {
       return false;
     }
@@ -1151,13 +1154,13 @@ Class Admin {
         $mail->isSMTP(); // Set mailer to use SMTP
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
-        $mail->Username = 'your_email@gmail.com'; // SMTP username
-        $mail->Password = 'your_password'; // SMTP password
+        $mail->Username = 'jerslippad3@gmail.com'; // SMTP username
+        $mail->Password = 'frei snyj zlkk hmzb'; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
         // Recipients
-        $mail->setFrom('your_email@gmail.com', 'Mailer');
+        $mail->setFrom('jerslippad3@gmail.com', 'Mailer');
         $mail->addAddress($to); // Add a recipient
 
         // Attachments
@@ -1244,7 +1247,7 @@ Class Admin {
           $body = "Dear " . $tenant['fname'] . " " . $tenant['lname'] . ",<br><br>";
           $body .= "This is a reminder that your monthly payment is due.<br>";
           $body .= "Amount Due: $" . number_format($balance, 2) . "<br><br>";
-          $body .= "Best regards,<br>Your Company Name";
+          $body .= "Best regards,<br>Renttrack Pro";
 
           // Send email
           if ($this->sendEmail($to, $subject, $body)) {

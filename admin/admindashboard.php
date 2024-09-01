@@ -20,7 +20,7 @@
     // echo "<br><br>";
     
     $incomedata = $admin->getMonthlyIncome();
-    print_r($incomedata);
+    // print_r($incomedata);
 
     // echo "<br><br>";
 
