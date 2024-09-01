@@ -27,9 +27,12 @@
             header("Location: register.php");
             exit();
         } else {
-            $_SESSION['message'] = "Registration Failed";
-            header("Location: register.php");
-            exit();
+            //If session variable 'message' is not declared in registerUser function 
+            if(!isset($_SESSION['message'])) {
+                $_SESSION['message'] = "Registration Failed";
+                header("Location: register.php");
+                exit();
+            }
         }
     }
 

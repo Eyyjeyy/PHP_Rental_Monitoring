@@ -107,7 +107,8 @@ Class Admin {
       return "All fields are required.";
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      return "Invalid email format.";
+      $_SESSION['message'] = "Invalid Email";
+      return false;
     }
     
     $role = 'user';
