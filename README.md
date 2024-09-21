@@ -95,3 +95,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 8/18/24 - Added Info Page for Users <br>
 - Info Page retrieves logged in user's account from houseaccounts table. <br>
+
+9/21/24 - Added Info Page for Users <br>
+- Merged table from admincategories.php to adminhouses.php. <br>
+- Improved admin/includes/header.php code indentations <br>
