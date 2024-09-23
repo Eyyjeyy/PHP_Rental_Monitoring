@@ -99,3 +99,5 @@ The project is built using PHP, MySQL for database management, and incorporates 
 9/21/24 - Added Info Page for Users <br>
 - Merged table from admincategories.php to adminhouses.php. <br>
 - Improved admin/includes/header.php code indentations <br>
+
+9/23/24 - Integrated Semaphore curl API, Revised format of email contents, changed sender gmail <br>

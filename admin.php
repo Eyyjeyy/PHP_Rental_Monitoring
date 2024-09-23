@@ -1156,19 +1156,24 @@ Class Admin {
         $mail->isSMTP(); // Set mailer to use SMTP
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
-        $mail->Username = 'jerslippad3@gmail.com'; // SMTP username
-        $mail->Password = 'frei snyj zlkk hmzb'; // SMTP password
+        $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
+        $mail->Password = 'cdzc dueq yfzl rcve'; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
         // Recipients
-        $mail->setFrom('jerslippad3@gmail.com', 'Mailer');
+        $mail->setFrom('renttrackpro@gmail.com', 'Mailer');
         $mail->addAddress($to); // Add a recipient
 
         // Attachments
         if ($attachmentPath) {
-            $mail->addAttachment($attachmentPath); // Add attachments
+            // $mail->addAttachment($attachmentPath); // Add attachments
+            $cid = 'renttrack_image'; // Content ID for referencing the image
+            $mail->addEmbeddedImage($attachmentPath, $cid);
         }
+
+        // Reference the image in the email body
+        $body .= '<img src="cid:' . $cid . '" alt="Renttrack Logo" style="width: 200px; height: auto;"><br>';
 
         // Content
         $mail->isHTML(true); // Set email format to HTML
@@ -1245,14 +1250,18 @@ Class Admin {
           $balance = $rentDuePerTenant - $totalPayments;
 
           // Create email content
-          $subject = "Monthly Payment Reminder";
-          $body = "Dear " . $tenant['fname'] . " " . $tenant['lname'] . ",<br><br>";
-          $body .= "This is a reminder that your monthly payment is due.<br>";
-          $body .= "Amount Due: $" . number_format($balance, 2) . "<br><br>";
-          $body .= "Best regards,<br>Renttrack Pro";
+          $subject = "Monthly Rent Payment Reminder";
+          $body = '<p style="font-size: 18px; color: #004c00; font-family: Helvetica;">Dear <strong>' . $tenant['fname'] . ' ' . $tenant['lname'] . '</strong>,</p>';
+          $body .= '<p style="font-size: 16px; color: #414141;">';
+          $body .= 'This is a reminder that your monthly payment is due.<br>';
+          $body .= 'Amount Due: <strong>₱' . number_format($balance, 2) . '</strong><br><br>';
+          $body .= 'You can pay through the following: <br>Gcash: <br>Bank: <br><br>';
+          $body .= 'Upload your proof of payment: <br>Link: https://www.renttrackpro.online/ <br><br>';
+          $body .= 'Best regards,<br>Renttrack Pro<br></p>';
+          $imagePath = 'asset/Renttrack pro.png';
 
           // Send email
-          if ($this->sendEmail($to, $subject, $body)) {
+          if ($this->sendEmail($to, $subject, $body, $imagePath)) {
               echo "Email sent to " . $to . "\n";
           } else {
               echo "Failed to send email to " . $to . "\n";
