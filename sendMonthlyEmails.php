@@ -5,6 +5,7 @@ use Twilio\Rest\Client;
 
 
 $admin = new Admin();
+$notifications = $admin->sendMonthlyPaymentNotifications();
 
 // $account_sid = "ACe7fb0d1b5fa2212c4137fb8653261463";
 // $auth_token = "d8f6de152838e5c1326e689debbd3ea9";
@@ -33,27 +34,57 @@ $admin = new Admin();
 // Initialize a cURL session
 $ch = curl_init();
 
-// Set the parameters for the API request
-$parameters = array(
-    'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
-    'number' => '9398380417',  // Replace with the recipient's number
-    'message' => 'I just sent my first message with Semaphore',
-    'sendername' => 'SEMAPHORE' // Replace with your registered sender name
-);
+foreach ($notifications as $notification) {
+    $balance = $notification['balance'];
+    $message = "Dear {$notification['fname']} {$notification['lname']}, your monthly rent is ₱" . number_format($balance, 2) . ". Pay as soon as possible.";
 
-// Set cURL options for the request
-curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Set the parameters for the API request
+    $parameters = array(
+        'apikey' => '', // Replace with your actual API key
+        'number' => $notification['phonenumber'],  // Replace with the recipient's number
+        'message' => $message,
+        'sendername' => 'Thesis' // Replace with your registered sender name
+    );
 
-// Execute the cURL request and get the response
-$output = curl_exec($ch);
+    // Set cURL options for the request
+    curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute the cURL request and get the response
+    $output = curl_exec($ch);
+
+    // Output the response from Semaphore
+    echo $output . "\n";
+}
 
 // Close the cURL session
 curl_close($ch);
 
-// Output the response from Semaphore
-echo $output;
 
-$admin->sendMonthlyPaymentNotifications();
+
+// // Set the parameters for the API request
+// $parameters = array(
+//     'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+//     'number' => '09955835160',  // Replace with the recipient's number
+//     'message' => 'I just sent my first message with Semaphore',
+//     'sendername' => 'Thesis' // Replace with your registered sender name
+// );
+
+// // Set cURL options for the request
+// curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+// curl_setopt($ch, CURLOPT_POST, 1);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// // Execute the cURL request and get the response
+// $output = curl_exec($ch);
+
+// // Close the cURL session
+// curl_close($ch);
+
+// // Output the response from Semaphore
+// echo $output;
+
+// $admin->sendMonthlyPaymentNotifications();

@@ -223,6 +223,11 @@ table.table{
     margin-top: 5px;
 }
 
+.seen-status {
+    font-size: 0.85em;
+    color: #474545;
+}
+
 /* Send Message Form Styling */
 form {
     display: flex;

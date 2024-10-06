@@ -292,6 +292,7 @@
         }
 
         var userId = <?php echo $user_id; ?>; // Assuming $user_id is set in PHP
+        var chatUserId = <?php echo $chat_user_id; ?>;
 
         function initSSE(chatUserId) {
             if (typeof(EventSource) !== "undefined") {
@@ -348,6 +349,10 @@
                         }
 
                         messageHtml += '<span class="timestamp">' + row.timestamp + '</span>';
+                        var seenStatus = (row.seen == 1 && row.sender_id == userId) ? '<span class="seen-status">Seen</span>' : '';
+                        if (messageClass === 'message-right') {
+                            messageHtml += seenStatus;
+                        }
                         messageHtml += '</div>';
 
                         messagesHtml += messageHtml;
@@ -381,7 +386,7 @@
         }
 
         // Initial fetch of messages for the first user
-        var chatUserId = <?php echo $chat_user_id; ?>;
+        
         if (chatUserId) {
             switchChatUser(chatUserId);
         }
@@ -390,9 +395,13 @@
         $('a[data-user-id]').on('click', function(e) {
             e.preventDefault();
             var newChatUserId = $(this).data('user-id');
+            chatUserId = newChatUserId;
             history.pushState(null, '', '?user_id=' + newChatUserId);
             switchChatUser(newChatUserId);
+            markMessagesSeen();
         });
+
+        
 
         function showSendMessageForm(chatUserId) {
             if (chatUserId) {
@@ -455,6 +464,23 @@
 
         // Initial call to display the send message form
         showSendMessageForm(chatUserId);
+
+        // Function to mark messages as seen
+        function markMessagesSeen() {
+            $.post('mark_seen.php', { user_id: userId, chat_user_id: chatUserId }, function(response) {
+                console.log('Messages marked as seen:', response);
+            });
+        }
+
+        // If the chat window is in focus, mark messages as seen
+        if (document.hasFocus()) {
+            markMessagesSeen();
+        }
+
+        // Optional: Mark messages as seen when the window gains focus
+        $(window).on('focus', function() {
+            markMessagesSeen();
+        });
     });
 </script>
 

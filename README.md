@@ -101,3 +101,15 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Improved admin/includes/header.php code indentations <br>
 
 9/23/24 - Integrated Semaphore curl API, Revised format of email contents, changed sender gmail <br>
+
+9/26/24 - Admin.php <br>
+- Revised addPayment function to include name validation of the user due to tester's feedback being able to commit client-side manipulation through editing of value by inspect element before submitting user payment data <br> 
+
+10/4/2024 - Created "Seen" feature for admin and user chats <br>
+- Created mark_seen.php that updates message seen column when called by chat or chat_user.php <br>
+- Revised chat.php to mark recipient's message as seen. Admin's message will also have its own seen stamp when recipient/regular user sees or fetches the conversation <br>
+- Revised chat_user.php to mark recipient's message as seen. Regular user's message will also have its own seen stamp when recipient/admin sees or fetches the conversation <br>
+
+10/6/2024 - Revised text formatting of sms <br>
+- Revised admin.php's sendMonthlyPaymentNotifications function to pass tenant and user db info to sendMonthlyEmails.php for sms usage <br>
+- Revised sendMonthlyEmails.php to iterate over each tenant for dynamic sending of sms to any number of tenants depending on how many met the condition in sendMonthlyPaymentNotifications <br>

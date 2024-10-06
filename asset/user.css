@@ -149,6 +149,10 @@ thead {
     margin-top: 5px;
 }
 
+.message .seen-status {
+    display: block;
+}
+
 .message .sender {
     flex-shrink: 0;
     margin-right: 10px;

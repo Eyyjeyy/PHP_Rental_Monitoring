@@ -697,6 +697,16 @@ Class Admin {
   }
 
   public function addPayment($name, $amount, $houses_id, $paymentDate, $filePath) {
+    $retrieveusername = $this->conn->prepare("SELECT firstname, middlename, lastname FROM users WHERE id = ?");
+    $retrieveusername->bind_param("i", $this->session_id);
+    $retrieveusername->execute();
+    $retrieveresult = $retrieveusername->get_result();
+
+    if ($retrieverow = $retrieveresult->fetch_assoc()) {
+      // Concatenate the firstname, middlename, and lastname with a space separator
+      $name = trim($retrieverow['firstname']) . ' ' . trim($retrieverow['middlename']) . ' ' . trim($retrieverow['lastname']);
+    }
+
     // Sanitize input data
     $name = $this->conn->real_escape_string($name);
     $amount = (float)$amount;
@@ -1157,7 +1167,7 @@ Class Admin {
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
         $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
-        $mail->Password = 'cdzc dueq yfzl rcve'; // SMTP password
+        $mail->Password = ''; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
@@ -1193,9 +1203,11 @@ Class Admin {
     // Current date
     $today = new DateTime();
     $todayString = $today->format('Y-m-d');
+
+    $notifications = [];
     
     // SQL query to get all tenants and house price
-    $sql = "SELECT t.*, u.email, h.price
+    $sql = "SELECT t.*, u.email, u.phonenumber, h.price
     FROM tenants t
     INNER JOIN users u ON t.users_id = u.id
     INNER JOIN houses h ON t.house_id = h.id";
@@ -1249,6 +1261,15 @@ Class Admin {
           // Calculate the current balance for the current tenant
           $balance = $rentDuePerTenant - $totalPayments;
 
+          // Prepare notification data (email + balance)
+          $notifications[] = [
+            'email' => $tenant['email'],
+            'fname' => $tenant['fname'],
+            'lname' => $tenant['lname'],
+            'phonenumber' => $tenant['phonenumber'],
+            'balance' => $balance
+          ];
+
           // Create email content
           $subject = "Monthly Rent Payment Reminder";
           $body = '<p style="font-size: 18px; color: #004c00; font-family: Helvetica;">Dear <strong>' . $tenant['fname'] . ' ' . $tenant['lname'] . '</strong>,</p>';
@@ -1271,6 +1292,7 @@ Class Admin {
     } else {
         echo "No tenants to notify today.\n";
     }
+    return $notifications;
   }
 
   public function getTenantCountByApartment() {

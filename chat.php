@@ -644,11 +644,22 @@
                             </video>`;
                         }
                     }
-                    html += `<div class="message ${classMessage}">
-                                <p><strong>${sender}:</strong> ${message.message}</p>
-                                ${mediaHTML}
-                                <span class="timestamp">${message.timestamp}</span>
-                            </div>`;
+
+                    var seenStatus = (message.seen == 1 && message.sender_id == userId) ? '<span class="seen-status">Seen</span>' : '';
+                    if (classMessage === 'message-right') {
+                        html += `<div class="message ${classMessage}">
+                                    <p><strong>${sender}:</strong> ${message.message}</p>
+                                    ${mediaHTML}
+                                    <span class="timestamp">${message.timestamp}</span>
+                                    ${seenStatus}
+                                </div>`;
+                    } else {
+                        html += `<div class="message ${classMessage}">
+                                    <p><strong>${sender}:</strong> ${message.message}</p>
+                                    ${mediaHTML}
+                                    <span class="timestamp">${message.timestamp}</span>
+                                </div>`;
+                    }
                 });
                 $('.messages').html(html);
                 
@@ -688,6 +699,29 @@
                         console.error('Error submitting form:', textStatus, errorThrown);
                     }
                 });
+            });
+
+            // Function to mark messages as seen
+            // function markMessagesAsSeen() {
+            //     $.post('mark_seen.php', { 
+            //         user_id: userId, 
+            //         chat_user_id: chatUserId 
+            //     });
+            // }
+            function markMessagesSeen() {
+                $.post('mark_seen.php', { user_id: userId, chat_user_id: chatUserId }, function(response) {
+                    console.log('Messages marked as seen:', response);
+                });
+            }
+
+            // If the chat is active (window is focused), mark messages as seen
+            if (document.hasFocus()) {
+                markMessagesSeen();
+            }
+            
+            // Optional: Mark messages as seen when the window gains focus
+            $(window).on('focus', function() {
+                markMessagesSeen();
             });
         });
     </script>
