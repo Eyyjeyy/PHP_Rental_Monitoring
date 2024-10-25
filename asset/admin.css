@@ -70,7 +70,9 @@ a p {
 .col.main.content{
     background-color: #26262633;
     flex-basis: 75%; /* 75% width for main content */
-
+    .card-body:nth-of-type(2) {
+        margin-bottom: 4em;
+    }
 }
 
 .col.main.content .card-body{
@@ -93,6 +95,11 @@ table.table{
     display: flex;
     height: 100vh;
     background-color: #F9E8D9; /* Light cream color */
+}
+
+#usercol .card-body ul li a:hover {
+    background-color: #F7B787;
+    border-radius: 5px;
 }
 
 /* User List Styling */

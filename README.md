@@ -116,3 +116,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 10/25/2024 - adminhouses.php <br>
 - Revised html and javascript for sorting data when column header clicked <br>
+
+10/25/2024 - minor frontend content revisions <br>
+
+10/26/2024 - admin and user chats updated to be able to send photos without text message <br>

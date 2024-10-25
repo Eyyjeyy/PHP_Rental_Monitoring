@@ -410,7 +410,7 @@
                         <div class="row h-100 m-0" id="textbtnzone">
                             <div class="textzone-2">
                                 <div class="row m-0" id="textzone">
-                                    <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                                    <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..."></textarea>
                                 </div>
                             </div>
                             <div class="col-3 p-0" id="btnzone">

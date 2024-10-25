@@ -506,7 +506,7 @@
                         });
                     });
                 </script>
-                <p>Home</p>
+                <!-- <p>Home</p> -->
             </div>
         </div>
     </div>

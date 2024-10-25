@@ -433,7 +433,7 @@
                             <div class="card-header" style="background-color: #EE7214;">
                                 <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Users</h5>
                             </div>
-                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto; height: 80%;">
+                            <div class="card-body mt-0" style="background-color: #F9F3EE; overflow-y: auto; height: 80%; margin-bottom: 0;">
                                 <ul class="ps-0 h-100" style="list-style: none;">
                                     <?php foreach ($users as $user): ?>
                                         <li>
@@ -459,7 +459,7 @@
                             <div class="card-header" style="background-color: #527853;">
                                 <h5 class="text-center mb-0 text-white" style="font-size: 1.2rem; font-weight: bold;">Chat</h5>
                             </div>
-                            <div class="card-body mt-0" id="messagecard" style="background-color: #F9F3EE; overflow-y: auto;">
+                            <div class="card-body mt-0" id="messagecard" style="background-color: #F9F3EE; overflow-y: auto; margin-bottom: 0;">
                                 <div class="messages p-0" style="background-color: transparent; border: none; max-height: 100%; overflow-y: visible">
                                     <?php
                                         if ($chat_user_id) {
@@ -478,7 +478,7 @@
                                             <div class="col" style="margin-top: 7px;">
                                                 <div class="textzone-2">
                                                     <div class="row m-0" id="textzone">
-                                                        <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..." required></textarea>
+                                                        <textarea class="w-100" name="message" id="message-input" placeholder="Type your message here..."></textarea>
                                                     </div>
                                                 </div>
                                             </div>
