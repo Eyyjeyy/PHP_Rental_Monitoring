@@ -113,3 +113,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
 10/6/2024 - Revised text formatting of sms <br>
 - Revised admin.php's sendMonthlyPaymentNotifications function to pass tenant and user db info to sendMonthlyEmails.php for sms usage <br>
 - Revised sendMonthlyEmails.php to iterate over each tenant for dynamic sending of sms to any number of tenants depending on how many met the condition in sendMonthlyPaymentNotifications <br>
+
+10/25/2024 - adminhouses.php <br>
+- Revised html and javascript for sorting data when column header clicked <br>
