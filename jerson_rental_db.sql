@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2024 at 06:52 PM
+-- Generation Time: Oct 27, 2024 at 10:18 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -251,7 +251,10 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (155, 40, 'Message', 'Message, ID: 300<br>Receiver, : aj<br>', '2024-10-03 18:44:20'),
 (156, 40, 'Message', 'Message, ID: 301<br>Receiver, : aj<br>', '2024-10-03 18:46:59'),
 (157, 40, 'Message', 'Message, ID: 302<br>Receiver, : aj<br>', '2024-10-03 18:50:52'),
-(158, 40, 'Message', 'Message, ID: 303<br>Receiver, : aj<br>', '2024-10-03 18:51:35');
+(158, 40, 'Message', 'Message, ID: 303<br>Receiver, : aj<br>', '2024-10-03 18:51:35'),
+(159, 40, 'Message', 'Message, ID: 305<br>Receiver, : admin12<br>', '2024-10-25 21:13:23'),
+(160, 40, 'Message', 'Message, ID: 306<br>Receiver, : admin12<br>', '2024-10-25 21:15:44'),
+(161, 40, 'Message', 'Message, ID: 307<br>Receiver, : admin12<br>', '2024-10-25 21:17:50');
 
 -- --------------------------------------------------------
 
@@ -583,7 +586,13 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (301, 40, 41, 40, 'hye\r\n', '2024-10-04 02:46:59', NULL, 1),
 (302, 40, 41, 40, 'gg', '2024-10-04 02:50:52', NULL, 1),
 (303, 40, 41, 40, 'ee', '2024-10-04 02:51:35', NULL, 1),
-(304, 41, 40, 41, 'conflict', '2024-10-04 02:53:01', NULL, 1);
+(304, 41, 40, 41, 'conflict', '2024-10-04 02:53:01', NULL, 1),
+(305, 40, 40, 40, ' ', '2024-10-26 05:13:23', './uploads/671c09f3a6835.jpg', 1),
+(306, 40, 40, 40, '', '2024-10-26 05:15:44', './uploads/671c0a808b72b.png', 1),
+(307, 40, 40, 40, 'hello', '2024-10-26 05:17:50', NULL, 1),
+(308, 41, 40, 41, 'shadow on the sun', '2024-10-26 05:22:38', NULL, 0),
+(309, 41, 40, 41, '', '2024-10-26 05:26:48', './uploads/671c0d182a663.jpg', 0),
+(310, 41, 40, 41, '', '2024-10-26 05:27:10', './uploads/671c0d2e1576e.png', 0);
 
 -- --------------------------------------------------------
 
@@ -724,34 +733,35 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `role` varchar(50) NOT NULL,
   `Date` datetime NOT NULL DEFAULT current_timestamp(),
-  `phonenumber` varchar(15) NOT NULL
+  `phonenumber` varchar(15) NOT NULL,
+  `otp` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`) VALUES
-(40, 'admin12', '', '', '', '123', '', 'admin', '2024-05-25 18:51:47', ''),
-(41, 'aj', 'Broonam', 'Mad3434567german', 'Goodasd', '123777', '202010108@fit.edu.phhhhh', 'user', '2024-05-25 18:52:14', ''),
-(46, 'Mad Max1', 'as12', 'saasasa34', 'ddasasas56', 'lastname_murder', '', 'admin', '2024-06-02 22:18:16', ''),
-(50, 'asd_1', 'asd', 'asd', 'asd', 'sdf', '', 'admin', '2024-06-03 17:42:54', ''),
-(51, 'asd_ ', 'asd', 'asd', 'asd', 'asd', '', 'admin', '2024-06-03 17:43:08', ''),
-(60, 'asd', 'asd', 'asd', 'asd', '     asdasd', '', 'admin', '2024-06-03 18:43:49', ''),
-(61, 'asd', 'asd', 'asd', 'asd', 'asd  ', '', 'admin', '2024-06-03 18:44:43', ''),
-(62, 'ajb', 'aj', 'aj', 'aj', '__  123', '', 'admin', '2024-06-03 18:47:08', ''),
-(67, 'gar', 'gar', 'gar', 'gar', 'gar_1', '', 'admin', '2024-06-03 18:57:00', ''),
-(68, 'aj', 'aj', 'aj', 'aj', 'pass', '', 'admin', '2024-06-03 19:14:31', ''),
-(69, 'aj', 'John', 'Payo', 'Junio', '1234', '', 'user', '2024-06-09 02:18:40', ''),
-(70, 'OuterHeaven', 'Lucious', 'Black', 'Gorehound', '123', '', 'user', '2024-06-12 22:05:52', ''),
-(71, 'Bad', 'Romeo', 'Juliet', 'Echo', '123', '', 'user', '2024-06-14 00:44:38', ''),
-(72, 'testing1', 'test fname', 'testmiddle', 'testlastname', '123', 'redrider0939@gmail.com', 'user', '2024-07-07 19:19:18', '09955835160'),
-(73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52', '09398380417'),
-(74, 'test39099', 'fnm', 'mnm', 'lnm', '123', '', 'user', '2024-07-18 15:55:16', ''),
-(80, 'cancerarty', 'asd', 'fac', 'dsdsds', '12', '', 'admin', '2024-08-09 01:49:01', ''),
-(81, 'asd', 'asd', 'asd', 'asd', '123', 'asd@gmail.com', 'user', '2024-09-01 19:15:20', ''),
-(82, 'asd', 'asd', 'asd', 'asd', '123', 'fsdf@gmail.com', 'user', '2024-09-01 19:17:42', ''),
-(83, 'asd', 'asd', 'asd', 'asd', '123', 'Asd@gmail.com', 'user', '2024-09-01 19:20:44', '');
+INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`, `otp`) VALUES
+(40, 'admin12', '', '', '', '123', '', 'admin', '2024-05-25 18:51:47', '', NULL),
+(41, 'aj', 'Broonam', 'Mad3434567german', 'Goodasd', '123777', '202010108@fit.edu.phhhhh', 'user', '2024-05-25 18:52:14', '', NULL),
+(46, 'Mad Max1', 'as12', 'saasasa34', 'ddasasas56', 'lastname_murder', '', 'admin', '2024-06-02 22:18:16', '', NULL),
+(50, 'asd_1', 'asd', 'asd', 'asd', 'sdf', '', 'admin', '2024-06-03 17:42:54', '', NULL),
+(51, 'asd_ ', 'asd', 'asd', 'asd', 'asd', '', 'admin', '2024-06-03 17:43:08', '', NULL),
+(60, 'asd', 'asd', 'asd', 'asd', '     asdasd', '', 'admin', '2024-06-03 18:43:49', '', NULL),
+(61, 'asd', 'asd', 'asd', 'asd', 'asd  ', '', 'admin', '2024-06-03 18:44:43', '', NULL),
+(62, 'ajb', 'aj', 'aj', 'aj', '__  123', '', 'admin', '2024-06-03 18:47:08', '', NULL),
+(67, 'gar', 'gar', 'gar', 'gar', 'gar_1', '', 'admin', '2024-06-03 18:57:00', '', NULL),
+(68, 'aj', 'aj', 'aj', 'aj', 'pass', '', 'admin', '2024-06-03 19:14:31', '', NULL),
+(69, 'aj', 'John', 'Payo', 'Junio', '1234', '', 'user', '2024-06-09 02:18:40', '', NULL),
+(70, 'OuterHeaven', 'Lucious', 'Black', 'Gorehound', '123', '', 'user', '2024-06-12 22:05:52', '', NULL),
+(71, 'Bad', 'Romeo', 'Juliet', 'Echo', '123', '', 'user', '2024-06-14 00:44:38', '', NULL),
+(72, 'testing1', 'test fname', 'testmiddle', 'testlastname', 'horuslu', 'redrider0939@gmail.com', 'user', '2024-07-07 19:19:18', '09955835160', 375519),
+(73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52', '09398380417', NULL),
+(74, 'test39099', 'fnm', 'mnm', 'lnm', '123', '', 'user', '2024-07-18 15:55:16', '', NULL),
+(80, 'cancerarty', 'asd', 'fac', 'dsdsds', '12', '', 'admin', '2024-08-09 01:49:01', '', NULL),
+(81, 'asd', 'asd', 'asd', 'asd', '123', 'asd@gmail.com', 'user', '2024-09-01 19:15:20', '', NULL),
+(82, 'asd', 'asd', 'asd', 'asd', '123', 'fsdf@gmail.com', 'user', '2024-09-01 19:17:42', '', NULL),
+(83, 'asd', 'asd', 'asd', 'asd', '123', 'Asd@gmail.com', 'user', '2024-09-01 19:20:44', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -845,7 +855,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -863,7 +873,7 @@ ALTER TABLE `houses`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=305;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=311;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`

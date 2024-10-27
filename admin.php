@@ -1157,6 +1157,144 @@ Class Admin {
 
 
 
+  public function sendOTP($email) {
+    // Prepare the SQL statement to check if the email exists for a user role
+    $stmt = $this->conn->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND role = 'user'");
+    
+    if (!$stmt) {
+      return "Failed to prepare statement: " . $this->conn->error;
+    }
+
+    // Bind the email parameter as a string
+    $stmt->bind_param("s", $email);
+
+    // Execute the statement and check if it was successful
+    if (!$stmt->execute()) {
+      $stmt->close();
+      return "Failed to execute statement: " . $stmt->error;
+    }
+
+    $stmt->bind_result($emailCount);
+    
+    // Fetch the result
+    $stmt->fetch();
+    
+    // Close the statement
+    $stmt->close();
+
+    // If the email does not exist, return an error message
+    if ($emailCount === 0) {
+      return false;
+    }
+
+    // Generate a random 6-digit OTP
+    $otp = random_int(100000, 999999);
+
+    // Optionally, store OTP in a session or database if verification is needed later
+    $_SESSION['otp'] = $otp;
+
+    // Update the OTP in the users table for the corresponding email
+    $updateStmt = $this->conn->prepare("UPDATE users SET otp = ? WHERE email = ?");
+    
+    if (!$updateStmt) {
+      return "Failed to prepare OTP update: " . $this->conn->error;
+    }
+
+    // Bind parameters and execute the statement
+    $updateStmt->bind_param("is", $otp, $email);
+    
+    if (!$updateStmt->execute()) {
+      $updateStmt->close();
+      return "Failed to update OTP: " . $updateStmt->error;
+    }
+
+    // Close the update statement
+    $updateStmt->close();
+
+    // Set up the email subject and body
+    $subject = "Your OTP Code";
+    $body = "Your OTP code is: <strong>$otp</strong><br>Please enter this code to verify your identity.";
+
+    // Call the sendEmail function to send the OTP via email
+    $emailSent = $this->sendEmail($email, $subject, $body);
+
+    // Now, send OTP via SMS
+    // Fetch the user's phone number
+    $phoneStmt = $this->conn->prepare("SELECT phonenumber FROM users WHERE email = ?");
+    $phoneStmt->bind_param("s", $email);
+    $phoneStmt->execute();
+    $phoneStmt->bind_result($phoneNumber);
+    $phoneStmt->fetch();
+    $phoneStmt->close();
+
+    // Prepare SMS parameters
+    $smsSent = false;
+    if ($phoneNumber) {
+      // Prepare the message
+      $smsMessage = "Your OTP code is: $otp. Please enter this code to verify your identity.";
+
+      // Set up the cURL request to send SMS
+      $ch = curl_init();
+      $parameters = array(
+        'apikey' => '', // Replace with your actual API key
+        'number' => $phoneNumber,  // Recipient's number
+        'message' => $smsMessage,
+        'sendername' => 'Thesis' // Replace with your registered sender name
+      );
+
+      // Set cURL options for the request
+      curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+      // Execute the cURL request and get the response
+      $output = curl_exec($ch);
+      if ($output) {
+        $smsSent = true; // SMS sent successfully
+      }
+
+      // Close the cURL session
+      curl_close($ch);
+    }
+
+    // Check if both email and SMS were sent successfully
+    if ($emailSent && $smsSent) {
+      return "OTP sent successfully via email and SMS.";
+    } else {
+      return "Failed to send OTP via email or SMS.";
+    }
+  }
+
+  public function resetPassword($otp, $newPassword) {
+    // Verify the OTP
+    $stmt = $this->conn->prepare("SELECT email FROM users WHERE otp = ?");
+    $stmt->bind_param("i", $otp);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+      return false; // OTP is invalid or has expired
+    }
+
+    // Fetch the user email associated with the OTP
+    $user = $result->fetch_assoc();
+    $email = $user['email'];
+
+    // Step 3: Update the user's password in the database
+    $updateStmt = $this->conn->prepare("UPDATE users SET password = ?, otp = NULL WHERE email = ?");
+    $updateStmt->bind_param("ss", $newPassword, $email);
+    
+    if ($updateStmt->execute()) {
+      return true; // Password reset successfully
+    } else {
+      return false; // Failed to update the password
+    }
+  }
+
+
+
+
   public function sendEmail($to, $subject, $body, $attachmentPath = null) {
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 

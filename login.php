@@ -32,6 +32,48 @@
         }
     }
 
+    if (isset($_POST['recovery_user']) && !empty($_POST['email'])) {
+        $email = $_POST['email'];
+        
+        // Assuming $admin->sendOTP($email) sends the OTP
+        $sentOtp = $admin->sendOTP($email);
+    
+        // Respond back with a success or failure message
+        if ($sentOtp) {
+            echo "OTP has been sent to your email.";
+        } else {
+            echo "Failed to send OTP. Please try again.";
+        }
+    
+        // Stop further execution for AJAX request
+        exit();
+    }
+
+    if (isset($_POST['reset_password']) && isset($_POST['otp']) && isset($_POST['newPassword']) && isset($_POST['confirmPassword'])) {
+        $otp = $_POST['otp'];
+        $newPassword = $_POST['newPassword'];
+        $confirmPassword = $_POST['confirmPassword'];
+
+        // Check if new passwords match
+        if ($newPassword !== $confirmPassword) {
+            echo "Passwords do not match!";
+            exit();
+        }
+
+        // Call your method to reset the password
+        $passwordReset = $admin->resetPassword($otp, $newPassword); // Assuming you have this method
+
+        if ($passwordReset) {
+            echo "Password has been reset successfully.";
+        } else {
+            echo "Failed to reset password. Please try again.";
+        }
+
+        // Stop further execution for AJAX request
+        exit();
+    }
+    
+
     if ($admin->isLoggedIn()) {
         if ($admin->session_role == 'admin') {
             header("Location: admin/admindashboard.php");
@@ -121,9 +163,76 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="row w-100">
+                                <div class="col-12 p-0 text-center">
+                                    <a href="" class="text-decoration-none" id="recovery">Forgot Password?</a>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
+                <!-- Recovery Modal -->
+                <div class="modal fade" id="recoveryModal" tabindex="-1" aria-labelledby="recoveryModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                    <div class="modal-dialog" style="margin: 0; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="recoveryModalLabel">Password Recovery</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newUserForm" method="POST" action="login.php">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Please enter your email to receive an OTP</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" name="recovery_user" class="btn btn-primary">Send OTP</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Reset Modal -->
+                <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-labelledby="passwordResetModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                    <div class="modal-dialog" style="margin: 0; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="passwordResetModalLabel">Reset Password</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="passwordResetForm" method="POST" action="login.php">
+                                    <div class="mb-3">
+                                        <label for="otp" class="form-label">Enter OTP</label>
+                                        <input type="text" class="form-control" id="otp" name="otp" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" name="reset_password" class="btn btn-success">Reset Password</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Script Code prevents form resubmission when refreshing -->
                 <!-- login page after submitting wrong credentials -->
                 <script>
@@ -145,6 +254,128 @@
                         unset($_SESSION['message']);
                     }
                 ?>
+
+                <script>
+                    // Show recovery modal on click
+                    document.getElementById('recovery').addEventListener('click', function (event) {
+                        event.preventDefault(); // Prevents the anchor link from reloading the page
+                        var recoveryModal = new bootstrap.Modal(document.getElementById('recoveryModal'), {
+                            keyboard: false
+                        });
+                        recoveryModal.show();
+                    });
+
+                    // AJAX form submission for OTP
+                    document.getElementById('newUserForm').addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        const email = document.getElementById('email').value;
+
+                        fetch('login.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                email: email,
+                                recovery_user: true
+                            })
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            // alert(data); // Display the OTP response message for debugging
+
+                            if (data.includes("OTP has been sent to your email.")) {
+                                const existingAlert = document.querySelector('#recoveryModal .modal-body .alert');
+                                if (existingAlert) {
+                                    existingAlert.remove();
+                                }
+                                // Create a new alert div
+                                const alertDiv = document.createElement('div');
+                                alertDiv.className = 'alert alert-success';
+                                alertDiv.textContent = "OTP has been sent to your email and SMS.";
+                                
+                                // Append the alert to the modal body
+                                const modalBody = document.querySelector('#recoveryModal .modal-body');
+                                modalBody.insertBefore(alertDiv, modalBody.firstChild); // Insert at the top
+
+                                // Hide the recovery modal after a brief moment
+                                setTimeout(() => {
+                                    var recoveryModal = bootstrap.Modal.getInstance(document.getElementById('recoveryModal'));
+                                    if (recoveryModal) {
+                                        recoveryModal.hide();
+                                    }
+
+                                    // Show the password reset modal
+                                    console.log("Opening Password Reset Modal");
+                                    var passwordResetModalElement = document.getElementById('passwordResetModal');
+                                    var passwordResetModal = new bootstrap.Modal(passwordResetModalElement, {
+                                        keyboard: false
+                                    });
+                                    passwordResetModal.show();
+                                }, 2000); // Adjust the timeout duration as needed
+                            } else {
+                                const existingAlert = document.querySelector('#recoveryModal .modal-body .alert');
+                                if (existingAlert) {
+                                    existingAlert.remove();
+                                }
+                                // Optionally handle the failure case with an alert in the modal
+                                const alertDiv = document.createElement('div');
+                                alertDiv.className = 'alert alert-danger';
+                                alertDiv.textContent = "Failed to send OTP. Please try again.";
+                                
+                                // Append the alert to the modal body
+                                const modalBody = document.querySelector('#recoveryModal .modal-body');
+                                modalBody.insertBefore(alertDiv, modalBody.firstChild); // Insert at the top
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+
+                    // AJAX form submission for password reset
+                    document.getElementById('passwordResetForm').addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        const otp = document.getElementById('otp').value;
+                        const newPassword = document.getElementById('newPassword').value;
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+
+                        // Basic validation
+                        if (newPassword !== confirmPassword) {
+                            alert("Passwords do not match!");
+                            return;
+                        }
+
+                        fetch('login.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                otp: otp,
+                                newPassword: newPassword,
+                                confirmPassword: confirmPassword,
+                                reset_password: true // Indicating that this is a password reset request
+                            })
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data); // Display the password reset response message for debugging
+
+                            // You can handle further actions based on the response
+                            if (data.includes("Password has been reset successfully")) {
+                                // Close the password reset modal
+                                var passwordResetModal = bootstrap.Modal.getInstance(document.getElementById('passwordResetModal'));
+                                if (passwordResetModal) {
+                                    passwordResetModal.hide();
+                                }
+                                // Optionally, you can redirect or show a success message
+                                // window.location.href = 'login.php'; // Redirect to login page after successful reset
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                </script>
             </div>
         </div>
     </div>

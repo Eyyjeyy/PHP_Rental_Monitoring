@@ -120,3 +120,8 @@ The project is built using PHP, MySQL for database management, and incorporates 
 10/25/2024 - minor frontend content revisions <br>
 
 10/26/2024 - admin and user chats updated to be able to send photos without text message <br>
+
+10/27/2024 - login.php, admin.php <br>
+- new column in users table <br>
+- admin.php sendotp function sending to user's gmail and cellphone <br>
+- login.php now has recovery method to change to new password if user forgot account through OTP method <br>
