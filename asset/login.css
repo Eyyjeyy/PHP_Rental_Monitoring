@@ -44,6 +44,19 @@ a[name="login"] {
     width: 100px;
 }
 
+button[aria-label="Close"] {
+    background-color: #527853;
+    color: #F9E8D9;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[aria-label="Close"]:hover {
+    background-color: #EE7214; /* Bright orange color */
+}
+
 button[name="login"] {
     background-color: #527853;
     border-color: #527853;
