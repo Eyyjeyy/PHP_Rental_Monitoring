@@ -67,7 +67,7 @@
                     </div>  
                 </div>
                              
-                <p>Home</p>
+                <!-- <p>Home</p> -->
             </div>
         </div>
     </div>
