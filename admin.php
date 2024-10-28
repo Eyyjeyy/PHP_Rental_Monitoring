@@ -111,6 +111,24 @@ Class Admin {
       $_SESSION['message'] = "Invalid Email";
       return false;
     }
+    if (strlen($password) < 7) {
+      $_SESSION['message'] = "Password must be at least 7 characters long";
+      return false;
+    }
+
+    // Check if the username already exists
+    $checkStmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+    $checkStmt->bind_param("s", $username);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    // If a row was found, the username already exists
+    if ($checkStmt->num_rows > 0) {
+      $_SESSION['message'] = "Username already taken";
+      $checkStmt->close();
+      return false;
+    }
+    $checkStmt->close();
     
     $role = 'user';
 
@@ -1638,6 +1656,7 @@ $sql = "SELECT
                 YEAR(date_payment) as year, 
                 SUM(amount) as total_income 
             FROM payments 
+            WHERE approval = 'true'
             GROUP BY YEAR(date_payment) 
             ORDER BY YEAR(date_payment) ASC";
 

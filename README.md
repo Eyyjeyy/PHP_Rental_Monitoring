@@ -125,3 +125,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - new column in users table <br>
 - admin.php sendotp function sending to user's gmail and cellphone <br>
 - login.php now has recovery method to change to new password if user forgot account through OTP method <br>
+
+10/28/2024 - admin.php revised getyearlyincome for dashboard <br>
+- revised data shown on chart to only show data/payments that are approved by admin in the income per year chart <br>
+- revised "Send OTP" button color from blue to green <br>

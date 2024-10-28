@@ -190,7 +190,7 @@
                                         <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" name="recovery_user" class="btn btn-primary">Send OTP</button>
+                                        <button type="submit" name="recovery_user" class="btn btn-primary table-buttons-update">Send OTP</button>
                                     </div>
                                 </form>
                             </div>

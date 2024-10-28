@@ -64,6 +64,12 @@ button[name="login"] {
     width: 100px;
 }
 
+.table-buttons-update {
+    color: #fff;
+    background-color: #527853 !important;
+    border-color: #527853 !important;
+}
+
 button[name="login"]:hover {
     background-color: #3A583C;
     border-color: #3A583C; 

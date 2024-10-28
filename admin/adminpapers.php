@@ -522,7 +522,7 @@
                         <td>${e.id}</td>
                         <td>${e.name}</td>
                         <td>${e.created_at}</td>
-                        <td>
+                        <td style="text-align: center;">
                             <button class="btn btn-danger btn-delete table-buttons-delete" name="delete_category" data-id="${e.id}" style="width: 100px;">Delete</button>
                         </td>
                     </tr>

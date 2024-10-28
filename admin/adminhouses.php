@@ -355,6 +355,8 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="row" style="min-height: 54px;">
+                    </div>
                 </div>
                 <!-- New House Modal -->
                 <div class="modal fade" id="newHouseModal_house" tabindex="-1" aria-labelledby="newHouseModalLabel" aria-hidden="true">
