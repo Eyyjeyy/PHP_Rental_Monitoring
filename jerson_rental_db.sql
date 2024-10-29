@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2024 at 10:18 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Oct 29, 2024 at 12:34 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,16 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
 INSERT INTO `categories` (`id`, `name`) VALUES
-(65, '093'),
 (66, 'Studio'),
-(71, 'jjbaa');
+(74, 'Duplex'),
+(75, 'Micro Studio'),
+(76, 'Loft'),
+(77, 'Land');
 
 -- --------------------------------------------------------
 
@@ -54,26 +56,7 @@ CREATE TABLE `expenses` (
   `amount` float NOT NULL,
   `house_id` int(11) DEFAULT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `expenses`
---
-
-INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `house_id`, `date`) VALUES
-(1, 'sample', 'yada yada', 5000, 838, '2024-08-14'),
-(4, 'varda', 'gg', 88, 55, '2024-08-15'),
-(5, 'varda', '4324', 90.99, NULL, '2024-08-15'),
-(6, 'gg', 'varda', 91, NULL, '2024-08-15'),
-(7, 'fdsf', 'vardas', 90.9999, NULL, '2024-08-15'),
-(8, 'asdas', 'gg', 91, NULL, '2024-08-15'),
-(9, 'ss', 'ss', 23, NULL, '2024-08-15'),
-(10, 'aasd', 'asd', 91, NULL, '2024-08-15'),
-(11, 'bbg', 'sprt', 9000, NULL, '2024-08-21'),
-(12, 'testtt', 'yadgdggf', 777, 838, '2024-08-21'),
-(13, 'uygh', 'gffdfg', 10000, NULL, '2024-08-21'),
-(14, 'yada', 'asddf', 2000, 840, '2024-08-21'),
-(15, 'fdsg', 'asda', 200, 846, '2024-08-24');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,7 +70,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   `details` text NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `history`
@@ -254,7 +237,73 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (158, 40, 'Message', 'Message, ID: 303<br>Receiver, : aj<br>', '2024-10-03 18:51:35'),
 (159, 40, 'Message', 'Message, ID: 305<br>Receiver, : admin12<br>', '2024-10-25 21:13:23'),
 (160, 40, 'Message', 'Message, ID: 306<br>Receiver, : admin12<br>', '2024-10-25 21:15:44'),
-(161, 40, 'Message', 'Message, ID: 307<br>Receiver, : admin12<br>', '2024-10-25 21:17:50');
+(161, 40, 'Message', 'Message, ID: 307<br>Receiver, : admin12<br>', '2024-10-25 21:17:50'),
+(162, 40, 'Delete', 'Deleted Category, ID: 71<br> Username: jjbaa', '2024-10-29 11:03:01'),
+(163, 40, 'Delete', 'Deleted Category, ID: 65<br> Username: 093', '2024-10-29 11:03:03'),
+(164, 40, 'Add', 'Added Category, ID: 74<br> Username: Duplex', '2024-10-29 11:03:49'),
+(165, 40, 'Add', 'Added Category, ID: 75<br> Username: Micro Studio', '2024-10-29 11:04:18'),
+(166, 40, 'Add', 'Added Category, ID: 76<br> Username: Loft', '2024-10-29 11:04:24'),
+(167, 40, 'Add', 'Added House, ID: 858<br> Housename: Roxasville A<br> Category: 74<br> Price: 15000<br> Electric Account: John (132053845)<br> Water Account: John (93473595)', '2024-10-29 11:06:06'),
+(168, 40, 'Add', 'Added House, ID: 859<br> Housename: Roxasville B<br> Category: 74<br> Price: 15000<br> Electric Account: Jan (3425645345)<br> Water Account: Jan (345334288)', '2024-10-29 11:06:37'),
+(169, 40, 'Add', 'Added House, ID: 860<br> Housename: Bagatua Corner A<br> Category: 74<br> Price: 10000<br> Electric Account: John (21342342)<br> Water Account: John (42635636)', '2024-10-29 11:12:22'),
+(170, 40, 'Add', 'Added House, ID: 861<br> Housename: Bagatua Corner B<br> Category: 74<br> Price: 10000<br> Electric Account: Jan (2342634)<br> Water Account: Jan (6354636)', '2024-10-29 11:12:47'),
+(171, 40, 'Add', 'Added House, ID: 862<br> Housename: Bagatua Corner C<br> Category: 74<br> Price: 10000<br> Electric Account: Jan (45345345)<br> Water Account: Jan (34532347)', '2024-10-29 11:13:17'),
+(172, 40, 'Add', 'Added House, ID: 863<br> Housename: Bagatua Corner D<br> Category: 66<br> Price: 10000<br> Electric Account: Jemille (4647457)<br> Water Account: Jemille (457452)', '2024-10-29 11:13:53'),
+(173, 40, 'Update', 'Updated House, ID: 862<br>Category: Duplex -> Studio<br>Price: 10000 -> 10000', '2024-10-29 11:14:03'),
+(174, 40, 'Add', 'Added House, ID: 864<br> Housename: Lagro A<br> Category: 74<br> Price: 16000<br> Electric Account: Mildred (3213426)<br> Water Account: Mildred (3437474)', '2024-10-29 11:15:19'),
+(175, 40, 'Add', 'Added House, ID: 865<br> Housename: Lagro B<br> Category: 74<br> Price: 16000<br> Electric Account: Mildred (42346363)<br> Water Account: Mildred (6366346)', '2024-10-29 11:15:29'),
+(176, 40, 'Add', 'Added House, ID: 866<br> Housename: Bagatua Side A<br> Category: 75<br> Price: 5000<br> Electric Account: Jerum (325252)<br> Water Account: Jerum (263453)', '2024-10-29 11:16:00'),
+(177, 40, 'Add', 'Added House, ID: 867<br> Housename: Bagatua Side A<br> Category: 75<br> Price: 5000<br> Electric Account: Jerum (34537745)<br> Water Account: Jerum (45747455)', '2024-10-29 11:16:20'),
+(178, 40, 'Delete', 'Deleted House, ID: 856<br> Housename: gg23<br> Category: Studio<br> Price: 42322', '2024-10-29 11:16:25'),
+(179, 40, 'Add', 'Added Category, ID: 77<br> Username: Land', '2024-10-29 11:16:45'),
+(180, 40, 'Add', 'Added House, ID: 868<br> Housename: Regalado<br> Category: 77<br> Price: 30000<br> Electric Account: Mikhail (23426346)<br> Water Account: Mikhail (46363466)', '2024-10-29 11:17:06'),
+(181, 40, 'Update', 'Updated House, ID: 867<br>Housename: Bagatua Side A -> Bagatua Side B<br>Price: 5000 -> 5000', '2024-10-29 11:17:15'),
+(182, 40, 'Add', 'Added User, ID: 84<br> Username: admin', '2024-10-29 11:18:15'),
+(183, 40, 'Add', 'Added User, ID: 85<br> Username: user', '2024-10-29 11:18:25'),
+(184, 40, 'Delete', 'Deleted User, ID: 40<br> Username: admin12', '2024-10-29 11:18:39'),
+(185, 40, 'Delete', 'Deleted User, ID: 41<br> Username: aj', '2024-10-29 11:18:40'),
+(186, 40, 'Delete', 'Deleted User, ID: 46<br> Username: Mad Max1', '2024-10-29 11:18:40'),
+(187, 40, 'Delete', 'Deleted User, ID: 50<br> Username: asd_1', '2024-10-29 11:18:41'),
+(188, 40, 'Delete', 'Deleted User, ID: 51<br> Username: asd_ ', '2024-10-29 11:18:41'),
+(189, 40, 'Delete', 'Deleted User, ID: 60<br> Username: asd', '2024-10-29 11:18:43'),
+(190, 40, 'Delete', 'Deleted User, ID: 61<br> Username: asd', '2024-10-29 11:18:44'),
+(191, 40, 'Delete', 'Deleted User, ID: 62<br> Username: ajb', '2024-10-29 11:18:44'),
+(192, 40, 'Delete', 'Deleted User, ID: 67<br> Username: gar', '2024-10-29 11:18:44'),
+(193, 40, 'Delete', 'Deleted User, ID: 68<br> Username: aj', '2024-10-29 11:18:45'),
+(194, 40, 'Delete', 'Deleted User, ID: 69<br> Username: aj', '2024-10-29 11:18:45'),
+(195, 40, 'Delete', 'Deleted User, ID: 70<br> Username: OuterHeaven', '2024-10-29 11:18:45'),
+(196, 40, 'Delete', 'Deleted User, ID: 71<br> Username: Bad', '2024-10-29 11:18:47'),
+(197, 40, 'Delete', 'Deleted User, ID: 72<br> Username: testing1', '2024-10-29 11:18:47'),
+(198, 40, 'Delete', 'Deleted User, ID: 73<br> Username: testing2', '2024-10-29 11:18:48'),
+(199, 40, 'Delete', 'Deleted User, ID: 74<br> Username: test39099', '2024-10-29 11:18:48'),
+(200, 40, 'Delete', 'Deleted User, ID: 80<br> Username: cancerarty', '2024-10-29 11:18:49'),
+(201, 40, 'Delete', 'Deleted User, ID: 81<br> Username: asd', '2024-10-29 11:18:49'),
+(202, 40, 'Delete', 'Deleted User, ID: 82<br> Username: asd', '2024-10-29 11:18:50'),
+(203, 40, 'Delete', 'Deleted User, ID: 83<br> Username: asd', '2024-10-29 11:18:50'),
+(204, 40, 'Delete', 'Deleted Tenant, ID: 61<br> Firstname: Broonam<br> Middlename: Mad3434567german<br> Lastname: Goodasd<br> User ID: 41<br> Username: aj<br> House ID: 846', '2024-10-29 11:20:39'),
+(205, 40, 'Delete', 'Deleted Tenant, ID: 62<br> Firstname: John<br> Middlename: Payo<br> Lastname: Junio<br> User ID: 69<br> Username: aj<br> House ID: 839', '2024-10-29 11:20:40'),
+(206, 40, 'Delete', 'Deleted Tenant, ID: 63<br> Firstname: Lucious<br> Middlename: Black<br> Lastname: Gorehound<br> User ID: 70<br> Username: OuterHeaven<br> House ID: 847', '2024-10-29 11:20:40'),
+(207, 40, 'Delete', 'Deleted Tenant, ID: 66<br> Firstname: Romeo<br> Middlename: Juliet<br> Lastname: Echo<br> User ID: 71<br> Username: Bad<br> House ID: 847', '2024-10-29 11:20:40'),
+(208, 40, 'Delete', 'Deleted Tenant, ID: 67<br> Firstname: test fname<br> Middlename: testmiddle<br> Lastname: testlastname<br> User ID: 72<br> Username: testing1<br> House ID: 838', '2024-10-29 11:20:41'),
+(209, 40, 'Delete', 'Deleted Tenant, ID: 68<br> Firstname: test fname2<br> Middlename: test middle2<br> Lastname: testlastname2<br> User ID: 73<br> Username: testing2<br> House ID: 838', '2024-10-29 11:20:41'),
+(210, 40, 'Delete', 'Deleted Tenant, ID: 73<br> Firstname: fnm<br> Middlename: mnm<br> Lastname: lnm<br> User ID: 74<br> Username: test39099<br> House ID: 856', '2024-10-29 11:20:42'),
+(211, 40, 'Add', 'Added Tenant, ID: 74<br>First Name: Jerson<br>Middle Name: Wayas<br>Last Name: Lippad<br>Contact: 09324404218<br>User ID: 85<br>Username: user<br>House ID: 862<br>House Category: Studio', '2024-10-29 11:22:03'),
+(212, 40, 'Delete', 'Deleted Expense, ID: 1<br>Expense Name : sample<br>Expense Info : yada yada<br>', '2024-10-29 11:25:26'),
+(213, 40, 'Delete', 'Deleted Expense, ID: 4<br>Expense Name : varda<br>Expense Info : gg<br>', '2024-10-29 11:25:26'),
+(214, 40, 'Delete', 'Deleted Expense, ID: 5<br>Expense Name : varda<br>Expense Info : 4324<br>', '2024-10-29 11:25:27'),
+(215, 40, 'Delete', 'Deleted Expense, ID: 6<br>Expense Name : gg<br>Expense Info : varda<br>', '2024-10-29 11:25:27'),
+(216, 40, 'Delete', 'Deleted Expense, ID: 7<br>Expense Name : fdsf<br>Expense Info : vardas<br>', '2024-10-29 11:25:27'),
+(217, 40, 'Delete', 'Deleted Expense, ID: 8<br>Expense Name : asdas<br>Expense Info : gg<br>', '2024-10-29 11:25:28'),
+(218, 40, 'Delete', 'Deleted Expense, ID: 9<br>Expense Name : ss<br>Expense Info : ss<br>', '2024-10-29 11:25:28'),
+(219, 40, 'Delete', 'Deleted Expense, ID: 10<br>Expense Name : aasd<br>Expense Info : asd<br>', '2024-10-29 11:25:28'),
+(220, 40, 'Delete', 'Deleted Expense, ID: 11<br>Expense Name : bbg<br>Expense Info : sprt<br>', '2024-10-29 11:25:29'),
+(221, 40, 'Delete', 'Deleted Expense, ID: 12<br>Expense Name : testtt<br>Expense Info : yadgdggf<br>', '2024-10-29 11:25:29'),
+(222, 40, 'Delete', 'Deleted Expense, ID: 13<br>Expense Name : uygh<br>Expense Info : gffdfg<br>', '2024-10-29 11:25:29'),
+(223, 40, 'Delete', 'Deleted Expense, ID: 14<br>Expense Name : yada<br>Expense Info : asddf<br>', '2024-10-29 11:25:30'),
+(224, 40, 'Delete', 'Deleted Expense, ID: 15<br>Expense Name : fdsg<br>Expense Info : asda<br>', '2024-10-29 11:25:30'),
+(225, 40, 'Update', 'Updated Tenant, ID: 74<br>House ID: 862 -> 864<br>House Category: Studio -> Duplex', '2024-10-29 11:26:27'),
+(226, 40, 'Add', 'Added User, ID: 86<br> Username: john', '2024-10-29 11:29:19'),
+(227, 40, 'Add', 'Added User, ID: 87<br> Username: jan', '2024-10-29 11:29:38');
 
 -- --------------------------------------------------------
 
@@ -269,7 +318,7 @@ CREATE TABLE `houseaccounts` (
   `elec_accnum` int(50) NOT NULL,
   `water_accname` varchar(50) NOT NULL,
   `water_accnum` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `houseaccounts`
@@ -278,7 +327,17 @@ CREATE TABLE `houseaccounts` (
 INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `water_accname`, `water_accnum`) VALUES
 (1, 846, 'aj', 765, '', 0),
 (3, 848, 'asd', 4234, 'asd', 54235),
-(11, 856, 'asdasd2313', 3254662, 'fsdfds', 543534);
+(13, 858, 'John', 132053845, 'John', 93473595),
+(14, 859, 'Jan', 2147483647, 'Jan', 345334288),
+(15, 860, 'John', 21342342, 'John', 42635636),
+(16, 861, 'Jan', 2342634, 'Jan', 6354636),
+(17, 862, 'Jan', 45345345, 'Jan', 34532347),
+(18, 863, 'Jemille', 4647457, 'Jemille', 457452),
+(19, 864, 'Mildred', 3213426, 'Mildred', 3437474),
+(20, 865, 'Mildred', 42346363, 'Mildred', 6366346),
+(21, 866, 'Jerum', 325252, 'Jerum', 263453),
+(22, 867, 'Jerum', 34537745, 'Jerum', 45747455),
+(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466);
 
 -- --------------------------------------------------------
 
@@ -291,24 +350,24 @@ CREATE TABLE `houses` (
   `house_name` varchar(100) NOT NULL,
   `price` double NOT NULL,
   `category_id` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `houses`
 --
 
 INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`) VALUES
-(838, '54', 87, 65),
-(839, '54', 23, 65),
-(840, '123', 12, 65),
-(841, '123', 123, 65),
-(842, '123', 3214, 65),
-(843, '2343', 543, 65),
-(844, '2', 43, 65),
-(845, '54', 123, 65),
-(846, '54', 123, 65),
-(848, 'asd', 123, 65),
-(856, 'gg23', 42322, 66);
+(858, 'Roxasville A', 15000, 74),
+(859, 'Roxasville B', 15000, 74),
+(860, 'Bagatua Corner A', 10000, 74),
+(861, 'Bagatua Corner B', 10000, 74),
+(862, 'Bagatua Corner C', 10000, 66),
+(863, 'Bagatua Corner D', 10000, 66),
+(864, 'Lagro A', 16000, 74),
+(865, 'Lagro B', 16000, 74),
+(866, 'Bagatua Side A', 5000, 75),
+(867, 'Bagatua Side B', 5000, 75),
+(868, 'Regalado', 30000, 77);
 
 -- --------------------------------------------------------
 
@@ -325,7 +384,7 @@ CREATE TABLE `messages` (
   `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   `image_path` varchar(255) DEFAULT NULL,
   `seen` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
@@ -604,7 +663,7 @@ CREATE TABLE `paper_categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `paper_categories`
@@ -630,7 +689,7 @@ CREATE TABLE `paper_files` (
   `file_name` varchar(500) NOT NULL,
   `file_url` varchar(500) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `paper_files`
@@ -662,7 +721,7 @@ CREATE TABLE `payments` (
   `filepath` varchar(200) NOT NULL,
   `date_payment` date NOT NULL,
   `approval` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `payments`
@@ -702,20 +761,14 @@ CREATE TABLE `tenants` (
   `date_start` date NOT NULL,
   `date_end` date DEFAULT NULL,
   `date_preferred` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tenants`
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(61, 'Broonam', 'Mad3434567german', 'Goodasd', '123456', '41', 'aj', 846, '093', '2024-05-09', NULL, NULL),
-(62, 'John', 'Payo', 'Junio', '0983', '69', 'aj', 839, '09', '2024-06-09', NULL, NULL),
-(63, 'Lucious', 'Black', 'Gorehound', '093414', '70', 'OuterHeaven', 847, '093', '2024-05-01', NULL, '2024-05-01'),
-(66, 'Romeo', 'Juliet', 'Echo', '123', '71', 'Bad', 847, '093', '2024-05-01', NULL, '2024-05-01'),
-(67, 'test fname', 'testmiddle', 'testlastname', '0939', '72', 'testing1', 838, '093', '2024-07-07', NULL, '2024-06-07'),
-(68, 'test fname2', 'test middle2', 'testlastname2', '123432', '73', 'testing2', 838, '093', '2024-07-07', NULL, '2024-03-23'),
-(73, 'fnm', 'mnm', 'lnm', '99999999999', '74', 'test39099', 856, 'Studio', '2024-08-12', NULL, NULL);
+(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-30');
 
 -- --------------------------------------------------------
 
@@ -735,33 +788,17 @@ CREATE TABLE `users` (
   `Date` datetime NOT NULL DEFAULT current_timestamp(),
   `phonenumber` varchar(15) NOT NULL,
   `otp` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`, `otp`) VALUES
-(40, 'admin12', '', '', '', '123', '', 'admin', '2024-05-25 18:51:47', '', NULL),
-(41, 'aj', 'Broonam', 'Mad3434567german', 'Goodasd', '123777', '202010108@fit.edu.phhhhh', 'user', '2024-05-25 18:52:14', '', NULL),
-(46, 'Mad Max1', 'as12', 'saasasa34', 'ddasasas56', 'lastname_murder', '', 'admin', '2024-06-02 22:18:16', '', NULL),
-(50, 'asd_1', 'asd', 'asd', 'asd', 'sdf', '', 'admin', '2024-06-03 17:42:54', '', NULL),
-(51, 'asd_ ', 'asd', 'asd', 'asd', 'asd', '', 'admin', '2024-06-03 17:43:08', '', NULL),
-(60, 'asd', 'asd', 'asd', 'asd', '     asdasd', '', 'admin', '2024-06-03 18:43:49', '', NULL),
-(61, 'asd', 'asd', 'asd', 'asd', 'asd  ', '', 'admin', '2024-06-03 18:44:43', '', NULL),
-(62, 'ajb', 'aj', 'aj', 'aj', '__  123', '', 'admin', '2024-06-03 18:47:08', '', NULL),
-(67, 'gar', 'gar', 'gar', 'gar', 'gar_1', '', 'admin', '2024-06-03 18:57:00', '', NULL),
-(68, 'aj', 'aj', 'aj', 'aj', 'pass', '', 'admin', '2024-06-03 19:14:31', '', NULL),
-(69, 'aj', 'John', 'Payo', 'Junio', '1234', '', 'user', '2024-06-09 02:18:40', '', NULL),
-(70, 'OuterHeaven', 'Lucious', 'Black', 'Gorehound', '123', '', 'user', '2024-06-12 22:05:52', '', NULL),
-(71, 'Bad', 'Romeo', 'Juliet', 'Echo', '123', '', 'user', '2024-06-14 00:44:38', '', NULL),
-(72, 'testing1', 'test fname', 'testmiddle', 'testlastname', 'horuslu', 'redrider0939@gmail.com', 'user', '2024-07-07 19:19:18', '09955835160', 375519),
-(73, 'testing2', 'test fname2', 'test middle2', 'testlastname2', '123', 'ajunio.feudiliman@gmail.com', 'user', '2024-07-07 19:41:52', '09398380417', NULL),
-(74, 'test39099', 'fnm', 'mnm', 'lnm', '123', '', 'user', '2024-07-18 15:55:16', '', NULL),
-(80, 'cancerarty', 'asd', 'fac', 'dsdsds', '12', '', 'admin', '2024-08-09 01:49:01', '', NULL),
-(81, 'asd', 'asd', 'asd', 'asd', '123', 'asd@gmail.com', 'user', '2024-09-01 19:15:20', '', NULL),
-(82, 'asd', 'asd', 'asd', 'asd', '123', 'fsdf@gmail.com', 'user', '2024-09-01 19:17:42', '', NULL),
-(83, 'asd', 'asd', 'asd', 'asd', '123', 'Asd@gmail.com', 'user', '2024-09-01 19:20:44', '', NULL);
+(84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'admin', '2024-10-29 19:18:15', '', NULL),
+(85, 'user', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'user', '2024-10-29 19:18:25', '', NULL),
+(86, 'john', 'John', 'North', 'Garcia', '1234567', '', 'user', '2024-10-29 19:29:19', '', NULL),
+(87, 'jan', 'Jan', 'West', 'Nuevo', '1234567', '', 'user', '2024-10-29 19:29:38', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -843,7 +880,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -855,19 +892,19 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=858;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=869;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -897,13 +934,13 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- Constraints for dumped tables
