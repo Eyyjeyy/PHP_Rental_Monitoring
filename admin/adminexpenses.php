@@ -82,9 +82,10 @@
             LEFT JOIN houses ON expenses.house_id = houses.id;";
     $result = $admin->conn->query($sql);
 
-    $sql_option = "SELECT expenses.*, houses.house_name, houses.id AS housingid
-            FROM expenses
-            LEFT JOIN houses ON expenses.house_id = houses.id;";
+    // $sql_option = "SELECT expenses.*, houses.house_name, houses.id AS housingid
+    //         FROM expenses
+    //         LEFT JOIN houses ON expenses.house_id = houses.id;";
+    $sql_option = "SELECT * FROM houses;";
     $result_option = $admin->conn->query($sql_option);
 
     // Set the title for this page
@@ -201,8 +202,9 @@
                                         if ($result_option->num_rows > 0) {
                                             // Output options for each expense amount
                                             while ($row_option = $result_option->fetch_assoc()) {
-                                                if($row_option['housingid'] != null || !empty($row_option['housingid']))
-                                                echo "<option value='" . $row_option['housingid'] . "'>" . $row_option['house_name'] . "</option>";
+                                                // if($row_option['housingid'] != null || !empty($row_option['housingid']))
+                                                // echo "<option value='" . $row_option['housingid'] . "'>" . $row_option['house_name'] . "</option>";
+                                                echo "<option value='" . $row_option['id'] . "'>" . $row_option['house_name'] . "</option>";
                                             }
                                         } else {
                                             echo "<option value=''>No categories found</option>";
