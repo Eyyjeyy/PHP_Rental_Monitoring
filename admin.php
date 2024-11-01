@@ -1695,7 +1695,7 @@ $sql = "SELECT
 
   function countUsersNotInTenants() {
     // SQL query to count users whose id is not in the tenants table
-    $sql = "SELECT COUNT(*) as count FROM users WHERE id NOT IN (SELECT users_id FROM tenants)";
+    $sql = "SELECT COUNT(*) as count FROM users WHERE id NOT IN (SELECT users_id FROM tenants) AND role = 'user'";
     
     // Execute the query
     $result = $this->conn->query($sql);
