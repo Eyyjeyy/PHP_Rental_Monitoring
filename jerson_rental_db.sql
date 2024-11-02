@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 03:05 AM
+-- Generation Time: Nov 02, 2024 at 05:43 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -722,25 +722,6 @@ CREATE TABLE `payments` (
   `date_payment` date NOT NULL,
   `approval` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
-(7, 'Lucious Black Gorehound', 0, 63, 847, '../uploads/GAMEPOSTER_666b08e7a6d95.jpg', '2024-06-13', ''),
-(8, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/GAMEPOSTER_666b08fddb94a.jpg', '2024-06-13', 'true'),
-(9, 'Lucious Black Gorehound', 54, 63, 847, '../uploads/received_993104588452786_666b0958540c1.jpeg', '2024-06-14', ''),
-(10, 'Broonam Mad3434567german Goodasd', 9000, 61, 846, '../uploads/2023-11-19 13-03-19_6683d246aae55.mp4', '2024-07-02', 'true'),
-(11, 'Broonam Mad3434567german Goodasd', 3000, 61, 846, '../uploads/received_993104588452786_6697935ad360f.jpeg', '2024-07-17', 'true'),
-(12, 'Broonam Mad3434567german Goodasd', 50, 61, 846, '../uploads/Untitled_66a0d66bb54de.png', '2024-07-24', 'true'),
-(13, 'Broonam Mad3434567german Goodasd', 500, 61, 846, '../uploads/Untitled_66b9e91dc024e.png', '2024-08-12', 'false'),
-(15, 'test testsdfds', 8000, 0, 0, '', '2025-10-08', 'true'),
-(16, 'tsdfsdfx', 10000, 87, 243, '', '2022-05-03', ''),
-(17, 'asdasd', 4000, 8768, 847456, '', '2028-06-02', 'true'),
-(18, 'Aking sinta', 999, 61, 846, '../uploads/received_993104588452786_66f44ca55df29.jpeg', '2024-09-19', ''),
-(19, 'Broonam Mad3434567german Goodasd', 5435234, 61, 846, '../uploads/GAMEPOSTER-1_66f44f10ccbec.jpg', '2024-09-26', ''),
-(20, 'Broonam Mad3434567german Goodasd', 987, 61, 846, '../uploads/GAMEPOSTER_66f4530c5c7cb.jpg', '2024-09-26', '');
 
 -- --------------------------------------------------------
 
