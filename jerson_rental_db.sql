@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2024 at 05:43 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Nov 02, 2024 at 07:34 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
@@ -56,7 +56,17 @@ CREATE TABLE `expenses` (
   `amount` float NOT NULL,
   `house_id` int(11) DEFAULT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `expenses`
+--
+
+INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `house_id`, `date`) VALUES
+(16, 'CR Repair', 'Broken Faucet', 500, 858, '2024-11-02'),
+(17, 'Roof', 'Roof Leakage', 5000, 860, '2024-11-02'),
+(18, 'Paint', 'White Paint for Rennovation', 2000, 863, '2024-11-02'),
+(19, 'Paint', 'Gray Paint for Rennovation', 3000, 858, '2024-11-02');
 
 -- --------------------------------------------------------
 
@@ -70,7 +80,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   `details` text NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `history`
@@ -303,7 +313,39 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (224, 40, 'Delete', 'Deleted Expense, ID: 15<br>Expense Name : fdsg<br>Expense Info : asda<br>', '2024-10-29 11:25:30'),
 (225, 40, 'Update', 'Updated Tenant, ID: 74<br>House ID: 862 -> 864<br>House Category: Studio -> Duplex', '2024-10-29 11:26:27'),
 (226, 40, 'Add', 'Added User, ID: 86<br> Username: john', '2024-10-29 11:29:19'),
-(227, 40, 'Add', 'Added User, ID: 87<br> Username: jan', '2024-10-29 11:29:38');
+(227, 40, 'Add', 'Added User, ID: 87<br> Username: jan', '2024-10-29 11:29:38'),
+(228, 84, 'Add', 'Added Expenses, ID: 16<br>Expenses Name : CR Repair<br>Expenses Info : Broken Faucet<br>Expenses Amount : 500<br>House ID: 858<br>', '2024-11-02 06:01:49'),
+(229, 84, 'Delete', 'Deleted Paper Category, ID: 63<br>Category Name, : 3432<br>', '2024-11-02 06:02:20'),
+(230, 84, 'Delete', 'Deleted Paper Category, ID: 68<br>Category Name, : asd<br>', '2024-11-02 06:02:21'),
+(231, 84, 'Delete', 'Deleted Paper Category, ID: 70<br>Category Name, : affd<br>', '2024-11-02 06:02:22'),
+(232, 84, 'Delete', 'Deleted Paper Category, ID: 83<br>Category Name, : xds<br>', '2024-11-02 06:02:23'),
+(233, 84, 'Delete', 'Deleted Paper Category, ID: 87<br>Category Name, : bebe<br>', '2024-11-02 06:02:23'),
+(234, 84, 'Add', 'Added Paper Category, ID: 89<br>Category Name, : Roxasville Paper<br>', '2024-11-02 06:02:47'),
+(235, 84, 'Add', 'Added Paper Category, ID: 90<br>Category Name, : Bagatua Paper<br>', '2024-11-02 06:02:51'),
+(236, 84, 'Add', 'Added Paper Category, ID: 91<br>Category Name, : Regalado Paper<br>', '2024-11-02 06:02:55'),
+(237, 84, 'Add', 'Added Paper Category, ID: 92<br>Category Name, : Lagro Paper<br>', '2024-11-02 06:03:09'),
+(238, 84, 'Delete', 'Deleted Paper, ID: 1<br>Paper Name, : Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png<br>', '2024-11-02 06:03:11'),
+(239, 84, 'Delete', 'Deleted Paper, ID: 3<br>Paper Name, : received_993104588452786.jpeg<br>', '2024-11-02 06:03:11'),
+(240, 84, 'Delete', 'Deleted Paper, ID: 23<br>Paper Name, : 6685763997254.docx<br>', '2024-11-02 06:03:12'),
+(241, 84, 'Delete', 'Deleted Paper, ID: 25<br>Paper Name, : Untitled_66858228aefaf.png<br>', '2024-11-02 06:03:12'),
+(242, 84, 'Delete', 'Deleted Paper, ID: 31<br>Paper Name, : BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx<br>', '2024-11-02 06:03:12'),
+(243, 84, 'Delete', 'Deleted Paper, ID: 32<br>Paper Name, : Terms and Conditions for Unleash_669a700d8f616.docx<br>', '2024-11-02 06:03:13'),
+(244, 84, 'Delete', 'Deleted Paper, ID: 38<br>Paper Name, : Untitled_669a891a62e5c.png<br>', '2024-11-02 06:03:14'),
+(245, 84, 'Delete', 'Deleted Paper, ID: 40<br>Paper Name, : Untitled_66b9cf3e1e116.png<br>', '2024-11-02 06:03:14'),
+(246, 84, 'Delete', 'Deleted Paper, ID: 41<br>Paper Name, : GAMEPOSTER_66b9d129518a2.jpg<br>', '2024-11-02 06:03:14'),
+(247, 84, 'Add', 'Added Paper, ID: 42<br>Category Name : Roxasville Paper<br>File Name : paper_6725c125f2292.jpeg<br>', '2024-11-02 06:05:25'),
+(248, 84, 'Message', 'Message, ID: 311<br>Receiver, : admin<br>', '2024-11-02 06:08:28'),
+(249, 84, 'Add', 'Added Expenses, ID: 17<br>Expenses Name : Roof<br>Expenses Info : Roof Leakage<br>Expenses Amount : 5000<br>House ID: 860<br>', '2024-11-02 06:09:16'),
+(250, 84, 'Add', 'Added Expenses, ID: 18<br>Expenses Name : Paint<br>Expenses Info : White Paint for Rennovation<br>Expenses Amount : 2000<br>House ID: 863<br>', '2024-11-02 06:09:43'),
+(251, 84, 'Add', 'Added Expenses, ID: 19<br>Expenses Name : Paint<br>Expenses Info : Gray Paint for Rennovation<br>Expenses Amount : 3000<br>House ID: 858<br>', '2024-11-02 06:10:10'),
+(252, 84, 'Add', 'Added Tenant, ID: 75<br>First Name: Jan<br>Middle Name: West<br>Last Name: Nuevo<br>Contact: 09235552786<br>User ID: 87<br>Username: jan<br>House ID: 868<br>House Category: Land', '2024-11-02 06:12:37'),
+(253, 84, 'Add', 'Added Tenant, ID: 76<br>First Name: John<br>Middle Name: North<br>Last Name: Garcia<br>Contact: 09325557609<br>User ID: 86<br>Username: john<br>House ID: 865<br>House Category: Duplex', '2024-11-02 06:13:27'),
+(254, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Pending -> Accepted', '2024-11-02 06:33:18'),
+(255, 84, 'Approve', 'Payment Approved, ID: 23<br>Approval: Pending -> Accepted', '2024-11-02 06:33:19'),
+(256, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:45'),
+(257, 84, 'Approve', 'Payment Approved, ID: 21<br>Approval: Pending -> Accepted', '2024-11-02 06:33:46'),
+(258, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-02 06:33:54'),
+(259, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:57');
 
 -- --------------------------------------------------------
 
@@ -318,7 +360,7 @@ CREATE TABLE `houseaccounts` (
   `elec_accnum` int(50) NOT NULL,
   `water_accname` varchar(50) NOT NULL,
   `water_accnum` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `houseaccounts`
@@ -350,7 +392,7 @@ CREATE TABLE `houses` (
   `house_name` varchar(100) NOT NULL,
   `price` double NOT NULL,
   `category_id` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `houses`
@@ -384,7 +426,7 @@ CREATE TABLE `messages` (
   `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   `image_path` varchar(255) DEFAULT NULL,
   `seen` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
@@ -651,7 +693,8 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`,
 (307, 40, 40, 40, 'hello', '2024-10-26 05:17:50', NULL, 1),
 (308, 41, 40, 41, 'shadow on the sun', '2024-10-26 05:22:38', NULL, 0),
 (309, 41, 40, 41, '', '2024-10-26 05:26:48', './uploads/671c0d182a663.jpg', 0),
-(310, 41, 40, 41, '', '2024-10-26 05:27:10', './uploads/671c0d2e1576e.png', 0);
+(310, 41, 40, 41, '', '2024-10-26 05:27:10', './uploads/671c0d2e1576e.png', 0),
+(311, 84, 84, 84, 'Hello\r\n', '2024-11-02 14:08:28', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -663,18 +706,17 @@ CREATE TABLE `paper_categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `paper_categories`
 --
 
 INSERT INTO `paper_categories` (`id`, `name`, `created_at`) VALUES
-(63, '3432', '2024-07-01 13:58:59'),
-(68, 'asd', '2024-07-02 18:43:27'),
-(70, 'affd', '2024-07-03 16:53:49'),
-(83, 'xds', '2024-07-18 18:50:47'),
-(87, 'bebe', '2024-08-12 08:23:34');
+(89, 'Roxasville Paper', '2024-11-02 06:02:47'),
+(90, 'Bagatua Paper', '2024-11-02 06:02:51'),
+(91, 'Regalado Paper', '2024-11-02 06:02:55'),
+(92, 'Lagro Paper', '2024-11-02 06:03:09');
 
 -- --------------------------------------------------------
 
@@ -689,22 +731,14 @@ CREATE TABLE `paper_files` (
   `file_name` varchar(500) NOT NULL,
   `file_url` varchar(500) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `paper_files`
 --
 
 INSERT INTO `paper_files` (`id`, `category_id`, `category_name`, `file_name`, `file_url`, `uploaded_at`) VALUES
-(1, 63, '', 'Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '../uploads/Mental Omega Screenshot 2023.04.11 - 12.13.09.91.png', '2024-07-01 17:04:33'),
-(3, 63, '', 'received_993104588452786.jpeg', '../uploads/received_993104588452786.jpeg', '2024-07-01 17:08:14'),
-(23, 63, '', '6685763997254.docx', '../uploads/6685763997254.docx', '2024-07-03 16:03:05'),
-(25, 63, '', 'Untitled_66858228aefaf.png', '../uploads/Untitled_66858228aefaf.png', '2024-07-03 16:54:00'),
-(31, 63, '', 'BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '../uploads/BooTails Petspa & Mobile Grooming-Unleash Merchant Partnership Letter_66890be9852b5.docx', '2024-07-06 09:18:33'),
-(32, 85, '', 'Terms and Conditions for Unleash_669a700d8f616.docx', '../uploads/Terms and Conditions for Unleash_669a700d8f616.docx', '2024-07-19 13:54:21'),
-(38, 83, 'xds', 'Untitled_669a891a62e5c.png', '../uploads/Untitled_669a891a62e5c.png', '2024-07-19 15:41:14'),
-(40, 87, 'bebe', 'Untitled_66b9cf3e1e116.png', '../uploads/Untitled_66b9cf3e1e116.png', '2024-08-12 09:00:46'),
-(41, 87, 'bebe', 'GAMEPOSTER_66b9d129518a2.jpg', '../uploads/GAMEPOSTER_66b9d129518a2.jpg', '2024-08-12 09:08:57');
+(42, 89, 'Roxasville Paper', 'paper_6725c125f2292.jpeg', '../uploads/paper_6725c125f2292.jpeg', '2024-11-02 06:05:25');
 
 -- --------------------------------------------------------
 
@@ -721,7 +755,16 @@ CREATE TABLE `payments` (
   `filepath` varchar(200) NOT NULL,
   `date_payment` date NOT NULL,
   `approval` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
+(21, 'Jerson Wayas Lippad', 16000, 74, 864, '../uploads/bdo receipt_6725c73b161d5.png', '2024-11-02', 'true'),
+(22, 'Jerson Wayas Lippad', 0, 74, 864, '../uploads/pay maya receipt_6725c74fbce78.jpg', '2024-10-02', 'false'),
+(23, 'John North Garcia', 16000, 76, 865, '../uploads/gcash receipt_6725c79088e73.jpg', '2024-09-02', 'true');
 
 -- --------------------------------------------------------
 
@@ -742,14 +785,16 @@ CREATE TABLE `tenants` (
   `date_start` date NOT NULL,
   `date_end` date DEFAULT NULL,
   `date_preferred` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tenants`
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-30');
+(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-30'),
+(75, 'Jan', 'West', 'Nuevo', '09235552786', '87', 'jan', 868, 'Land', '2024-11-02', NULL, '2024-11-03'),
+(76, 'John', 'North', 'Garcia', '09325557609', '86', 'john', 865, 'Duplex', '2024-11-02', NULL, '2024-11-04');
 
 -- --------------------------------------------------------
 
@@ -769,7 +814,7 @@ CREATE TABLE `users` (
   `Date` datetime NOT NULL DEFAULT current_timestamp(),
   `phonenumber` varchar(15) NOT NULL,
   `otp` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -867,13 +912,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=260;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -891,31 +936,31 @@ ALTER TABLE `houses`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=311;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
 
 --
 -- AUTO_INCREMENT for table `paper_categories`
 --
 ALTER TABLE `paper_categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `paper_files`
 --
 ALTER TABLE `paper_files`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `users`
