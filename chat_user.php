@@ -195,6 +195,7 @@
                             <li>
                                 <a href="chat_user.php?user_id=<?php echo $user['id']; ?>" data-user-id="<?php echo $user['id']; ?>" class="text-decoration-none" style="color: #2C3E50;">
                                     <p class="fs-5 mb-2">
+                                        <span id="unseen-count-<?php echo $user['id']; ?>" class="badge bg-success" style="margin-left: 10px; visibility: hidden;">0</span>
                                         <?php echo htmlspecialchars($user['username']); ?>
                                     </p>
                                 </a>
@@ -482,6 +483,65 @@
             markMessagesSeen();
         });
     });
+</script>
+<script>
+    function fetchUnreadMessages() {
+        $.ajax({
+            url: 'fetch_unread_count.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.unread_messages !== undefined) {
+                    $('#unseenChatLabel').text(data.unread_messages);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching unread messages:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    // Run once on page load
+    fetchUnreadMessages();
+
+    // Poll every 3 seconds
+    setInterval(fetchUnreadMessages, 3000);
+</script>
+<script>
+    function fetchUnseenCounts() {
+        $.ajax({
+            url: 'fetch_unseen_count_specific.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Use the data object to update each user's unseen count
+                <?php foreach ($users as $user): ?>
+                    // Directly use a new variable name inside this block
+                    (function(userId) {
+                        const unseenCount = data[userId] || 0; // Get unseen count or default to 0
+                        const unseenCountLabel = $('#unseen-count-' + userId);
+
+                        // Update the label and show/hide based on count
+                        unseenCountLabel.text(unseenCount);
+                        if (unseenCount > 0) {
+                            unseenCountLabel.css('visibility', 'visible'); // Make the badge visible
+                        } else {
+                            unseenCountLabel.css('visibility', 'hidden'); // Make the badge invisible but occupy space
+                        }
+                    })(<?php echo $user['id']; ?>); // Immediately invoked function with user ID
+                <?php endforeach; ?>
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching unseen counts:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    // Poll every 3 seconds
+    setInterval(fetchUnseenCounts, 3000);
+
+    // Run once on page load
+    fetchUnseenCounts();
 </script>
 
 

@@ -759,7 +759,8 @@ Class Admin {
   }
 
   public function getAllUsers() {
-    $sql = "SELECT id, username FROM users";
+    // $sql = "SELECT id, username FROM users";
+    $sql = "SELECT u.id, u.username, (SELECT COUNT(*) FROM messages WHERE receiver_id = u.id AND seen = 0) AS unread_count FROM users u";
     $result = $this->conn->query($sql);
     $users = [];
     if ($result->num_rows > 0) {

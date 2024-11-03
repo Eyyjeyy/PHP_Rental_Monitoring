@@ -326,6 +326,19 @@
                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
                                 </svg>
                                 <p>Chat</p>
+                                <?php
+                                    foreach ($users as $user) {
+                                        if ($user['id'] == $admin->session_id) {
+                                            $userFound = $user;
+                                            break; // Stop the loop once the user is found
+                                        }
+                                    }
+                                    if ($userFound) {
+                                        echo "<p class='notifs fw-bold position-absolute' style='color: #F28543; right: 80px;' id='unseenChatLabel'>" . $userFound['unread_count'] . "</p>";
+                                    } else {
+                                        echo "<p class='notifs fw-bold position-absolute' style='color: #F28543; right: 80px;'>0</p>"; // Fallback if user not found
+                                    }
+                                ?>
                             </a>
     </div>
     <div class="hover-container">
@@ -426,7 +439,7 @@
                 </form>
             </div> -->
             <div class="col main content" style="margin: 0; padding: 0; justify-content: center;">
-            <div class="row mx-auto" style="height: 100%; width: 100%; justify-content: center;">
+                <div class="row mx-auto" style="height: 100%; width: 100%; justify-content: center;">
 
                     <div class="col-12 col-md-5 pe-md-0" id="usercol">
                         <div class="card h-100">
@@ -445,6 +458,7 @@
                                                 border-radius: 5px;
                                                 font-weight: 400;
                                                 font-size: 30px;">
+                                                    <span id="unseen-count-<?php echo $user['id']; ?>" class="badge bg-success" style="margin-left: 10px; visibility: hidden;">0</span>
                                                     <?php echo htmlspecialchars($user['username']); ?>
                                                 </p>
                                             </a>
@@ -663,6 +677,7 @@
                 });
                 $('.messages').html(html);
                 
+                $()
                 scrollToBottom();
             };
 
@@ -725,6 +740,97 @@
             });
         });
     </script>
+    <script>
+        function fetchUnreadMessages() {
+            $.ajax({
+                url: 'fetch_unread_count.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.unread_messages !== undefined) {
+                        $('#unseenChatLabel').text(data.unread_messages);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching unread messages:", textStatus, errorThrown);
+                }
+            });
+        }
+
+        // Run once on page load
+        fetchUnreadMessages();
+
+        // Poll every 3 seconds
+        setInterval(fetchUnreadMessages, 3000);
+    </script>
+    <script>
+        function fetchUnseenCounts() {
+            $.ajax({
+                url: 'fetch_unseen_count_specific.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Use the data object to update each user's unseen count
+                    <?php foreach ($users as $user): ?>
+                        // Directly use a new variable name inside this block
+                        (function(userId) {
+                            const unseenCount = data[userId] || 0; // Get unseen count or default to 0
+                            const unseenCountLabel = $('#unseen-count-' + userId);
+
+                            // Update the label and show/hide based on count
+                            unseenCountLabel.text(unseenCount);
+                            if (unseenCount > 0) {
+                                unseenCountLabel.css('visibility', 'visible'); // Make the badge visible
+                            } else {
+                                unseenCountLabel.css('visibility', 'hidden'); // Make the badge invisible but occupy space
+                            }
+                        })(<?php echo $user['id']; ?>); // Immediately invoked function with user ID
+                    <?php endforeach; ?>
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching unseen counts:", textStatus, errorThrown);
+                }
+            });
+        }
+
+        // Poll every 3 seconds
+        setInterval(fetchUnseenCounts, 3000);
+
+        // Run once on page load
+        fetchUnseenCounts();
+    </script>
+
+
+
+
+    <!-- <script>
+        // Realtime retrieval of total number of messages received by logged in user but not yet seen by him
+
+        function updateUnreadCount() {
+            $.ajax({
+                url: 'fetch_unread_count.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Check if the response contains the unread count
+                    if (data && data.unread_count !== undefined) {
+                        $('#unseenChatLabel').text(data.unread_count);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching unread count:", error);
+                }
+            });
+        }
+
+        // Poll every 5 seconds (5000 milliseconds)
+        setInterval(updateUnreadCount, 5000);
+
+        // Initial call to set the unread count on page load
+        $(document).ready(function() {
+            updateUnreadCount();
+        });
+    </script> -->
 
 
 

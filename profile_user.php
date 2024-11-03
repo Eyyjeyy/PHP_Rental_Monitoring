@@ -147,4 +147,30 @@
     </div>
 </div>
 
+<!-- Include jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  function fetchUnreadMessages() {
+    $.ajax({
+      url: 'fetch_unread_count.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        if (data && data.unread_messages !== undefined) {
+          $('#unseenChatLabel').text(data.unread_messages);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching unread messages:", textStatus, errorThrown);
+      }
+    });
+  }
+
+  // Run once on page load
+  fetchUnreadMessages();
+
+  // Poll every 3 seconds
+  setInterval(fetchUnreadMessages, 3000);
+</script>
+
 <?php include 'regular/includes/footer.php'; ?>

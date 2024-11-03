@@ -129,3 +129,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 10/28/2024 - admin.php revised getyearlyincome for dashboard <br>
 - revised data shown on chart to only show data/payments that are approved by admin in the income per year chart <br>
 - revised "Send OTP" button color from blue to green <br>
+
+11/3/2024 - all user and admin pages revised to include indicator of unseen chat messages in navbar and header <br>
+- unable to use more than one sse on each page and had to use polling <br>
+- created fetch_unread_count and fetch_unseen_count_specific for counting of total unread messages for all users and total unread messages per user <br>

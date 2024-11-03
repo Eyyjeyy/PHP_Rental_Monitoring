@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2024 at 07:34 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Nov 03, 2024 at 07:17 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `categories`
@@ -56,7 +56,7 @@ CREATE TABLE `expenses` (
   `amount` float NOT NULL,
   `house_id` int(11) DEFAULT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `expenses`
@@ -80,7 +80,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   `details` text NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `history`
@@ -360,7 +360,7 @@ CREATE TABLE `houseaccounts` (
   `elec_accnum` int(50) NOT NULL,
   `water_accname` varchar(50) NOT NULL,
   `water_accnum` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `houseaccounts`
@@ -392,7 +392,7 @@ CREATE TABLE `houses` (
   `house_name` varchar(100) NOT NULL,
   `price` double NOT NULL,
   `category_id` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `houses`
@@ -426,275 +426,7 @@ CREATE TABLE `messages` (
   `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   `image_path` varchar(255) DEFAULT NULL,
   `seen` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `messages`
---
-
-INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `users_id`, `message`, `timestamp`, `image_path`, `seen`) VALUES
-(4, 40, 41, 10, 'Lupercal  _Horus', '2024-06-23 02:15:13', NULL, 1),
-(6, 41, 40, 41, '123432', '2024-06-23 02:27:10', NULL, 1),
-(7, 40, 41, 40, 'lupercall', '2024-06-24 23:17:17', NULL, 1),
-(8, 40, 41, 40, 'lupercall', '2024-06-24 23:17:43', NULL, 1),
-(9, 40, 41, 40, 'eyjey', '2024-06-24 23:43:56', NULL, 1),
-(10, 40, 41, 40, 'Mango', '2024-06-24 23:45:44', NULL, 1),
-(11, 40, 41, 40, '123', '2024-06-24 23:50:31', NULL, 1),
-(12, 40, 41, 40, 'circumstances', '2024-06-25 00:03:47', NULL, 1),
-(13, 40, 41, 40, 'circumstances', '2024-06-25 00:05:23', NULL, 1),
-(14, 41, 40, 41, 'Horus Heressysyysysysys\r\n<p>Terra</p>', '2024-06-25 00:35:13', NULL, 1),
-(15, 41, 40, 41, '<strong>This text is important!</strong>\r\n', '2024-06-25 00:35:36', NULL, 1),
-(16, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 22:13:52', NULL, 1),
-(17, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 22:34:23', NULL, 1),
-(18, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 22:36:43', NULL, 1),
-(19, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 22:56:48', NULL, 1),
-(20, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 23:13:36', NULL, 1),
-(21, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 23:14:10', NULL, 1),
-(22, 40, 41, 40, 'asdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasdddddddddddddddddasddddddddddddddddd', '2024-06-27 23:14:24', NULL, 1),
-(23, 40, 41, 40, '123', '2024-06-28 00:51:17', NULL, 1),
-(24, 40, 41, 40, '124', '2024-06-28 00:51:25', NULL, 1),
-(25, 40, 41, 40, '124', '2024-06-28 01:05:22', NULL, 1),
-(26, 40, 41, 40, '124', '2024-06-28 01:15:05', './uploads/667d9e19a5fbe.jpg', 1),
-(27, 40, 41, 40, '123', '2024-06-28 01:15:27', NULL, 1),
-(28, 40, 41, 40, '123', '2024-06-28 01:15:29', NULL, 1),
-(29, 40, 41, 40, '1234', '2024-06-28 01:15:29', NULL, 1),
-(30, 40, 41, 40, '123', '2024-06-28 01:15:30', NULL, 1),
-(31, 40, 41, 40, '123', '2024-06-28 01:15:34', './uploads/667d9e36bfcc8.jpg', 1),
-(32, 40, 41, 40, '123', '2024-06-28 01:15:36', './uploads/667d9e387a135.jpg', 1),
-(33, 40, 41, 40, '123', '2024-06-28 01:15:37', './uploads/667d9e39d12c0.jpg', 1),
-(34, 40, 41, 40, '124', '2024-06-28 01:17:49', './uploads/667d9ebd1c2cf.jpg', 1),
-(35, 40, 41, 40, '124', '2024-06-28 01:24:24', './uploads/667da048543f7.jpg', 1),
-(36, 40, 41, 40, '124', '2024-06-28 01:24:31', './uploads/667da04f80989.jpg', 1),
-(37, 40, 41, 40, '55', '2024-06-28 01:24:35', NULL, 1),
-(38, 40, 41, 40, '123', '2024-06-28 01:35:55', './uploads/667da2fb0bd4c.jpeg', 1),
-(39, 40, 41, 40, '123', '2024-06-28 01:36:21', './uploads/667da315916a3.jpeg', 1),
-(40, 40, 41, 40, '123', '2024-06-28 01:36:27', './uploads/667da31b081ff.jpeg', 1),
-(41, 40, 41, 40, '123', '2024-06-28 01:36:27', './uploads/667da31b33532.jpeg', 1),
-(42, 40, 41, 40, '123', '2024-06-28 01:36:27', './uploads/667da31b59034.jpeg', 1),
-(43, 40, 41, 40, '123', '2024-06-28 01:36:29', './uploads/667da31d18a40.jpeg', 1),
-(44, 40, 41, 40, '123', '2024-06-28 01:43:29', './uploads/667da4c173227.jpeg', 1),
-(45, 40, 41, 40, 'aj', '2024-06-28 01:47:47', './uploads/667da5c34850a.jpg', 1),
-(46, 40, 41, 40, 'jhh', '2024-06-28 01:49:45', './uploads/667da63905825.jpeg', 1),
-(47, 40, 41, 40, 'aj', '2024-06-28 01:49:53', NULL, 1),
-(48, 40, 41, 40, 'ajj', '2024-06-28 01:49:56', './uploads/667da644d25b5.jpeg', 1),
-(49, 40, 41, 40, 'ajj', '2024-06-28 01:49:57', './uploads/667da64568423.jpeg', 1),
-(50, 40, 41, 40, 'ajj', '2024-06-28 01:49:57', './uploads/667da64592811.jpeg', 1),
-(51, 40, 41, 40, 'ajj', '2024-06-28 01:50:21', './uploads/667da65d39193.jpg', 1),
-(52, 40, 41, 40, 'hh', '2024-06-28 01:51:34', './uploads/667da6a64db49.jpeg', 1),
-(53, 40, 41, 40, 'hah', '2024-06-28 01:53:30', './uploads/667da71a2ffb0.jpg', 1),
-(54, 40, 41, 40, '54', '2024-06-28 01:56:53', './uploads/667da7e541801.png', 1),
-(55, 40, 41, 40, '55', '2024-06-28 01:57:06', './uploads/667da7f2ab330.jpg', 1),
-(56, 40, 41, 40, '23', '2024-06-28 01:59:34', './uploads/667da886ad05e.jpeg', 1),
-(57, 40, 41, 40, '12', '2024-06-28 01:59:41', NULL, 1),
-(58, 40, 41, 40, '5432', '2024-06-28 02:00:56', './uploads/667da8d856170.jpg', 1),
-(59, 40, 41, 40, '243', '2024-06-28 02:04:09', NULL, 1),
-(60, 40, 41, 40, '123', '2024-06-28 02:06:53', './uploads/667daa3da47d6.jpg', 1),
-(61, 40, 41, 40, '554', '2024-06-28 02:08:26', './uploads/667daa9ab3676.jpg', 1),
-(62, 40, 41, 40, '355', '2024-06-28 02:10:13', './uploads/667dab05e7083.jpg', 1),
-(63, 40, 41, 40, '231', '2024-06-28 02:10:21', './uploads/667dab0dab5e1.jpg', 1),
-(64, 40, 0, 40, '3434', '2024-06-28 02:13:04', './uploads/667dabb037356.jpeg', 0),
-(65, 40, 0, 40, '234', '2024-06-28 02:17:18', './uploads/667dacae616d5.jpeg', 0),
-(66, 40, 41, 40, '34345', '2024-06-28 02:18:08', './uploads/667dace00f555.jpeg', 1),
-(67, 40, 41, 40, '2334', '2024-06-28 02:22:28', './uploads/667dade4df419.jpg', 1),
-(68, 40, 41, 40, '432', '2024-06-28 02:28:53', './uploads/667daf651db3c.jpg', 1),
-(69, 40, 41, 40, '435', '2024-06-28 02:29:33', './uploads/667daf8dbd93b.jpg', 1),
-(70, 40, 41, 40, '432', '2024-06-28 02:33:28', './uploads/667db078c94bd.jpg', 1),
-(71, 40, 41, 40, '432', '2024-06-28 02:33:37', './uploads/667db081c31b2.jpg', 1),
-(72, 40, 41, 40, '4325', '2024-06-28 02:37:37', './uploads/667db171d711d.jpg', 1),
-(73, 40, 41, 40, '4324', '2024-06-28 02:39:03', './uploads/667db1c7ca57c.jpeg', 1),
-(74, 40, 0, 40, '325', '2024-06-28 02:44:55', './uploads/667db32712902.jpg', 0),
-(108, 40, 0, 40, '12345', '2024-06-28 15:39:25', './uploads/667e68adce3c8.png', 0),
-(121, 40, 0, 40, 'asd', '2024-06-28 16:04:27', NULL, 0),
-(122, 40, 0, 40, '2134', '2024-06-28 16:11:30', NULL, 0),
-(123, 40, 0, 40, '234', '2024-06-28 16:13:05', NULL, 0),
-(124, 40, 0, 40, '543', '2024-06-28 16:13:10', './uploads/667e70967e86c.jpg', 0),
-(125, 40, 0, 40, '123', '2024-06-28 16:21:31', NULL, 0),
-(126, 40, 0, 40, '123', '2024-06-28 16:22:04', NULL, 0),
-(127, 40, 0, 40, '0', '2024-06-28 16:25:38', '534', 0),
-(128, 40, 0, 40, '55', '2024-06-28 16:27:56', NULL, 0),
-(129, 40, 0, 40, '123', '2024-06-28 16:28:45', NULL, 0),
-(130, 40, 0, 40, '23154', '2024-06-28 16:35:19', NULL, 0),
-(131, 40, 0, 40, '123', '2024-06-28 16:36:34', NULL, 0),
-(132, 40, 0, 40, '123', '2024-06-28 16:37:58', NULL, 0),
-(133, 40, 0, 40, '234', '2024-06-28 16:38:27', NULL, 0),
-(134, 40, 0, 40, '55553434', '2024-06-28 16:38:54', NULL, 0),
-(135, 40, 0, 40, '908978', '2024-06-28 16:39:16', NULL, 0),
-(136, 40, 0, 40, '255 c', '2024-06-28 16:43:54', NULL, 0),
-(137, 40, 40, 40, '255 crt', '2024-06-28 16:44:32', NULL, 1),
-(138, 40, 0, 40, '5342', '2024-06-28 16:47:49', NULL, 0),
-(139, 40, 41, 40, '532', '2024-06-28 16:49:44', NULL, 1),
-(140, 40, 41, 40, '32', '2024-06-28 16:49:49', NULL, 1),
-(141, 40, 41, 40, '24', '2024-06-28 16:49:55', NULL, 1),
-(142, 40, 41, 40, '43245435', '2024-06-28 16:53:15', NULL, 1),
-(143, 41, 40, 41, 'I am so high in time', '2024-06-28 19:12:13', NULL, 1),
-(144, 41, 40, 41, 'huha', '2024-06-28 19:12:19', NULL, 1),
-(145, 40, 41, 40, '55', '2024-06-28 19:13:36', NULL, 1),
-(146, 40, 41, 40, '24', '2024-06-28 19:13:41', NULL, 1),
-(147, 40, 41, 40, '24', '2024-06-28 19:13:46', NULL, 1),
-(148, 40, 41, 40, 'huha on time', '2024-06-28 19:14:19', NULL, 1),
-(149, 40, 41, 40, ' ', '2024-06-28 19:23:08', NULL, 1),
-(150, 40, 41, 40, '154', '2024-06-28 19:30:24', NULL, 1),
-(151, 40, 41, 40, '12', '2024-06-28 19:30:39', NULL, 1),
-(152, 40, 41, 40, '22', '2024-06-28 19:30:54', NULL, 1),
-(153, 40, 41, 40, '55', '2024-06-28 19:30:56', NULL, 1),
-(154, 40, 41, 40, '22', '2024-06-28 19:31:01', NULL, 1),
-(155, 40, 41, 40, '23', '2024-06-30 03:18:21', NULL, 1),
-(156, 40, 41, 40, '24', '2024-06-30 03:27:06', NULL, 1),
-(157, 40, 41, 40, '32', '2024-06-30 21:44:35', NULL, 1),
-(158, 40, 41, 40, '123', '2024-07-02 18:12:19', NULL, 1),
-(159, 40, 41, 40, '123', '2024-07-02 18:15:22', NULL, 1),
-(160, 41, 40, 41, 'asd', '2024-07-26 06:08:58', NULL, 1),
-(161, 41, 40, 41, 'asd', '2024-07-26 06:11:15', NULL, 1),
-(162, 41, 40, 41, 'asd', '2024-07-26 06:11:26', NULL, 1),
-(163, 41, 40, 41, 'asd', '2024-07-26 06:11:29', NULL, 1),
-(164, 41, 40, 41, 'asd', '2024-07-26 06:11:33', NULL, 1),
-(165, 41, 40, 41, 'asd', '2024-07-26 06:11:56', NULL, 1),
-(166, 41, 40, 41, 'asd', '2024-07-26 06:11:58', NULL, 1),
-(167, 40, 41, 40, 'asd', '2024-07-26 06:13:43', NULL, 1),
-(168, 41, 40, 41, 'asd', '2024-07-26 06:13:50', NULL, 1),
-(169, 41, 40, 41, 'a', '2024-07-26 06:14:02', NULL, 1),
-(170, 40, 41, 40, 'ffas', '2024-07-26 08:23:48', NULL, 1),
-(171, 41, 41, 41, 'm41', '2024-07-26 17:02:10', NULL, 1),
-(172, 41, 41, 41, 'asd', '2024-07-26 17:02:21', NULL, 1),
-(173, 41, 41, 41, '456', '2024-07-26 17:02:49', NULL, 1),
-(174, 41, 41, 41, 'as', '2024-07-26 17:19:09', NULL, 1),
-(175, 41, 40, 41, 'as', '2024-08-03 13:00:59', NULL, 1),
-(176, 41, 40, 41, '34', '2024-08-03 13:04:44', NULL, 1),
-(177, 41, 40, 41, 'as', '2024-08-03 13:04:52', NULL, 1),
-(178, 41, 40, 41, 'asas', '2024-08-03 13:05:07', NULL, 1),
-(179, 41, 40, 41, 'a', '2024-08-03 13:05:12', NULL, 1),
-(180, 41, 40, 41, '23', '2024-08-03 13:05:17', NULL, 1),
-(181, 40, 41, 40, 'darci', '2024-08-12 11:44:08', NULL, 1),
-(182, 40, 41, 40, 'lommy', '2024-08-12 12:09:47', NULL, 1),
-(183, 40, 41, 40, 'meme', '2024-08-18 14:11:14', './uploads/66c19082b39c2.jpg', 1),
-(184, 40, 41, 40, 'jeje', '2024-08-18 14:13:31', './uploads/66c1910b00ce2.jpg', 1),
-(185, 40, 41, 40, 'jeje', '2024-08-18 14:14:39', './uploads/66c1914f347b3.jpg', 1),
-(186, 40, 41, 40, 'keke', '2024-08-18 14:16:09', './uploads/66c191a908713.gif', 1),
-(187, 40, 41, 40, 'meme', '2024-08-18 14:17:57', './uploads/66c19215e36dd.gif', 1),
-(188, 41, 40, 41, 'asdasd', '2024-08-18 14:36:28', NULL, 1),
-(189, 41, 40, 41, 'asd', '2024-08-18 14:36:55', NULL, 1),
-(190, 41, 40, 41, 'sdf', '2024-08-18 14:36:56', NULL, 1),
-(191, 41, 40, 41, 'fdsf', '2024-08-18 14:37:00', NULL, 1),
-(192, 41, 40, 41, 'sdfds', '2024-08-18 14:37:05', NULL, 1),
-(193, 41, 40, 41, 'ajj', '2024-08-18 14:57:15', NULL, 1),
-(194, 41, 40, 41, 'gg', '2024-08-18 14:57:30', NULL, 1),
-(195, 41, 40, 41, 'bababa', '2024-08-18 15:51:30', NULL, 1),
-(196, 40, 41, 40, 'gg', '2024-08-18 15:51:39', NULL, 1),
-(197, 41, 40, 41, 'bootstrap bill', '2024-08-18 16:59:18', NULL, 1),
-(198, 40, 41, 40, 'aj', '2024-08-18 16:59:25', NULL, 1),
-(199, 40, 41, 40, 'mm', '2024-08-18 17:16:44', NULL, 1),
-(200, 40, 41, 40, 'yy', '2024-08-18 17:16:50', NULL, 1),
-(201, 40, 41, 40, 'ee', '2024-08-18 17:18:21', NULL, 1),
-(202, 40, 41, 40, 'kk', '2024-08-18 17:20:23', NULL, 1),
-(203, 40, 41, 40, 'll', '2024-08-18 17:20:28', NULL, 1),
-(204, 40, 41, 40, 'pp', '2024-08-18 17:20:36', NULL, 1),
-(205, 40, 41, 40, 'mm', '2024-08-18 17:29:09', NULL, 1),
-(206, 40, 41, 40, 'kk', '2024-08-19 09:49:34', './uploads/66c2a4aebebe5.png', 1),
-(207, 40, 41, 40, 'lop', '2024-08-19 09:50:50', './uploads/66c2a4fa13301.mp4', 1),
-(208, 40, 41, 40, 'lmao', '2024-08-19 10:21:10', './uploads/66c2ac16e4025.jpg', 1),
-(209, 41, 40, 41, 'gg', '2024-08-19 11:56:47', NULL, 1),
-(210, 41, 40, 41, 'asd', '2024-08-19 11:57:04', NULL, 1),
-(211, 41, 40, 41, 'aa', '2024-08-19 11:57:29', NULL, 1),
-(212, 41, 40, 41, 'gg', '2024-08-19 11:58:38', NULL, 1),
-(213, 41, 40, 41, 'aa', '2024-08-19 12:35:17', NULL, 1),
-(214, 41, 40, 41, 'qq', '2024-08-19 12:44:00', './uploads/66c2cd907d9c0.png', 1),
-(215, 41, 40, 41, 'as', '2024-08-19 13:39:48', './uploads/66c2daa451e54.jpeg', 1),
-(216, 41, 40, 41, 'sd', '2024-08-19 13:39:54', NULL, 1),
-(217, 41, 40, 41, 'ff', '2024-08-19 13:40:03', './uploads/66c2dab35fa1c.jpeg', 1),
-(218, 41, 40, 41, 'ff', '2024-08-19 13:40:11', NULL, 1),
-(219, 41, 40, 41, 'as', '2024-08-19 13:42:29', './uploads/66c2db4560c15.png', 1),
-(220, 41, 40, 41, 'g', '2024-08-19 13:42:36', './uploads/66c2db4c6e8b3.png', 1),
-(221, 41, 40, 41, 'aas', '2024-08-19 13:42:46', './uploads/66c2db56757c4.png', 1),
-(222, 41, 40, 41, 'as', '2024-08-19 13:42:51', './uploads/66c2db5b464a9.png', 1),
-(223, 41, 40, 41, 'gg', '2024-08-19 13:53:15', './uploads/66c2ddcb61f3c.png', 1),
-(224, 41, 40, 41, 'tt', '2024-08-19 13:53:18', NULL, 1),
-(225, 41, 40, 41, 'gg', '2024-08-19 13:53:26', './uploads/66c2ddd63a3fb.jpg', 1),
-(226, 41, 40, 41, 'gg', '2024-08-19 13:54:07', NULL, 1),
-(227, 41, 40, 41, 'tt', '2024-08-19 13:54:18', './uploads/66c2de0a83049.jpg', 1),
-(228, 41, 40, 41, 'yy', '2024-08-19 13:54:23', NULL, 1),
-(229, 41, 40, 41, 'gg', '2024-08-19 13:59:17', './uploads/66c2df352d77f.mp4', 1),
-(230, 41, 40, 41, 'tt', '2024-08-19 13:59:24', NULL, 1),
-(231, 41, 40, 41, 'tt', '2024-08-19 13:59:32', './uploads/66c2df44603c2.mp4', 1),
-(232, 41, 40, 41, 'tt', '2024-08-19 13:59:41', NULL, 1),
-(233, 40, 41, 40, 'lol', '2024-08-22 23:26:09', NULL, 1),
-(234, 40, 40, 40, 'gg', '2024-08-23 10:31:42', NULL, 1),
-(235, 41, 40, 41, 'luper', '2024-08-23 11:34:41', NULL, 1),
-(236, 40, 41, 40, 'gg', '2024-08-23 11:46:41', NULL, 1),
-(237, 40, 41, 40, 'gg', '2024-08-23 11:48:25', './uploads/66c8068910225.jpg', 1),
-(238, 40, 41, 40, 'tt', '2024-08-23 11:48:33', './uploads/66c80691be2c3.jpg', 1),
-(239, 40, 41, 40, 'yy', '2024-08-23 11:56:19', './uploads/66c80863d669d.png', 1),
-(240, 40, 41, 40, 'aa', '2024-08-23 11:57:33', './uploads/66c808ad4091e.png', 1),
-(241, 40, 41, 40, 'sad', '2024-08-23 11:59:39', './uploads/66c8092b8250c.png', 1),
-(242, 40, 41, 40, 'ee', '2024-08-23 11:59:45', NULL, 1),
-(243, 40, 41, 40, 'test', '2024-08-23 12:00:33', NULL, 1),
-(244, 40, 41, 40, 'test', '2024-08-23 12:00:41', './uploads/66c80969372de.jpg', 1),
-(245, 40, 41, 40, 'uu', '2024-08-23 12:00:52', './uploads/66c8097400584.jpg', 1),
-(246, 40, 41, 40, 'yy', '2024-08-23 12:01:09', './uploads/66c809853fa07.jpeg', 1),
-(247, 40, 41, 40, 'uu', '2024-08-23 12:01:20', NULL, 1),
-(248, 40, 41, 40, 'yy', '2024-08-23 12:01:50', './uploads/66c809aeecc6a.png', 1),
-(249, 40, 41, 40, 'gg', '2024-08-23 12:02:23', './uploads/66c809cfc527f.png', 1),
-(250, 40, 41, 40, 'uu', '2024-08-23 12:02:29', NULL, 1),
-(251, 40, 41, 40, 'yy', '2024-08-23 12:03:58', NULL, 1),
-(252, 40, 41, 40, 'yy', '2024-08-23 12:04:10', './uploads/66c80a3a718fb.png', 1),
-(253, 40, 41, 40, 'yy', '2024-08-25 14:53:30', NULL, 1),
-(254, 40, 41, 40, 'tt', '2024-08-25 15:09:57', NULL, 1),
-(255, 40, 41, 40, 'uu', '2024-08-25 15:10:03', NULL, 1),
-(256, 40, 41, 40, 'kk', '2024-08-25 15:10:07', NULL, 1),
-(257, 40, 41, 40, 'q', '2024-08-25 15:10:13', NULL, 1),
-(258, 40, 41, 40, 'aa', '2024-08-26 19:19:01', NULL, 1),
-(259, 40, 41, 40, 'aaa', '2024-08-26 19:19:24', './uploads/66cc64bc3eda4.mp4', 1),
-(260, 41, 41, 41, 'g', '2024-08-26 20:07:43', './uploads/66cc700f102b7.mp4', 1),
-(261, 41, 41, 41, 'g', '2024-08-26 20:08:00', './uploads/66cc702001736.png', 1),
-(262, 41, 41, 41, 'assssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssa', '2024-08-26 20:10:35', NULL, 1),
-(263, 41, 41, 41, 'assssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaassssssssssaasssssss', '2024-08-26 20:10:42', NULL, 1),
-(264, 41, 40, 41, 'gg', '2024-09-02 22:45:30', NULL, 1),
-(265, 41, 40, 41, 'ee', '2024-09-02 22:45:38', NULL, 1),
-(266, 41, 40, 41, 'gg', '2024-10-03 21:21:33', NULL, 1),
-(267, 40, 41, 40, 'test seen', '2024-10-03 21:22:52', NULL, 1),
-(268, 41, 40, 41, 'test seen 2nd\r\n', '2024-10-03 21:28:39', NULL, 1),
-(269, 40, 41, 40, 'lupercal', '2024-10-03 21:29:16', NULL, 1),
-(270, 40, 41, 40, 'jj', '2024-10-03 21:29:41', NULL, 1),
-(271, 40, 41, 40, 'ii', '2024-10-03 21:30:12', NULL, 1),
-(272, 40, 41, 40, 'yo', '2024-10-04 00:30:48', NULL, 1),
-(273, 40, 41, 40, 'lupercal', '2024-10-04 00:31:51', NULL, 1),
-(274, 40, 41, 40, 'yii\r\n', '2024-10-04 00:33:33', NULL, 1),
-(275, 40, 41, 40, 'yollo', '2024-10-04 00:43:57', NULL, 1),
-(276, 40, 41, 40, 'nice\r\n', '2024-10-04 00:50:51', NULL, 1),
-(277, 40, 41, 40, 'progress', '2024-10-04 00:56:08', NULL, 1),
-(278, 40, 41, 40, 'people\r\n', '2024-10-04 00:56:23', NULL, 1),
-(279, 40, 41, 40, 'more', '2024-10-04 00:58:58', NULL, 1),
-(280, 40, 41, 40, 'yo\r\n', '2024-10-04 01:03:24', NULL, 1),
-(281, 40, 41, 40, 'hi', '2024-10-04 01:19:45', NULL, 1),
-(282, 40, 41, 40, 'gg', '2024-10-04 01:20:45', NULL, 1),
-(283, 40, 41, 40, 'last test', '2024-10-04 01:28:29', NULL, 1),
-(284, 41, 40, 41, 'nice one', '2024-10-04 01:29:25', NULL, 1),
-(285, 41, 40, 41, 'yrllo', '2024-10-04 01:43:30', NULL, 1),
-(286, 41, 40, 41, 'yello', '2024-10-04 01:43:54', NULL, 1),
-(287, 41, 40, 41, 'one last', '2024-10-04 01:45:44', NULL, 1),
-(288, 40, 41, 40, 'horus heresy', '2024-10-04 01:46:59', NULL, 1),
-(289, 40, 41, 40, 'gg', '2024-10-04 01:47:52', NULL, 1),
-(290, 40, 41, 40, 'gg last na', '2024-10-04 01:51:43', NULL, 1),
-(291, 40, 41, 40, 'last ule', '2024-10-04 02:00:22', NULL, 1),
-(292, 40, 41, 40, 'isa pa', '2024-10-04 02:01:03', NULL, 1),
-(293, 40, 41, 40, 'gg', '2024-10-04 02:01:41', NULL, 1),
-(294, 40, 41, 40, 'hilaw', '2024-10-04 02:02:27', NULL, 1),
-(295, 41, 40, 41, 'oks oks ', '2024-10-04 02:09:27', NULL, 1),
-(296, 40, 41, 40, 'testing again', '2024-10-04 02:24:38', NULL, 1),
-(297, 40, 41, 40, 'gg', '2024-10-04 02:25:22', NULL, 1),
-(298, 40, 41, 40, 'gg', '2024-10-04 02:41:47', NULL, 1),
-(299, 40, 41, 40, 'yooo', '2024-10-04 02:43:52', NULL, 1),
-(300, 40, 41, 40, 'gg', '2024-10-04 02:44:20', NULL, 1),
-(301, 40, 41, 40, 'hye\r\n', '2024-10-04 02:46:59', NULL, 1),
-(302, 40, 41, 40, 'gg', '2024-10-04 02:50:52', NULL, 1),
-(303, 40, 41, 40, 'ee', '2024-10-04 02:51:35', NULL, 1),
-(304, 41, 40, 41, 'conflict', '2024-10-04 02:53:01', NULL, 1),
-(305, 40, 40, 40, ' ', '2024-10-26 05:13:23', './uploads/671c09f3a6835.jpg', 1),
-(306, 40, 40, 40, '', '2024-10-26 05:15:44', './uploads/671c0a808b72b.png', 1),
-(307, 40, 40, 40, 'hello', '2024-10-26 05:17:50', NULL, 1),
-(308, 41, 40, 41, 'shadow on the sun', '2024-10-26 05:22:38', NULL, 0),
-(309, 41, 40, 41, '', '2024-10-26 05:26:48', './uploads/671c0d182a663.jpg', 0),
-(310, 41, 40, 41, '', '2024-10-26 05:27:10', './uploads/671c0d2e1576e.png', 0),
-(311, 84, 84, 84, 'Hello\r\n', '2024-11-02 14:08:28', NULL, 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -706,7 +438,7 @@ CREATE TABLE `paper_categories` (
   `id` int(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `paper_categories`
@@ -731,7 +463,7 @@ CREATE TABLE `paper_files` (
   `file_name` varchar(500) NOT NULL,
   `file_url` varchar(500) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `paper_files`
@@ -755,7 +487,7 @@ CREATE TABLE `payments` (
   `filepath` varchar(200) NOT NULL,
   `date_payment` date NOT NULL,
   `approval` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `payments`
@@ -785,7 +517,7 @@ CREATE TABLE `tenants` (
   `date_start` date NOT NULL,
   `date_end` date DEFAULT NULL,
   `date_preferred` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tenants`
@@ -814,7 +546,7 @@ CREATE TABLE `users` (
   `Date` datetime NOT NULL DEFAULT current_timestamp(),
   `phonenumber` varchar(15) NOT NULL,
   `otp` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
