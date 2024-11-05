@@ -208,7 +208,7 @@
                                     </th>
                                     <th scope="col">
                                         <a href="?column=house_category&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            House
+                                            Apartment
                                             <?php echo $sortColumn === 'house_category' ? $arrow : ''; ?>
                                         </a>
                                     </th>
@@ -441,7 +441,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="updateCategoryId" class="form-label">House</label>
+                                                <label for="updateCategoryId" class="form-label">Apartment</label>
                                                 <select class="form-select" id="updateCategoryId" name="house_data" required>
                                                     <?php
                                                         // Fetch categories from the database

@@ -134,6 +134,11 @@
     echo "No user found with the specified ID.";
   }
 
+  // Initialize default values
+  $monthlyBalance = 0.00;
+  $monthlyRentDue = 0.00;
+  $totalPayments = 0.00;
+
   // Get the tenant information
   $sql_tenant = "SELECT t.date_start, t.date_preferred, t.date_end, t.house_id, t.id AS tenant_id, h.price 
   FROM tenants t
@@ -178,7 +183,7 @@
             AND approval = 'true'";
     $result_payments = $admin->conn->query($sql_payments);
     $row_payments = $result_payments->fetch_assoc();
-    $totalPayments = $row_payments['total_payments'];
+    $totalPayments = $row_payments['total_payments'] ?? 0.00;  // Default to 0 if no payments are found
 
     // Count the number of tenants sharing the same house
     $sql_tenants_count = "SELECT COUNT(*) AS tenants_count
@@ -216,7 +221,7 @@
         AND approval = 'true'";
     $result_monthly_payments = $admin->conn->query($sql_monthly_payments);
     $row_monthly_payments = $result_monthly_payments->fetch_assoc();
-    $totalMonthlyPayments = $row_monthly_payments['total_monthly_payments'];
+    $totalMonthlyPayments = $row_monthly_payments['total_monthly_payments'] ?? 0.00;  // Default to 0 if no payments are found
 
     // Calculate the balance for the current month
     $monthlyBalance = $monthlyRentDue - $totalMonthlyPayments;
@@ -402,7 +407,8 @@
                                 echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
                                 echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
                                 echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
-                                echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
+                                // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
+                                echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>";
                                 echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
                                 echo "</tr>";
                             }

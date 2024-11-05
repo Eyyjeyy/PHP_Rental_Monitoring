@@ -14,40 +14,65 @@
         exit();
     }
 
-    // Prepare the SQL query to select the house_id from the tenants table using the user_id
+    // // Prepare the SQL query to select the house_id from the tenants table using the user_id
+    // $sql = "SELECT house_id FROM tenants WHERE users_id = ?";
+    // $stmt = $admin->conn->prepare($sql);
+    // $stmt->bind_param("i", $admin->session_id);
+    // $stmt->execute();
+    // $tenantResult = $stmt->get_result();
+    
+    // if ($tenantResult->num_rows === 0) {
+    //   // No matching tenant found, return null or handle as needed
+    //   return null;
+    // }
+
+    // // Retrieve the house_id
+    // $tenantRow = $tenantResult->fetch_assoc();
+    // $houseId = $tenantRow['house_id'];
+    
+    // $stmt->close();
+
+    // // Prepare the SQL query to retrieve matching records in houseaccounts table using house_id
+    // $sql = "SELECT * FROM houseaccounts WHERE houses_id = ?";
+    // $stmt = $admin->conn->prepare($sql);
+    // $stmt->bind_param("i", $houseId);
+    // $stmt->execute();
+    // $houseAccountResult = $stmt->get_result();
+    
+    // if ($houseAccountResult->num_rows === 0) {
+    //   // No matching house account found, return null or handle as needed
+    //   return null;
+    // }
+
+    // // Fetch the results as an associative array
+    // $houseAccounts = $houseAccountResult->fetch_assoc();
+    
+    // $stmt->close();
+
+    // Fetch the house_id using users_id from tenants table
     $sql = "SELECT house_id FROM tenants WHERE users_id = ?";
     $stmt = $admin->conn->prepare($sql);
     $stmt->bind_param("i", $admin->session_id);
     $stmt->execute();
     $tenantResult = $stmt->get_result();
-    
+
     if ($tenantResult->num_rows === 0) {
-      // No matching tenant found, return null or handle as needed
-      return null;
+        // No tenant found; Set $houseAccounts to null
+        $houseAccounts = null;
+    } else {
+        // Fetch house_id and retrieve matching records in houseaccounts
+        $tenantRow = $tenantResult->fetch_assoc();
+        $houseId = $tenantRow['house_id'];
+        $stmt->close();
+
+        $sql = "SELECT * FROM houseaccounts WHERE houses_id = ?";
+        $stmt = $admin->conn->prepare($sql);
+        $stmt->bind_param("i", $houseId);
+        $stmt->execute();
+        $houseAccountResult = $stmt->get_result();
+        $houseAccounts = ($houseAccountResult->num_rows > 0) ? $houseAccountResult->fetch_assoc() : null;
+        $stmt->close();
     }
-
-    // Retrieve the house_id
-    $tenantRow = $tenantResult->fetch_assoc();
-    $houseId = $tenantRow['house_id'];
-    
-    $stmt->close();
-
-    // Prepare the SQL query to retrieve matching records in houseaccounts table using house_id
-    $sql = "SELECT * FROM houseaccounts WHERE houses_id = ?";
-    $stmt = $admin->conn->prepare($sql);
-    $stmt->bind_param("i", $houseId);
-    $stmt->execute();
-    $houseAccountResult = $stmt->get_result();
-    
-    if ($houseAccountResult->num_rows === 0) {
-      // No matching house account found, return null or handle as needed
-      return null;
-    }
-
-    // Fetch the results as an associative array
-    $houseAccounts = $houseAccountResult->fetch_assoc();
-    
-    $stmt->close();
 
     $pageTitle = 'Info Page';
 ?>
@@ -83,19 +108,19 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Address</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="address" value="<?php echo htmlspecialchars($houseAccounts['elec_accname']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="address" value="<?php echo htmlspecialchars($houseAccounts['elec_accname'] ?? 'N/A'); ?>">
                                 </div>
                                 <div class="col-12 col-md-6 mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Meralco Account Owner Name</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="first_name" value="<?php echo htmlspecialchars($houseAccounts['elec_accname']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="first_name" value="<?php echo htmlspecialchars($houseAccounts['elec_accname'] ?? 'N/A'); ?>">
                                 </div>
                                 <div class="col-12 col-md-6 mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Meralco Account Owner Number</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="middle_name" value="<?php echo htmlspecialchars($houseAccounts['elec_accnum']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="middle_name" value="<?php echo htmlspecialchars($houseAccounts['elec_accnum'] ?? 'N/A'); ?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -103,13 +128,13 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Maynilad Account Owner Name</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="contact_number" value="<?php echo htmlspecialchars($houseAccounts['water_accname']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="contact_number" value="<?php echo htmlspecialchars($houseAccounts['water_accname'] ?? 'N/A'); ?>">
                                 </div>
                                 <div class="col-12 col-md-6 mb-3 mt-3">
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Maynilad Account Owner Number</p>
                                     </label>
-                                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" value="<?php echo htmlspecialchars($houseAccounts['water_accnum']); ?>">
+                                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" value="<?php echo htmlspecialchars($houseAccounts['water_accnum'] ?? 'N/A'); ?>">
                                 </div>
                             </div>
                             <!-- <div class="row justify-content-center justify-content-md-end">

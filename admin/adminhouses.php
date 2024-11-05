@@ -296,14 +296,14 @@
 
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New House</button>
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered" id="secondTable">
                             <thead>
                                 <tr>
-                                    <th scope="col" data-column="id" onclick="sortTable('id')">#</th>
+                                    <!-- <th scope="col" data-column="id" onclick="sortTable('id')">#</th>
                                     <th scope="col" data-column="house_name" onclick="sortTable('house_name')">Apartment Name</th>
                                     <th scope="col" data-column="price" onclick="sortTable('price')">Rent</th>
                                     <th scope="col" data-column="category_name" onclick="sortTable('category_name')">Apartment Type</th>
@@ -311,6 +311,15 @@
                                     <th scope="col" data-column="elec_accname" onclick="sortTable('elec_accname')">Meralco Account Name</th>
                                     <th scope="col" data-column="water_accnum" onclick="sortTable('water_accnum')">Maynilad #</th>
                                     <th scope="col" data-column="water_accname" onclick="sortTable('water_accname')">Maynilad Account Name</th>
+                                    <th scope="col">Actions</th> -->
+                                    <th scope="col" data-column="id" onclick="sortTable('id')"># <span class="sort-arrow" data-column="id"></span></th>
+                                    <th scope="col" data-column="house_name" onclick="sortTable('house_name')" style="cursor: pointer;">Apartment Name <span class="sort-arrow" data-column="house_name"></span></th>
+                                    <th scope="col" data-column="price" onclick="sortTable('price')" style="cursor: pointer;">Rent <span class="sort-arrow" data-column="price"></span></th>
+                                    <th scope="col" data-column="category_name" onclick="sortTable('category_name')" style="cursor: pointer;">Apartment Type <span class="sort-arrow" data-column="category_name"></span></th>
+                                    <th scope="col" data-column="elec_accnum" style="max-width: 80px; cursor: pointer;" onclick="sortTable('elec_accnum')">Meralco # <span class="sort-arrow" data-column="elec_accnum"></span></th>
+                                    <th scope="col" data-column="elec_accname" onclick="sortTable('elec_accname')" style="cursor: pointer;">Meralco Account Name <span class="sort-arrow" data-column="elec_accname"></span></th>
+                                    <th scope="col" data-column="water_accnum" onclick="sortTable('water_accnum')" style="cursor: pointer;">Maynilad # <span class="sort-arrow" data-column="water_accnum"></span></th>
+                                    <th scope="col" data-column="water_accname" onclick="sortTable('water_accname')" style="cursor: pointer;">Maynilad Account Name <span class="sort-arrow" data-column="water_accname"></span></th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -387,7 +396,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">House Name</label>
+                                            <label for="username" class="form-label">Apartment Name</label>
                                             <input type="text" class="form-control" id="username" name="housenumber" required>
                                         </div>
                                     </div>
@@ -445,7 +454,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <button type="submit" name="add_house" class="btn btn-primary table-buttons-update">Add House</button>
+                                        <button type="submit" name="add_house" class="btn btn-primary table-buttons-update">Add Apartment</button>
                                     </div>
                                 </div>
                             </form>
@@ -471,7 +480,7 @@
                                         <input type="hidden" id="updateHouseId" name="house_id">
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="updateHouseNumber" class="form-label">House Name</label>
+                                                <label for="updateHouseNumber" class="form-label">Apartment Name</label>
                                                 <input type="text" class="form-control" id="updateHouseNumber" name="house_number" required>
                                             </div>
                                         </div>                                        
@@ -691,49 +700,89 @@
                 </script>
 
                 <script>
+                    // let sortDirection = true; // True means ascending, false means descending
+
+                    // function sortTable(column) {
+                    //     const table = document.querySelector('table#secondTable'); // Get the table
+                    //     const tbody = table.querySelector('tbody'); // Get tbody (data rows)
+                    //     const rows = Array.from(tbody.querySelectorAll('tr')); // Convert rows NodeList to array
+
+                    //     // Find the column index using the data attribute
+                    //     const columnIndex = Array.from(document.querySelectorAll('table#secondTable thead th')).findIndex(th => th.getAttribute('data-column') === column);
+                        
+                    //     if (columnIndex === -1) {
+                    //         console.error("Column not found");
+                    //         return;
+                    //     }
+                    //     console.log(`Sorting by column: ${column}, index: ${columnIndex}`);
+
+                    //     // Sort rows based on the clicked column's cell value
+                    //     rows.sort((rowA, rowB) => {
+                    //         const cellA = rowA.children[columnIndex] ? rowA.children[columnIndex].innerText.trim() : '';
+                    //         const cellB = rowB.children[columnIndex] ? rowB.children[columnIndex].innerText.trim() : '';
+                    //         console.log(cellA);
+
+                    //         // Check if the cell content is numeric
+                    //         const isNumeric = !isNaN(cellA) && !isNaN(cellB);
+
+                    //         if (isNumeric) {
+                    //             // Numeric sort (if cells are numbers)
+                    //             return sortDirection ? cellA - cellB : cellB - cellA;
+                    //         } else {
+                    //             // Textual sort (if cells are strings)
+                    //             return sortDirection ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+                    //         }
+                    //     });
+                    //     // Debugging: log the sorted rows
+                    //     console.log("Sorted rows:", rows);
+
+                    //     // Append the sorted rows back into the table body
+                    //     rows.forEach(row => tbody.appendChild(row));
+
+                    //     // Toggle the sort direction for next time
+                    //     sortDirection = !sortDirection;
+                        
+                    // }
+                    let currentSortColumn = ''; // Track the currently sorted column
                     let sortDirection = true; // True means ascending, false means descending
 
                     function sortTable(column) {
-                        const table = document.querySelector('table#secondTable'); // Get the table
-                        const tbody = table.querySelector('tbody'); // Get tbody (data rows)
-                        const rows = Array.from(tbody.querySelectorAll('tr')); // Convert rows NodeList to array
-
-                        // Find the column index using the data attribute
+                        const table = document.querySelector('table#secondTable');
+                        const tbody = table.querySelector('tbody');
+                        const rows = Array.from(tbody.querySelectorAll('tr'));
                         const columnIndex = Array.from(document.querySelectorAll('table#secondTable thead th')).findIndex(th => th.getAttribute('data-column') === column);
-                        
+
                         if (columnIndex === -1) {
                             console.error("Column not found");
                             return;
                         }
-                        console.log(`Sorting by column: ${column}, index: ${columnIndex}`);
 
                         // Sort rows based on the clicked column's cell value
                         rows.sort((rowA, rowB) => {
                             const cellA = rowA.children[columnIndex] ? rowA.children[columnIndex].innerText.trim() : '';
                             const cellB = rowB.children[columnIndex] ? rowB.children[columnIndex].innerText.trim() : '';
-                            console.log(cellA);
-
-                            // Check if the cell content is numeric
+                            
                             const isNumeric = !isNaN(cellA) && !isNaN(cellB);
-
                             if (isNumeric) {
-                                // Numeric sort (if cells are numbers)
                                 return sortDirection ? cellA - cellB : cellB - cellA;
                             } else {
-                                // Textual sort (if cells are strings)
                                 return sortDirection ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
                             }
                         });
-                        // Debugging: log the sorted rows
-                        console.log("Sorted rows:", rows);
 
                         // Append the sorted rows back into the table body
                         rows.forEach(row => tbody.appendChild(row));
 
+                        // Update the sort arrow
+                        document.querySelectorAll('.sort-arrow').forEach(arrow => arrow.innerHTML = ''); // Clear previous arrows
+                        const arrow = document.querySelector(`.sort-arrow[data-column="${column}"]`);
+                        arrow.innerHTML = sortDirection ? '↑' : '↓'; // Set arrow based on sort direction
+
                         // Toggle the sort direction for next time
-                        sortDirection = !sortDirection;
-                        
+                        sortDirection = currentSortColumn === column ? !sortDirection : true; // Reset to ascending on new column
+                        currentSortColumn = column;
                     }
+
                 </script>
                 <!-- Include jQuery library -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

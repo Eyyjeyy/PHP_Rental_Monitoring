@@ -22,7 +22,7 @@
 
 
 <div class="container-fluid p-0 mb-0">
-    <div class="row mx-auto w-65 d-flex align-items-center p-0" style="margin-top: 150px;" id="textindex">
+    <div class="row mx-auto w-65 d-flex align-items-center p-0" style="" id="textindex">
         <div class="row mt-5 m-0 p-0">
             <div class="col-12 col-lg-6 d-flex flex-column justify-content-center p-0" style="margin-right: 0px;">
             <p class="fs-1 fw-bolder inter-google text-center mb-lg-3 m-0 p-0" style="color: #3A583C;">Welcome</p>

@@ -138,7 +138,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="bi bi-envelope phone-icon" viewBox="0 0 16 16">
                         <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
-                        <a class="mb-2" href="chat_user.php" id="linklink">Payment</a>
+                        <a class="mb-2" href="<?php echo (($pageTitle ?? '') != 'Payments Page') ? 'users/payments.php' : 'payments.php'; ?>" id="linklink">Payment</a>
                     </div>
     </div>
     <div class="hover-wrapper">

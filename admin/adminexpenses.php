@@ -108,11 +108,11 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col" onclick="handleSort('id')"># <span id="sortIconId"></span></th>
-                                    <th scope="col" onclick="handleSort('name')">Name <span id="sortIconName"></span></th>
-                                    <th scope="col" onclick="handleSort('info')">Info <span id="sortIconInfo"></span></th>
-                                    <th scope="col" onclick="handleSort('amount')">Amount <span id="sortIconAmount"></span></th>
-                                    <th scope="col" onclick="handleSort('date')">Date <span id="sortIconDate"></span></th>
+                                    <th scope="col" onclick="handleSort('id')" style="cursor: pointer;"># <span id="sortIconId"></span></th>
+                                    <th scope="col" onclick="handleSort('name')" style="cursor: pointer;">Name <span id="sortIconName"></span></th>
+                                    <th scope="col" onclick="handleSort('info')" style="cursor: pointer;">Info <span id="sortIconInfo"></span></th>
+                                    <th scope="col" onclick="handleSort('amount')" style="cursor: pointer;">Amount <span id="sortIconAmount"></span></th>
+                                    <th scope="col" onclick="handleSort('date')" style="cursor: pointer;">Date <span id="sortIconDate"></span></th>
                                     <th scope="col">House <span id="sortIconHouse"></span></th>
                                     <th scope="col">Actions</th>
                                 </tr>

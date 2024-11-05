@@ -22,7 +22,7 @@
     $_SESSION['chat_user_id'] = $chat_user_id;
 
 
-    $users = $admin->getAllUsers();
+    $users = $admin->getAdminOnly();
     // echo $chat_user_id . "<br>";
     // echo $_SESSION['chat_user_id'] . "<br>";
     // echo $admin->session_id . "<br>";
