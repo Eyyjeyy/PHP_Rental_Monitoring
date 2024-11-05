@@ -1195,6 +1195,15 @@ Class Admin {
 
 
   public function sendOTP($email) {
+    $userStmt = $this->conn->prepare("SELECT username FROM users WHERE email = ?");
+
+    // Bind and execute the statement
+    $userStmt->bind_param("s", $email);
+    $userStmt->execute();
+    $userStmt->bind_result($username);
+    $userStmt->fetch();
+    $userStmt->close();
+
     // Prepare the SQL statement to check if the email exists for a user role
     $stmt = $this->conn->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND role = 'user'");
     
@@ -1250,7 +1259,7 @@ Class Admin {
 
     // Set up the email subject and body
     $subject = "Your OTP Code";
-    $body = "Your OTP code is: <strong>$otp</strong><br>Please enter this code to verify your identity.";
+    $body = "Your username: $username<br>Your OTP code is: <strong>$otp</strong><br>Please enter this code to verify your identity.";
 
     // Call the sendEmail function to send the OTP via email
     $emailSent = $this->sendEmail($email, $subject, $body);
@@ -1268,7 +1277,7 @@ Class Admin {
     $smsSent = false;
     if ($phoneNumber) {
       // Prepare the message
-      $smsMessage = "Your OTP code is: $otp. Please enter this code to verify your identity.";
+      $smsMessage = "Your username: $username\nYour OTP code is: $otp. Please enter this code to verify your identity.";
 
       // Set up the cURL request to send SMS
       $ch = curl_init();
