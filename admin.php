@@ -101,9 +101,9 @@ Class Admin {
   }
 
   // Function to register a user
-  public function registerUser($username, $firstname, $middlename, $lastname, $password, $email) {
+  public function registerUser($username, $firstname, $middlename, $lastname, $password, $email, $phonenumber) {
     // Validate input
-    if (empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
+    if (empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($phonenumber)) {
       $_SESSION['message'] = "Fill up all fields";
       return false;
     }
@@ -113,6 +113,11 @@ Class Admin {
     }
     if (strlen($password) < 7) {
       $_SESSION['message'] = "Password must be at least 7 characters long";
+      return false;
+    }
+    $digitCount = preg_match_all('/\d/', (string)$phonenumber);
+    if ($digitCount != 11) {
+      $_SESSION['message'] = "Phone number must be 11 digits long";
       return false;
     }
 
@@ -133,8 +138,9 @@ Class Admin {
     $role = 'user';
 
     // Prepare the SQL statement to insert the new user
-    $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, middlename, lastname, password, email, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssss", $username, $firstname, $middlename, $lastname, $password, $email, $role);
+    $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, middlename, lastname, password, email, role, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $phonenumberStr = (string)$phonenumber;
+    $stmt->bind_param("ssssssss", $username, $firstname, $middlename, $lastname, $password, $email, $role, $phonenumberStr);
 
     // Execute the statement and check if the user was added successfully
     if ($stmt->execute()) {
