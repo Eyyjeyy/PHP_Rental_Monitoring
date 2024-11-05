@@ -18,11 +18,12 @@
 }
 
 .div-col1{
-    display: flex; /* Similar to the Bootstrap row class which uses flexbox */
-    flex-wrap: wrap; /* Allows child elements to wrap */
-    margin: 0; /* Removes default margin */
-    height: 100%; /* Sets height to 100% */
-    justify-content: center; /* Centers child elements horizontally */
+    /* display: flex; */
+    display: grid;
+    flex-wrap: wrap;
+    margin: 0;
+    height: 100%;
+    /* justify-content: center; */
 }
 
 .div-col2 {
