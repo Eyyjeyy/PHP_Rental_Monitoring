@@ -1342,7 +1342,7 @@ Class Admin {
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
         $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
-        $mail->Password = ''; // SMTP password
+        $mail->Password = 'cdzc dueq yfzl rcve'; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
