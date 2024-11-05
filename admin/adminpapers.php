@@ -916,5 +916,27 @@
         // Poll every 3 seconds
         setInterval(fetchUnreadMessages, 3000);
     </script>
+    <script>
+        // Function to create and set the favicon
+        function setFavicon(iconURL) {
+        // Create a new link element
+        const favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.type = 'image/x-icon';
+        favicon.href = iconURL;
+
+        // Remove any existing favicons
+        const existingIcons = document.querySelectorAll('link[rel="icon"]');
+        existingIcons.forEach(icon => icon.remove());
+
+        // Append the new favicon to the head
+        document.head.appendChild(favicon);
+        }
+
+        // Example usage: set the favicon on page load
+        document.addEventListener('DOMContentLoaded', () => {
+        setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+        });
+    </script>
 
     <?php include 'includes/footer.php'; ?>
