@@ -453,7 +453,8 @@
                                                             while ($row_option2 = $result_option2->fetch_assoc()) {
                                                                 // echo "<option value='" . $row_option['category_id'] . "'></option>";
                                                                 $house_info2 = $row_option2['id']. "|" . $row_option2['category_name'];
-                                                                echo "<option value='" . htmlspecialchars($house_info2) . "'>" . $row_option2['id'] . " " . $row_option2['category_name'] . "</option>";
+                                                                // echo "<option value='" . htmlspecialchars($house_info2) . "'>" . $row_option2['id'] . " " . $row_option2['category_name'] . "</option>";
+                                                                echo "<option value='" . htmlspecialchars($house_info2) . "'>" . $row_option2['house_name'] . " " . $row_option2['price'] . " " . $row_option2['category_name'] . "</option>";
                                                             }
                                                         } else {
                                                             echo "<option value=''>No categories found</option>";
