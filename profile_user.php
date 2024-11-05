@@ -125,7 +125,7 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Password</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="password" value="<?php echo htmlspecialchars($userProfile['password']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="password" value="<?php echo $userProfile['password'] ? str_repeat('*', strlen($userProfile['password'])) : 'N/A'; ?>">
                                 </div>
                                 <div class="col-12 col-lg-6 mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">
