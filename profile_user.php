@@ -131,7 +131,7 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Confirm Password</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="confirm_password">
+                                    <input type="password" class="form-control" id="exampleFormControlInput1" name="confirm_password">
                                 </div>
                             </div>
                             <div class="row justify-content-center justify-content-md-end">
