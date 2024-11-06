@@ -77,7 +77,7 @@
                 <div class="d-flex justify-content-center position-absolute" style="margin-bottom: 70vh;">
                     <img src="asset/Renttrack pro no word.png" class="img-fluid register" alt="...">
                 </div>
-                <div class="login-panel panel panel-primary flex-column justify-content-center align-self-center mx-auto" style="margin-top: 7vh;">
+                <div class="login-panel panel panel-primary flex-column justify-content-center align-self-center mx-auto" style="margin-top: 16vh;">
                     <div class="d-flex justify-content-center">
                         <p class="header">
                             Register
