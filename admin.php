@@ -116,8 +116,8 @@ Class Admin {
       return false;
     }
     $digitCount = preg_match_all('/\d/', (string)$phonenumber);
-    if ($digitCount != 12) {
-      $_SESSION['message'] = "Phone number must be 12 digits long";
+    if ($digitCount < 11 || $digitCount > 12) {
+      $_SESSION['message'] = "Phone number must be 11 or 12 digits long";
       return false;
     }
 
