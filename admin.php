@@ -1463,7 +1463,8 @@ Class Admin {
           $body .= 'You can pay through the following: <br>Gcash: <br>Bank: <br><br>';
           $body .= 'Upload your proof of payment: <br>Link: https://www.renttrackpro.online/ <br><br>';
           $body .= 'Best regards,<br>Renttrack Pro<br></p>';
-          $imagePath = 'asset/Renttrack pro.png';
+          // $imagePath = 'asset/Renttrack pro.png';
+          $imagePath = __DIR__ . '/asset/Renttrack pro.png';
 
           // Send email
           if ($this->sendEmail($to, $subject, $body, $imagePath)) {
