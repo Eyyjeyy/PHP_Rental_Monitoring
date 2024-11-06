@@ -121,7 +121,7 @@
     $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
 
     // Ensure the sort column is one of the allowed columns to prevent SQL injection
-    $allowedColumns = ['id', 'fname', 'mname', 'lname', 'users_username', 'house_category', 'date_start'];
+    $allowedColumns = ['id', 'fname', 'mname', 'lname', 'users_username', 'house_category', 'date_start', 'date_preferred'];
     if (!in_array($sortColumn, $allowedColumns)) {
         $sortColumn = 'id';
     }
@@ -199,7 +199,7 @@
                                             <?php echo $sortColumn === 'lname' ? $arrow : ''; ?>
                                         </a>
                                     </th>
-                                    <th scope="col">Contact</th>
+                                    
                                     <th scope="col">
                                         <a href="?column=users_username&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
                                             Username
@@ -218,6 +218,12 @@
                                             <?php echo $sortColumn === 'date_start' ? $arrow : ''; ?>
                                         </a>
                                     </th>
+                                    <th scope="col">
+                                        <a href="?column=date_preferred&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Date Preferred
+                                            <?php echo $sortColumn === 'date_preferred' ? $arrow : ''; ?>
+                                        </a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -230,10 +236,11 @@
                                         echo "<td>" . htmlspecialchars($row['fname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['mname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['lname']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
+                                        // echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['users_username']) . "</td>";
                                         echo "<td>Category: " . htmlspecialchars($row['house_category']) . "<br>House Name: " . htmlspecialchars($row['house_name']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['date_start']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['date_preferred']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
                                         echo "<div class='col-xl-6 px-2'>";

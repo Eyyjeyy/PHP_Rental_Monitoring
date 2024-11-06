@@ -158,6 +158,11 @@
                                         </a>
                                     </th>
                                     <th scope="col">
+                                        <a href="?column=role&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                            Contact Number
+                                        </a>
+                                    </th>
+                                    <th scope="col">
                                         <a href="?column=password&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
                                             Password
                                             <?php echo $sortColumn === 'password' ? $arrow : ''; ?>
@@ -183,6 +188,7 @@
                                         echo "<td>" . htmlspecialchars($row['firstname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['middlename']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['lastname']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['phonenumber']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['password'] ? str_repeat('*', strlen($row['password'])) : 'N/A') . "</td>";
                                         echo "<td>" . htmlspecialchars($row['role']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle'>";
