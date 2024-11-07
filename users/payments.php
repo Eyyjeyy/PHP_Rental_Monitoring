@@ -123,6 +123,9 @@
   $sql_name = "SELECT * FROM users WHERE id = '$admin->session_id'";
   $result_name = $admin->conn->query($sql_name);
 
+  $sql_gcashbank = "SELECT houseaccounts.* FROM houseaccounts INNER JOIN tenants ON houseaccounts.houses_id = tenants.house_id WHERE tenants.users_id = '$admin->session_id'";
+  $result_gcashbank = $admin->conn->query($sql_gcashbank);
+
   if ($result_name && $result_name->num_rows > 0) {
     // Fetch the data from the result set
     $row_name = $result_name->fetch_assoc();
@@ -376,6 +379,12 @@
                     echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
                     echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
                     echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
+                    if ($result_gcashbank->num_rows > 0) {
+                      while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {
+                        echo "<p class='fw-bolder'>Gcash: " . $row_gcashbank['gcash'] . "</p>";
+                        echo "<p class='fw-bolder'>Bank: " . $row_gcashbank['bank'] . "</p>";
+                      }
+                    }
                     ?>
                   </div>
                   <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end" id="createrecbtn">

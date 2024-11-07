@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2024 at 07:17 AM
+-- Generation Time: Nov 07, 2024 at 10:21 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -345,7 +345,9 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (256, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:45'),
 (257, 84, 'Approve', 'Payment Approved, ID: 21<br>Approval: Pending -> Accepted', '2024-11-02 06:33:46'),
 (258, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-02 06:33:54'),
-(259, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:57');
+(259, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:57'),
+(260, 84, 'Add', 'Added User, ID: 88<br> Username: ella', '2024-11-07 01:46:08'),
+(261, 84, 'Add', 'Added Tenant, ID: 77<br>First Name: mae<br>Middle Name: deves<br>Last Name: cruz<br>Contact: <br>User ID: 88<br>Username: ella<br>House ID: 862<br>House Category: Studio', '2024-11-07 01:51:00');
 
 -- --------------------------------------------------------
 
@@ -359,27 +361,29 @@ CREATE TABLE `houseaccounts` (
   `elec_accname` varchar(50) NOT NULL,
   `elec_accnum` int(50) NOT NULL,
   `water_accname` varchar(50) NOT NULL,
-  `water_accnum` int(50) NOT NULL
+  `water_accnum` int(50) NOT NULL,
+  `gcash` varchar(50) NOT NULL,
+  `bank` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `houseaccounts`
 --
 
-INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `water_accname`, `water_accnum`) VALUES
-(1, 846, 'aj', 765, '', 0),
-(3, 848, 'asd', 4234, 'asd', 54235),
-(13, 858, 'John', 132053845, 'John', 93473595),
-(14, 859, 'Jan', 2147483647, 'Jan', 345334288),
-(15, 860, 'John', 21342342, 'John', 42635636),
-(16, 861, 'Jan', 2342634, 'Jan', 6354636),
-(17, 862, 'Jan', 45345345, 'Jan', 34532347),
-(18, 863, 'Jemille', 4647457, 'Jemille', 457452),
-(19, 864, 'Mildred', 3213426, 'Mildred', 3437474),
-(20, 865, 'Mildred', 42346363, 'Mildred', 6366346),
-(21, 866, 'Jerum', 325252, 'Jerum', 263453),
-(22, 867, 'Jerum', 34537745, 'Jerum', 45747455),
-(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466);
+INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `water_accname`, `water_accnum`, `gcash`, `bank`) VALUES
+(1, 846, 'aj', 765, '', 0, '', ''),
+(3, 848, 'asd', 4234, 'asd', 54235, '', ''),
+(13, 858, 'John', 132053845, 'John', 93473595, '', ''),
+(14, 859, 'Jan', 2147483647, 'Jan', 345334288, '', ''),
+(15, 860, 'John', 21342342, 'John', 42635636, '', ''),
+(16, 861, 'Jan', 2342634, 'Jan', 6354636, '', ''),
+(17, 862, 'Jan', 45345345, 'Jan', 34532347, '', ''),
+(18, 863, 'Jemille', 4647457, 'Jemille', 457452, '', ''),
+(19, 864, 'Mildred', 3213426, 'Mildred', 3437474, '', ''),
+(20, 865, 'Mildred', 42346363, 'Mildred', 6366346, '', ''),
+(21, 866, 'Jerum', 325252, 'Jerum', 263453, '', ''),
+(22, 867, 'Jerum', 34537745, 'Jerum', 45747455, '', ''),
+(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '', '');
 
 -- --------------------------------------------------------
 
@@ -391,25 +395,26 @@ CREATE TABLE `houses` (
   `id` int(50) NOT NULL,
   `house_name` varchar(100) NOT NULL,
   `price` double NOT NULL,
-  `category_id` int(50) NOT NULL
+  `category_id` int(50) NOT NULL,
+  `address` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `houses`
 --
 
-INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`) VALUES
-(858, 'Roxasville A', 15000, 74),
-(859, 'Roxasville B', 15000, 74),
-(860, 'Bagatua Corner A', 10000, 74),
-(861, 'Bagatua Corner B', 10000, 74),
-(862, 'Bagatua Corner C', 10000, 66),
-(863, 'Bagatua Corner D', 10000, 66),
-(864, 'Lagro A', 16000, 74),
-(865, 'Lagro B', 16000, 74),
-(866, 'Bagatua Side A', 5000, 75),
-(867, 'Bagatua Side B', 5000, 75),
-(868, 'Regalado', 30000, 77);
+INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`, `address`) VALUES
+(858, 'Roxasville A', 15000, 74, ''),
+(859, 'Roxasville B', 15000, 74, ''),
+(860, 'Bagatua Corner A', 10000, 74, ''),
+(861, 'Bagatua Corner B', 10000, 74, ''),
+(862, 'Bagatua Corner C', 10000, 66, ''),
+(863, 'Bagatua Corner D', 10000, 66, ''),
+(864, 'Lagro A', 16000, 74, ''),
+(865, 'Lagro B', 16000, 74, ''),
+(866, 'Bagatua Side A', 5000, 75, ''),
+(867, 'Bagatua Side B', 5000, 75, ''),
+(868, 'Regalado', 30000, 77, '');
 
 -- --------------------------------------------------------
 
@@ -524,9 +529,10 @@ CREATE TABLE `tenants` (
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-30'),
+(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-06'),
 (75, 'Jan', 'West', 'Nuevo', '09235552786', '87', 'jan', 868, 'Land', '2024-11-02', NULL, '2024-11-03'),
-(76, 'John', 'North', 'Garcia', '09325557609', '86', 'john', 865, 'Duplex', '2024-11-02', NULL, '2024-11-04');
+(76, 'John', 'North', 'Garcia', '09325557609', '86', 'john', 865, 'Duplex', '2024-11-02', NULL, '2024-11-04'),
+(77, 'mae', 'deves', 'cruz', '', '88', 'ella', 862, 'Studio', '2024-11-07', NULL, '2024-11-14');
 
 -- --------------------------------------------------------
 
@@ -556,7 +562,8 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `p
 (84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'admin', '2024-10-29 19:18:15', '', NULL),
 (85, 'user', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'user', '2024-10-29 19:18:25', '', NULL),
 (86, 'john', 'John', 'North', 'Garcia', '1234567', '', 'user', '2024-10-29 19:29:19', '', NULL),
-(87, 'jan', 'Jan', 'West', 'Nuevo', '1234567', '', 'user', '2024-10-29 19:29:38', '', NULL);
+(87, 'jan', 'Jan', 'West', 'Nuevo', '1234567', '', 'user', '2024-10-29 19:29:38', '', NULL),
+(88, 'ella', 'mae', 'deves', 'cruz', '1234567', '', 'user', '2024-11-07 09:46:08', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -650,7 +657,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=260;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=262;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -692,13 +699,13 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- Constraints for dumped tables

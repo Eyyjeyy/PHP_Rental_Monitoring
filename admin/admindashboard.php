@@ -56,7 +56,7 @@
         <div class="row">
         <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body bg-transparent">
+                <div class="card-body bg-transparent" style="margin-top: 0; padding: 12px;">
                     <div class="row">
                         <div class="col-xl-6 py-md-2 mb-3">
                             <div class="card h-100" style="width: 100%;">

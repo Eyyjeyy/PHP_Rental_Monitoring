@@ -4,9 +4,10 @@ This repository contains the source code for a Rental Monitoring System, designe
 The project is built using PHP, MySQL for database management, and incorporates essential security measures for data integrity and user privacy.
 
 🖥 <strong>Languages:</strong> PHP, Javascript, HTML, CSS <br>
-📚 <strong>Libraries:</strong> Chart.js <br>
+📚 <strong>Libraries:</strong> Chart.js, JQuery, PHPMailer <br>
+☁  <strong>API:</strong> Semaphore SMS <br>
 🖼 <strong>Frameworks:</strong> Bootstrap 5 <br>
-🔨 <strong>Tools:</strong> phpMyAdmin <br>
+🔨 <strong>Tools:</strong> phpMyAdmin, Cron Job <br>
 👨‍💻 <strong>Data Formats:</strong> JSON <br>
 
 
@@ -133,3 +134,8 @@ The project is built using PHP, MySQL for database management, and incorporates 
 11/3/2024 - all user and admin pages revised to include indicator of unseen chat messages in navbar and header <br>
 - unable to use more than one sse on each page and had to use polling <br>
 - created fetch_unread_count and fetch_unseen_count_specific for counting of total unread messages for all users and total unread messages per user <br>
+
+11/7/2024
+- Removed contact from input of adding new tenants in admintenants <br>
+- added gcash and bank columns for houseaccounts <br>
+- added realtime search bar feature for many admin pages with tables <br>

@@ -140,7 +140,7 @@
         <div class="row">
         <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body" style="margin-top: 12px;">
                     <!-- <div class="row">
                         <form id="newPapersForm" action="adminpapers.php" enctype="multipart/form-data">
                             <div class="mb-3">

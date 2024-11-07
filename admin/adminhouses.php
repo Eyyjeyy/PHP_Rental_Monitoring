@@ -234,7 +234,7 @@
 
 
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body" style="margin-top: 12px;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <button class="btn btn-primary float-end table-buttons-update" id="new_category"><i class="fa fa-plus"></i> New Category</button>
@@ -296,7 +296,16 @@
 
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button>
+                            <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" />
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button> -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -320,6 +329,7 @@
                                     <th scope="col" data-column="elec_accname" onclick="sortTable('elec_accname')" style="cursor: pointer;">Meralco Account Name <span class="sort-arrow" data-column="elec_accname"></span></th>
                                     <th scope="col" data-column="water_accnum" onclick="sortTable('water_accnum')" style="cursor: pointer;">Maynilad # <span class="sort-arrow" data-column="water_accnum"></span></th>
                                     <th scope="col" data-column="water_accname" onclick="sortTable('water_accname')" style="cursor: pointer;">Maynilad Account Name <span class="sort-arrow" data-column="water_accname"></span></th>
+                                    <th scope="col" data-column="address" onclick="sortTable('address')" style="cursor: pointer;">Address <span class="sort-arrow" data-column="address"></span></th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -338,6 +348,7 @@
                                         echo "<td>" . $row['elec_accname'] . "</td>";
                                         echo "<td>" . $row['water_accnum'] . "</td>";
                                         echo "<td>" . $row['water_accname'] . "</td>";
+                                        echo "<td>" . $row['address'] . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
                                         echo "<div class='col-xxl-6 px-2'>";
@@ -808,6 +819,22 @@
 
                     // Poll every 3 seconds
                     setInterval(fetchUnreadMessages, 3000);
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+
+                            $.ajax({
+                                url: 'search/search_houses.php', // PHP script to perform search
+                                type: 'POST',
+                                data: { query: searchQuery },
+                                success: function(response) {
+                                    $('tbody#house_data').html(response); // Replace table body with new data
+                                }
+                            });
+                        });
+                    });
                 </script>
                 <script>
                     // Function to create and set the favicon

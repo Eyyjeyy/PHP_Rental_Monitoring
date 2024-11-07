@@ -120,7 +120,14 @@
                 <div class="card-body"  id="userbody">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_user"><i class="fa fa-plus"></i> New User</button>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_user"><i class="fa fa-plus"></i> New User</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter">
@@ -163,6 +170,9 @@
                                         </a>
                                     </th>
                                     <th scope="col">
+                                        Email
+                                    </th>
+                                    <th scope="col">
                                         <a href="?column=password&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
                                             Password
                                             <?php echo $sortColumn === 'password' ? $arrow : ''; ?>
@@ -188,7 +198,8 @@
                                         echo "<td>" . htmlspecialchars($row['firstname']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['middlename']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row['lastname']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['phonenumber']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['phonenumber'] ? $row['phonenumber'] : 'N/A') . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['email'] ? $row['email'] : 'N/A') . "</td>";
                                         echo "<td>" . htmlspecialchars($row['password'] ? str_repeat('*', strlen($row['password'])) : 'N/A') . "</td>";
                                         echo "<td>" . htmlspecialchars($row['role']) . "</td>";
                                         echo "<td class='justify-content-center text-center align-middle'>";
@@ -407,6 +418,22 @@
 
                     // Poll every 3 seconds
                     setInterval(fetchUnreadMessages, 3000);
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+
+                            $.ajax({
+                                url: 'search/search_users.php', // PHP script to perform search
+                                type: 'POST',
+                                data: { query: searchQuery },
+                                success: function(response) {
+                                    $('tbody').html(response); // Replace table body with new data
+                                }
+                            });
+                        });
+                    });
                 </script>
                 <script>
                     // Function to create and set the favicon

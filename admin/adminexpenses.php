@@ -98,10 +98,19 @@
         <div class="row">
             <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body" style="margin-top: 12px;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button>
+                            <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" />
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button> -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_expenses"><i class="fa fa-plus"></i> New Expenses</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -410,6 +419,22 @@
 
                     // Poll every 3 seconds
                     setInterval(fetchUnreadMessages, 3000);
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+
+                            $.ajax({
+                                url: 'search/search_expenses.php', // PHP script to perform search
+                                type: 'POST',
+                                data: { query: searchQuery },
+                                success: function(response) {
+                                    $('tbody').html(response); // Replace table body with new data
+                                }
+                            });
+                        });
+                    });
                 </script>
                 <script>
                     // Function to create and set the favicon

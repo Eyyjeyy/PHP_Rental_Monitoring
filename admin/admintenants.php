@@ -23,29 +23,23 @@
         // $firstname = htmlspecialchars($_POST['firstname']);
         // $middlename = htmlspecialchars($_POST['middlename']);
         // $lastname = htmlspecialchars($_POST['lastname']);
-        $contactno = htmlspecialchars($_POST['contactno']);
+        // $contactno = htmlspecialchars($_POST['contactno']);
         // $users_username = htmlspecialchars($_POST['user_name']);
         // $housename = htmlspecialchars($_POST['house_name']);
         // $houseid = htmlspecialchars($_POST['house_id']);
         $registerdate = htmlspecialchars($_POST['registerdate']);
         // Validate contact number length
-        if (preg_match('/^\d{10,11}$/', $contactno)) {
-            // Call the addTenant method to add the new tenant
-            $added = $admin->addTenant($contactno, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
-            if ($added["success"]) {
-                // Tenant added successfully, you can display a success message here if needed
-                header("Location: admintenants.php?tenant_added=1");
-                exit();
-            } else {
-                // Error occurred while adding tenant, store the error message in a session variable
-                $_SESSION['error_message'] = $added["message"];
-                header("Location: admintenants.php?error=add");
-                exit();
-            }
+
+        // Call the addTenant method to add the new tenant
+        $added = $admin->addTenant($users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
+        if ($added["success"]) {
+            // Tenant added successfully, you can display a success message here if needed
+            header("Location: admintenants.php?tenant_added=1");
+            exit();
         } else {
-            // Invalid contact number length, store the error message in a session variable
-            $_SESSION['error_message'] = "Contact number must be 10-11 digits long.";
-            header("Location: admintenants.php?error=invalid_contactno");
+            // Error occurred while adding tenant, store the error message in a session variable
+            $_SESSION['error_message'] = $added["message"];
+            header("Location: admintenants.php?error=add");
             exit();
         }
     }
@@ -170,10 +164,19 @@
         <div class="row">
         <?php include 'includes/header.php'; ?>
             <div class="col main content">
-                <div class="card-body">
+                <div class="card-body" style="margin-top: 12px;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader"> 
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_tenant"><i class="fa fa-plus"></i> New Tenant</button>
+                            <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" />
+                            <button class="btn btn-primary float-end table-buttons-update" id="new_tenant"><i class="fa fa-plus"></i> New Tenant</button> -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_tenant"><i class="fa fa-plus"></i> New Tenant</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -214,13 +217,13 @@
                                     </th>
                                     <th scope="col">
                                         <a href="?column=date_start&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Date
+                                            Date Registered
                                             <?php echo $sortColumn === 'date_start' ? $arrow : ''; ?>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a href="?column=date_preferred&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Date Preferred
+                                            Notification Date
                                             <?php echo $sortColumn === 'date_preferred' ? $arrow : ''; ?>
                                         </a>
                                     </th>
@@ -301,12 +304,14 @@
                                             <input type="text" class="form-control" id="lastname" name="lastname" required>
                                         </div>
                                     </div> -->
-                                    <div class="col-md-4">
+
+                                    <!-- <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="username" class="form-label">Contact #</label>
                                             <input type="text" class="form-control" id="contactno" name="contactno" required>
                                         </div>
-                                    </div>
+                                    </div> -->
+
                                     <!-- <div class="col-md-4"> -->
                                     <div class="col-md-8">
                                         <div class="mb-3">
@@ -353,7 +358,7 @@
                                                             // echo "<option value='" . $row_option['id'] . "'>" . $row_option['category_name'] . "</option>";
 
                                                             $user_info = $row_users['id'] . "|" . $row_users['username'];
-                                                            echo "<option value='" . htmlspecialchars($user_info) . "'>" . "ID: " . htmlspecialchars($row_users['id']) . " " . htmlspecialchars($row_users['username']) . "</option>";
+                                                            echo "<option value='" . htmlspecialchars($user_info) . "'>" . "" . htmlspecialchars($row_users['firstname']) . " " . htmlspecialchars($row_users['lastname']) . "</option>";
                                                             
                                                             // echo "<option value='" . htmlspecialchars($row_option['house_name']) . "' data-house-id='" . $row_option['id'] . "'>" . htmlspecialchars($row_option['house_number']) . " " . htmlspecialchars($row_option['category_name']) . "</option>";
                                                         }
@@ -538,6 +543,22 @@
 
                     // Poll every 3 seconds
                     setInterval(fetchUnreadMessages, 3000);
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+
+                            $.ajax({
+                                url: 'search/search_tenants.php', // PHP script to perform search
+                                type: 'POST',
+                                data: { query: searchQuery },
+                                success: function(response) {
+                                    $('tbody').html(response); // Replace table body with new data
+                                }
+                            });
+                        });
+                    });
                 </script>
                 <script>
                     // Function to create and set the favicon

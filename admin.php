@@ -625,7 +625,7 @@ Class Admin {
     }
   }
 
-  public function addTenant($contactno, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate = null) {
+  public function addTenant($users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate = null) {
     // Check if the users_username already exists
     $checkSql = "SELECT * FROM tenants WHERE users_id = ?";
     $checkStmt = $this->conn->prepare($checkSql);
@@ -653,14 +653,14 @@ Class Admin {
         // Determine the appropriate SQL statement based on whether preferreddate is provided
         if ($preferreddate) {
           // Insert with date_preferred
-          $insertSql = "INSERT INTO tenants (fname, mname, lname, contact, users_id, users_username, house_id, house_category, date_start, date_preferred) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          $insertSql = "INSERT INTO tenants (fname, mname, lname, users_id, users_username, house_id, house_category, date_start, date_preferred) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
           $insertStmt = $this->conn->prepare($insertSql);
-          $insertStmt->bind_param("ssssssssss", $firstname, $middlename, $lastname, $contactno, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
+          $insertStmt->bind_param("sssssssss", $firstname, $middlename, $lastname, $users_id, $users_username, $houseid, $housename, $registerdate, $preferreddate);
         } else {
           // Insert without date_preferred
-          $insertSql = "INSERT INTO tenants (fname, mname, lname, contact, users_id, users_username, house_id, house_category, date_start) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          $insertSql = "INSERT INTO tenants (fname, mname, lname, users_id, users_username, house_id, house_category, date_start) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
           $insertStmt = $this->conn->prepare($insertSql);
-          $insertStmt->bind_param("sssssssss", $firstname, $middlename, $lastname, $contactno, $users_id, $users_username, $houseid, $housename, $registerdate);
+          $insertStmt->bind_param("sssssssss", $firstname, $middlename, $lastname, $users_id, $users_username, $houseid, $housename, $registerdate);
         }
 
         $insertStmt->execute();
