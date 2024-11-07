@@ -83,38 +83,32 @@
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">
-                                        <a href="?column=id&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            #
-                                            <?php echo $sortColumn === 'id' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=name&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Tenant
-                                            <?php echo $sortColumn === 'name' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=amount&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529; min-width: 100px;">
-                                            Amount <?php echo $sortColumn === 'amount' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">Receipt</th>
-                                    <th scope="col">
-                                        <a href="?column=date_payment&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none" style="color: #212529;">
-                                            Date <?php echo $sortColumn === 'date_payment' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-
-                                    <!-- <th scope="col">
-                                        <a href="#" id="sortPaymentDate" data-sort="asc" class="text-decoration-none" style="color: #212529;">Payment Date <span id="sortIndicator">▲</span></a>
-                                    </th> -->
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <a href="javascript:void(0);" onclick="sortTable(0, 'id')" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                        # <span id="idSortArrow">↑</span>
+                                    </a>
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0);" onclick="sortTable(1, 'name')" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                        Tenant <span id="nameSortArrow"></span>
+                                    </a>
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0);" onclick="sortTable(2, 'amount')" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                        Amount <span id="amountSortArrow"></span>
+                                    </a>
+                                </th>
+                                <th scope="col">Receipt</th>
+                                <th scope="col">
+                                    <a href="javascript:void(0);" onclick="sortTable(4, 'date_payment')" class="text-decoration-none d-inline-block" style="color: #212529;">
+                                        Date <span id="datePaymentSortArrow"></span>
+                                    </a>
+                                </th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
                             <tbody id="paymentTableBody">
                                 <?php
                                 if ($result->num_rows > 0) {
@@ -218,6 +212,51 @@
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
                 <script>
+                    // JavaScript Sorting Function
+                    let sortDirection = 'asc';
+                    let lastSortedColumn = null;
+
+                    function sortTable(columnIndex, columnName) {
+                        const tableBody = document.getElementById("paymentTableBody");
+                        const rows = Array.from(tableBody.rows);
+                        let directionModifier = sortDirection === 'asc' ? 1 : -1;
+
+                        rows.sort((a, b) => {
+                            const aText = a.cells[columnIndex].textContent.trim();
+                            const bText = b.cells[columnIndex].textContent.trim();
+
+                            if (!isNaN(aText) && !isNaN(bText)) {
+                                return (parseFloat(aText) - parseFloat(bText)) * directionModifier;
+                            }
+                            return aText.localeCompare(bText) * directionModifier;
+                        });
+
+                        rows.forEach(row => tableBody.appendChild(row));
+
+                        // Toggle sort direction for next click
+                        sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
+
+                        // Update arrow indicators
+                        updateSortArrows(columnName);
+                    }
+
+                    function updateSortArrows(columnName) {
+                        const arrowIdMap = {
+                            id: "idSortArrow",
+                            name: "nameSortArrow",
+                            amount: "amountSortArrow",
+                            date_payment: "datePaymentSortArrow"
+                        };
+
+                        Object.keys(arrowIdMap).forEach(key => {
+                            const arrowElement = document.getElementById(arrowIdMap[key]);
+                            arrowElement.textContent = '';
+                        });
+
+                        const arrow = sortDirection === 'asc' ? '↑' : '↓';
+                        document.getElementById(arrowIdMap[columnName]).textContent = arrow;
+                    }
+
                     $(document).ready(function() {
                         $('#searchBar').on('input', function() {
                             var searchQuery = $(this).val();

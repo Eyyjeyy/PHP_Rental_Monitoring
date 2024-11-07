@@ -25,6 +25,7 @@ $result = $conn->query($sql);
 // Generate table rows based on search results
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        $expenses[] = $row; // Collect data for the JavaScript array
         echo "<tr>";
         echo "<th scope='row'>" . $row['id'] . "</th>";
         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
@@ -50,6 +51,7 @@ if ($result->num_rows > 0) {
         echo "</td>";
         echo "</tr>";
     }
+    echo "<script>var arrayData = " . json_encode($expenses) . ";</script>"; // Pass the data to JavaScript
 } else {
     echo "<tr><td colspan='10'>No Payments found</td></tr>";
 }

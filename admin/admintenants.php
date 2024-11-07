@@ -111,25 +111,24 @@
 
 
     // Get sort column and direction from query parameters
-    $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'id';
-    $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
+    // $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'id';
+    // $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
 
-    // Ensure the sort column is one of the allowed columns to prevent SQL injection
-    $allowedColumns = ['id', 'fname', 'mname', 'lname', 'users_username', 'house_category', 'date_start', 'date_preferred'];
-    if (!in_array($sortColumn, $allowedColumns)) {
-        $sortColumn = 'id';
-    }
+    // // Ensure the sort column is one of the allowed columns to prevent SQL injection
+    // $allowedColumns = ['id', 'fname', 'mname', 'lname', 'users_username', 'house_category', 'date_start', 'date_preferred'];
+    // if (!in_array($sortColumn, $allowedColumns)) {
+    //     $sortColumn = 'id';
+    // }
 
-    // Determine the next sort direction
-    $nextSortDirection = $sortDirection === 'ASC' ? 'desc' : 'asc';
+    // // Determine the next sort direction
+    // $nextSortDirection = $sortDirection === 'ASC' ? 'desc' : 'asc';
 
-    // Determine the arrow symbol based on the current sort direction
-    $arrow = $sortDirection === 'ASC' ? '↑' : '↓';
+    // // Determine the arrow symbol based on the current sort direction
+    // $arrow = $sortDirection === 'ASC' ? '↑' : '↓';
 
     $sql = "SELECT tenants.*, houses.house_name AS house_name
             FROM tenants
-            LEFT JOIN houses ON tenants.house_id = houses.id
-            ORDER BY $sortColumn $sortDirection;";
+            LEFT JOIN houses ON tenants.house_id = houses.id;";
 
     $result = $admin->conn->query($sql);
     // $sql_option = "SELECT houses.id, houses.house_number, categories.name AS category_name FROM houses 
@@ -184,48 +183,33 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">
-                                        <a href="?column=fname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Firstname
-                                            <?php echo $sortColumn === 'fname' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="fname" class="sortable-column">
+                                        Firstname
+                                        <span id="fnameSortArrow"></span>
                                     </th>
-                                    <th scope="col">
-                                        <a href="?column=mname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Middlename
-                                            <?php echo $sortColumn === 'mname' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="mname" class="sortable-column">
+                                        Middlename
+                                        <span id="mnameSortArrow"></span>
                                     </th>
-                                    <th scope="col">
-                                        <a href="?column=lname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Lastname
-                                            <?php echo $sortColumn === 'lname' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="lname" class="sortable-column">
+                                        Lastname
+                                        <span id="lnameSortArrow"></span>
                                     </th>
-                                    
-                                    <th scope="col">
-                                        <a href="?column=users_username&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Username
-                                            <?php echo $sortColumn === 'users_username' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="users_username" class="sortable-column">
+                                        Username
+                                        <span id="usernameSortArrow"></span>
                                     </th>
-                                    <th scope="col">
-                                        <a href="?column=house_category&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Apartment
-                                            <?php echo $sortColumn === 'house_category' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="house_category" class="sortable-column">
+                                        Apartment
+                                        <span id="categorySortArrow"></span>
                                     </th>
-                                    <th scope="col">
-                                        <a href="?column=date_start&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Date Registered
-                                            <?php echo $sortColumn === 'date_start' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="date_start" class="sortable-column">
+                                        Date Registered
+                                        <span id="dateStartSortArrow"></span>
                                     </th>
-                                    <th scope="col">
-                                        <a href="?column=date_preferred&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Notification Date
-                                            <?php echo $sortColumn === 'date_preferred' ? $arrow : ''; ?>
-                                        </a>
+                                    <th scope="col" data-column="date_preferred" class="sortable-column">
+                                        Notification Date
+                                        <span id="notificationDateSortArrow"></span>
                                     </th>
                                 </tr>
                             </thead>
@@ -545,7 +529,62 @@
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
                 <script>
+                    let sortDirection = 'asc';
+
+                    // Sorts the table based on a column and its data
+                    function sortTable(columnIndex, columnName) {
+                        const tableBody = document.getElementById("tablelimiter").querySelector("tbody");
+                        const rows = Array.from(tableBody.rows);
+                        let directionModifier = sortDirection === 'asc' ? 1 : -1;
+
+                        rows.sort((a, b) => {
+                            const aText = a.cells[columnIndex].textContent.trim();
+                            const bText = b.cells[columnIndex].textContent.trim();
+
+                            // Numeric sort if the content is a number, else use string comparison
+                            if (!isNaN(aText) && !isNaN(bText)) {
+                                return (parseFloat(aText) - parseFloat(bText)) * directionModifier;
+                            }
+                            return aText.localeCompare(bText) * directionModifier;
+                        });
+
+                        // Reattach sorted rows to the table body
+                        rows.forEach(row => tableBody.appendChild(row));
+
+                        // Toggle the sort direction for the next click
+                        sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
+
+                        // Update the sorting arrows
+                        updateSortArrows(columnName);
+                    }
+
+                    // Update the sorting arrows when sorting a column
+                    function updateSortArrows(columnName) {
+                        const arrowIdMap = {
+                            fname: "fnameSortArrow",
+                            mname: "mnameSortArrow",
+                            lname: "lnameSortArrow",
+                            users_username: "usernameSortArrow",
+                            house_category: "categorySortArrow",
+                            date_start: "dateStartSortArrow",
+                            date_preferred: "notificationDateSortArrow"
+                        };
+
+                        // Remove existing arrows
+                        Object.keys(arrowIdMap).forEach(key => {
+                            const arrowElement = document.getElementById(arrowIdMap[key]);
+                            if (arrowElement) arrowElement.textContent = '';
+                        });
+
+                        // Add new arrow for the sorted column
+                        const arrow = sortDirection === 'asc' ? '↑' : '↓';
+                        const columnArrow = document.getElementById(arrowIdMap[columnName]);
+                        if (columnArrow) columnArrow.textContent = arrow;
+                    }
+
+                    // jQuery to handle search and sorting
                     $(document).ready(function() {
+                        // Implement search functionality
                         $('#searchBar').on('input', function() {
                             var searchQuery = $(this).val();
 
@@ -555,11 +594,28 @@
                                 data: { query: searchQuery },
                                 success: function(response) {
                                     $('tbody').html(response); // Replace table body with new data
+                                    
+                                    // Re-apply sorting after search
+                                    if (lastSortedColumn) {
+                                        sortTable(lastSortedColumn.index, lastSortedColumn.name);
+                                    }
                                 }
                             });
                         });
+
+                        // Handle click on column headers for sorting
+                        $(".sortable-column").on("click", function() {
+                            const columnName = $(this).data("column");
+                            const columnIndex = $(this).index();
+
+                            // Store the last sorted column for re-sorting after search
+                            lastSortedColumn = { index: columnIndex, name: columnName };
+                            
+                            sortTable(columnIndex, columnName);
+                        });
                     });
                 </script>
+
                 <script>
                     // Function to create and set the favicon
                     function setFavicon(iconURL) {
