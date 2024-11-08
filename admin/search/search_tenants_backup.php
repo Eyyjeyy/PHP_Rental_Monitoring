@@ -1,48 +1,27 @@
 <?php
 include '../../db_connect.php'; // Include your database connection
 
-// Get search, pagination, and sorting parameters
+// Get the search query and trim any leading/trailing whitespace
 $query = isset($_POST['query']) ? trim($_POST['query']) : '';
-$page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
-$sort_column = isset($_POST['sort_column']) ? $_POST['sort_column'] : 'houses.id'; // Default sorting by house ID
-$sort_order = isset($_POST['sort_order']) ? $_POST['sort_order'] : 'ASC'; // Default sorting in ascending order
-$records_per_page = 5; // Adjust as needed
 
-// Calculate the offset for pagination
-$offset = ($page - 1) * $records_per_page;
-
-// Get the total number of matching records for pagination
-$total_sql = "
-    SELECT COUNT(*) as total FROM tenants
-    LEFT JOIN houses ON tenants.house_id = houses.id
-    WHERE
-        tenants.fname LIKE '%$query%' OR
-        tenants.mname LIKE '%$query%' OR
-        tenants.lname LIKE '%$query%' OR
-        tenants.users_username LIKE '%$query%' OR
-        tenants.date_start LIKE '%$query%' OR
-        tenants.date_preferred LIKE '%$query%'
-";
-$total_result = $conn->query($total_sql);
-$total_rows = $total_result->fetch_assoc()['total'];
-$total_pages = ceil($total_rows / $records_per_page);
-
-// Fetch paginated, sorted records
+// Build the SQL query
 $sql = "
     SELECT tenants.*, houses.house_name AS house_name
             FROM tenants
             LEFT JOIN houses ON tenants.house_id = houses.id
-    WHERE 
+";
+
+// Add the WHERE clause only if there’s a search query
+if (!empty($query)) {
+    $sql .= " WHERE 
         tenants.fname LIKE '%$query%' OR
         tenants.mname LIKE '%$query%' OR
         tenants.lname LIKE '%$query%' OR
         tenants.users_username LIKE '%$query%' OR
         tenants.date_start LIKE '%$query%' OR
         tenants.date_preferred LIKE '%$query%'
-    ORDER BY $sort_column $sort_order
-    LIMIT $offset, $records_per_page
-";
-
+    ";
+}
 
 // Append the ORDER BY clause
 // $sql .= " ORDER BY $sortColumn $sortDirection;";
@@ -84,13 +63,6 @@ if ($result->num_rows > 0) {
 } else {
     echo "<tr><td colspan='10'>No Apartments found</td></tr>";
 }
-
-// Output pagination buttons
-echo "<tr><td colspan='10' class='text-center'>";
-for ($i = 1; $i <= $total_pages; $i++) {
-    echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
-}
-echo "</td></tr>";
 
 $conn->close();
 ?>

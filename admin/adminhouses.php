@@ -321,15 +321,15 @@
                                     <th scope="col" data-column="water_accnum" onclick="sortTable('water_accnum')">Maynilad #</th>
                                     <th scope="col" data-column="water_accname" onclick="sortTable('water_accname')">Maynilad Account Name</th>
                                     <th scope="col">Actions</th> -->
-                                    <th scope="col" data-column="id" onclick="sortTable('id')"># <span class="sort-arrow" data-column="id"></span></th>
-                                    <th scope="col" data-column="house_name" onclick="sortTable('house_name')" style="cursor: pointer;">Apartment Name <span class="sort-arrow" data-column="house_name"></span></th>
-                                    <th scope="col" data-column="price" onclick="sortTable('price')" style="cursor: pointer;">Rent <span class="sort-arrow" data-column="price"></span></th>
-                                    <th scope="col" data-column="category_name" onclick="sortTable('category_name')" style="cursor: pointer;">Apartment Type <span class="sort-arrow" data-column="category_name"></span></th>
-                                    <th scope="col" data-column="elec_accnum" style="max-width: 80px; cursor: pointer;" onclick="sortTable('elec_accnum')">Meralco # <span class="sort-arrow" data-column="elec_accnum"></span></th>
-                                    <th scope="col" data-column="elec_accname" onclick="sortTable('elec_accname')" style="cursor: pointer;">Meralco Account Name <span class="sort-arrow" data-column="elec_accname"></span></th>
-                                    <th scope="col" data-column="water_accnum" onclick="sortTable('water_accnum')" style="cursor: pointer;">Maynilad # <span class="sort-arrow" data-column="water_accnum"></span></th>
-                                    <th scope="col" data-column="water_accname" onclick="sortTable('water_accname')" style="cursor: pointer;">Maynilad Account Name <span class="sort-arrow" data-column="water_accname"></span></th>
-                                    <th scope="col" data-column="address" onclick="sortTable('address')" style="cursor: pointer;">Address <span class="sort-arrow" data-column="address"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="id" onclick="sortTable('id')"># <span class="sort-arrow" data-column="id"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="house_name" onclick="sortTable('house_name')" style="cursor: pointer;">Apartment Name <span class="sort-arrow" data-column="house_name"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="price" onclick="sortTable('price')" style="cursor: pointer;">Rent <span class="sort-arrow" data-column="price"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="category_name" onclick="sortTable('category_name')" style="cursor: pointer;">Apartment Type <span class="sort-arrow" data-column="category_name"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="elec_accnum" style="max-width: 80px; cursor: pointer;" onclick="sortTable('elec_accnum')">Meralco # <span class="sort-arrow" data-column="elec_accnum"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="elec_accname" onclick="sortTable('elec_accname')" style="cursor: pointer;">Meralco Account Name <span class="sort-arrow" data-column="elec_accname"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="water_accnum" onclick="sortTable('water_accnum')" style="cursor: pointer;">Maynilad # <span class="sort-arrow" data-column="water_accnum"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="water_accname" onclick="sortTable('water_accname')" style="cursor: pointer;">Maynilad Account Name <span class="sort-arrow" data-column="water_accname"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="address" onclick="sortTable('address')" style="cursor: pointer;">Address <span class="sort-arrow" data-column="address"></span></th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -820,7 +820,7 @@
                     // Poll every 3 seconds
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
-                <script>
+                <!-- <script>
                     $(document).ready(function() {
                         $('#searchBar').on('input', function() {
                             var searchQuery = $(this).val();
@@ -833,6 +833,67 @@
                                     $('tbody#house_data').html(response); // Replace table body with new data
                                 }
                             });
+                        });
+                    });
+                </script> -->
+                <script>
+                    $(document).ready(function() {
+                        let currentSortColumn = 'id';
+                        let currentSortOrder = 'ASC';
+
+                        function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
+                            $.ajax({
+                                url: 'search/search_houses.php',
+                                type: 'POST',
+                                data: { 
+                                    page: page, 
+                                    query: query, 
+                                    sort_column: sortColumn, 
+                                    sort_order: sortOrder 
+                                },
+                                success: function(response) {
+                                    $('tbody#house_data').html(response); // Update table body with data
+                                }
+                            });
+                        }
+
+                        // Initial fetch on page load
+                        fetchUsers();
+
+                        // Search bar event
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+                            fetchUsers(1, searchQuery);
+                        });
+
+                        // Pagination button event
+                        $(document).on('click', '.pagination-btn', function() {
+                            var page = $(this).data('page');
+                            var searchQuery = $('#searchBar').val();
+                            fetchUsers(page, searchQuery);
+                        });
+
+                        // Column header sorting event
+                        $('.sortable-column').on('click', function() {
+                            let column = $(this).data('column');
+                            currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            currentSortColumn = column;
+
+                            // Toggle the arrow indicator directly in the column header
+                            $('.sortable-column').each(function() {
+                                // Reset all arrows to empty
+                                $(this).text($(this).data('column'));
+                            });
+
+                            // Add the appropriate arrow to the clicked column header
+                            if (currentSortOrder === 'ASC') {
+                                $(this).text($(this).data('column') + ' ↑');  // Add ascending arrow
+                            } else {
+                                $(this).text($(this).data('column') + ' ↓');  // Add descending arrow
+                            }
+
+                            let searchQuery = $('#searchBar').val();
+                            fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
                         });
                     });
                 </script>

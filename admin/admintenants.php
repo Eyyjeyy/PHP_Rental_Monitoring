@@ -529,89 +529,63 @@
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
                 <script>
-                    let sortDirection = 'asc';
-
-                    // Sorts the table based on a column and its data
-                    function sortTable(columnIndex, columnName) {
-                        const tableBody = document.getElementById("tablelimiter").querySelector("tbody");
-                        const rows = Array.from(tableBody.rows);
-                        let directionModifier = sortDirection === 'asc' ? 1 : -1;
-
-                        rows.sort((a, b) => {
-                            const aText = a.cells[columnIndex].textContent.trim();
-                            const bText = b.cells[columnIndex].textContent.trim();
-
-                            // Numeric sort if the content is a number, else use string comparison
-                            if (!isNaN(aText) && !isNaN(bText)) {
-                                return (parseFloat(aText) - parseFloat(bText)) * directionModifier;
-                            }
-                            return aText.localeCompare(bText) * directionModifier;
-                        });
-
-                        // Reattach sorted rows to the table body
-                        rows.forEach(row => tableBody.appendChild(row));
-
-                        // Toggle the sort direction for the next click
-                        sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
-
-                        // Update the sorting arrows
-                        updateSortArrows(columnName);
-                    }
-
-                    // Update the sorting arrows when sorting a column
-                    function updateSortArrows(columnName) {
-                        const arrowIdMap = {
-                            fname: "fnameSortArrow",
-                            mname: "mnameSortArrow",
-                            lname: "lnameSortArrow",
-                            users_username: "usernameSortArrow",
-                            house_category: "categorySortArrow",
-                            date_start: "dateStartSortArrow",
-                            date_preferred: "notificationDateSortArrow"
-                        };
-
-                        // Remove existing arrows
-                        Object.keys(arrowIdMap).forEach(key => {
-                            const arrowElement = document.getElementById(arrowIdMap[key]);
-                            if (arrowElement) arrowElement.textContent = '';
-                        });
-
-                        // Add new arrow for the sorted column
-                        const arrow = sortDirection === 'asc' ? '↑' : '↓';
-                        const columnArrow = document.getElementById(arrowIdMap[columnName]);
-                        if (columnArrow) columnArrow.textContent = arrow;
-                    }
-
-                    // jQuery to handle search and sorting
                     $(document).ready(function() {
-                        // Implement search functionality
-                        $('#searchBar').on('input', function() {
-                            var searchQuery = $(this).val();
+                        let currentSortColumn = 'id';
+                        let currentSortOrder = 'ASC';
 
+                        function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
                             $.ajax({
-                                url: 'search/search_tenants.php', // PHP script to perform search
+                                url: 'search/search_tenants.php',
                                 type: 'POST',
-                                data: { query: searchQuery },
+                                data: { 
+                                    page: page, 
+                                    query: query, 
+                                    sort_column: sortColumn, 
+                                    sort_order: sortOrder 
+                                },
                                 success: function(response) {
-                                    $('tbody').html(response); // Replace table body with new data
-                                    
-                                    // Re-apply sorting after search
-                                    if (lastSortedColumn) {
-                                        sortTable(lastSortedColumn.index, lastSortedColumn.name);
-                                    }
+                                    $('tbody').html(response); // Update table body with data
                                 }
                             });
+                        }
+
+                        // Initial fetch on page load
+                        fetchUsers();
+
+                        // Search bar event
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+                            fetchUsers(1, searchQuery);
                         });
 
-                        // Handle click on column headers for sorting
-                        $(".sortable-column").on("click", function() {
-                            const columnName = $(this).data("column");
-                            const columnIndex = $(this).index();
+                        // Pagination button event
+                        $(document).on('click', '.pagination-btn', function() {
+                            var page = $(this).data('page');
+                            var searchQuery = $('#searchBar').val();
+                            fetchUsers(page, searchQuery);
+                        });
 
-                            // Store the last sorted column for re-sorting after search
-                            lastSortedColumn = { index: columnIndex, name: columnName };
-                            
-                            sortTable(columnIndex, columnName);
+                        // Column header sorting event
+                        $('.sortable-column').on('click', function() {
+                            let column = $(this).data('column');
+                            currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            currentSortColumn = column;
+
+                            // Toggle the arrow indicator directly in the column header
+                            $('.sortable-column').each(function() {
+                                // Check if the column header contains an arrow (↑ or ↓) and remove it
+                                let text = $(this).text().trim();
+                                if (text.endsWith('↑') || text.endsWith('↓')) {
+                                    $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                                }
+                            });
+
+                            // Add the appropriate arrow to the clicked column header
+                            let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                            $(this).append(arrow);  // Append the arrow directly to the text
+
+                            let searchQuery = $('#searchBar').val();
+                            fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
                         });
                     });
                 </script>

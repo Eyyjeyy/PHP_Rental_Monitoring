@@ -84,7 +84,7 @@
                     <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>
+                            <!-- <tr>
                                 <th scope="col">
                                     <a href="javascript:void(0);" onclick="sortTable(0, 'id')" class="text-decoration-none d-inline-block" style="color: #212529;">
                                         # <span id="idSortArrow">↑</span>
@@ -107,6 +107,26 @@
                                     </a>
                                 </th>
                                 <th scope="col">Actions</th>
+                            </tr> -->
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" data-column="name" class="sortable-column">
+                                    Tenant
+                                    <span id="fnameSortArrow"></span>
+                                </th>
+                                <th scope="col" data-column="amount" class="sortable-column">
+                                    Amount
+                                    <span id="mnameSortArrow"></span>
+                                </th>
+                                <th scope="col">Receipt</th>
+                                <th scope="col" data-column="date_payment" class="sortable-column">
+                                    Date
+                                    <span id="lnameSortArrow"></span>
+                                </th>
+                                <th scope="col" data-column="users_username" class="sortable-column">
+                                    Username
+                                    <span id="usernameSortArrow"></span>
+                                </th>
                             </tr>
                         </thead>
                             <tbody id="paymentTableBody">
@@ -212,63 +232,63 @@
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
                 <script>
-                    // JavaScript Sorting Function
-                    let sortDirection = 'asc';
-                    let lastSortedColumn = null;
-
-                    function sortTable(columnIndex, columnName) {
-                        const tableBody = document.getElementById("paymentTableBody");
-                        const rows = Array.from(tableBody.rows);
-                        let directionModifier = sortDirection === 'asc' ? 1 : -1;
-
-                        rows.sort((a, b) => {
-                            const aText = a.cells[columnIndex].textContent.trim();
-                            const bText = b.cells[columnIndex].textContent.trim();
-
-                            if (!isNaN(aText) && !isNaN(bText)) {
-                                return (parseFloat(aText) - parseFloat(bText)) * directionModifier;
-                            }
-                            return aText.localeCompare(bText) * directionModifier;
-                        });
-
-                        rows.forEach(row => tableBody.appendChild(row));
-
-                        // Toggle sort direction for next click
-                        sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
-
-                        // Update arrow indicators
-                        updateSortArrows(columnName);
-                    }
-
-                    function updateSortArrows(columnName) {
-                        const arrowIdMap = {
-                            id: "idSortArrow",
-                            name: "nameSortArrow",
-                            amount: "amountSortArrow",
-                            date_payment: "datePaymentSortArrow"
-                        };
-
-                        Object.keys(arrowIdMap).forEach(key => {
-                            const arrowElement = document.getElementById(arrowIdMap[key]);
-                            arrowElement.textContent = '';
-                        });
-
-                        const arrow = sortDirection === 'asc' ? '↑' : '↓';
-                        document.getElementById(arrowIdMap[columnName]).textContent = arrow;
-                    }
-
                     $(document).ready(function() {
-                        $('#searchBar').on('input', function() {
-                            var searchQuery = $(this).val();
+                        let currentSortColumn = 'id';
+                        let currentSortOrder = 'ASC';
 
+                        function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
                             $.ajax({
-                                url: 'search/search_payments.php', // PHP script to perform search
+                                url: 'search/search_payments.php',
                                 type: 'POST',
-                                data: { query: searchQuery },
+                                data: { 
+                                    page: page, 
+                                    query: query, 
+                                    sort_column: sortColumn, 
+                                    sort_order: sortOrder 
+                                },
                                 success: function(response) {
-                                    $('tbody').html(response); // Replace table body with new data
+                                    $('tbody#paymentTableBody').html(response); // Update table body with data
                                 }
                             });
+                        }
+
+                        // Initial fetch on page load
+                        fetchUsers();
+
+                        // Search bar event
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+                            fetchUsers(1, searchQuery);
+                        });
+
+                        // Pagination button event
+                        $(document).on('click', '.pagination-btn', function() {
+                            var page = $(this).data('page');
+                            var searchQuery = $('#searchBar').val();
+                            fetchUsers(page, searchQuery);
+                        });
+
+                        // Column header sorting event
+                        $('.sortable-column').on('click', function() {
+                            let column = $(this).data('column');
+                            currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            currentSortColumn = column;
+
+                            // Toggle the arrow indicator directly in the column header
+                            $('.sortable-column').each(function() {
+                                // Check if the column header contains an arrow (↑ or ↓) and remove it
+                                let text = $(this).text().trim();
+                                if (text.endsWith('↑') || text.endsWith('↓')) {
+                                    $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                                }
+                            });
+
+                            // Add the appropriate arrow to the clicked column header
+                            let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                            $(this).append(arrow);  // Append the arrow directly to the text
+
+                            let searchQuery = $('#searchBar').val();
+                            fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
                         });
                     });
                 </script>

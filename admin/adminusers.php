@@ -134,56 +134,15 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">
-                                        <a href="?column=id&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            #
-                                            <?php echo $sortColumn === 'id' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=username&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Username
-                                            <?php echo $sortColumn === 'username' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=firstname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Firstname
-                                            <?php echo $sortColumn === 'firstname' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=middlename&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Middlename
-                                            <?php echo $sortColumn === 'middlename' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=lastname&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Lastname
-                                            <?php echo $sortColumn === 'lastname' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=role&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Contact Number
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        Email
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=password&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Password
-                                            <?php echo $sortColumn === 'password' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
-                                    <th scope="col">
-                                        <a href="?column=role&direction=<?php echo $nextSortDirection; ?>" class="text-decoration-none d-inline-block" style="color: #212529;">
-                                            Role
-                                            <?php echo $sortColumn === 'role' ? $arrow : ''; ?>
-                                        </a>
-                                    </th>
+                                    <th scope="col" class="sortable-column" data-column="id">ID</th>
+                                    <th scope="col" class="sortable-column" data-column="username">Username</th>
+                                    <th scope="col" class="sortable-column" data-column="firstname">First Name</th>
+                                    <th scope="col" class="sortable-column" data-column="middlename">Middle Name</th>
+                                    <th scope="col" class="sortable-column" data-column="lastname">Last Name</th>
+                                    <th scope="col" class="sortable-column" data-column="phonenumber">Phone Number</th>
+                                    <th scope="col" class="sortable-column" data-column="email">Email</th>
+                                    <th scope="col" class="sortable-column" data-column="password">Password</th>
+                                    <th scope="col" class="sortable-column" data-column="role">Role</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -421,17 +380,62 @@
                 </script>
                 <script>
                     $(document).ready(function() {
-                        $('#searchBar').on('input', function() {
-                            var searchQuery = $(this).val();
+                        let currentSortColumn = 'id';
+                        let currentSortOrder = 'ASC';
 
+                        function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
                             $.ajax({
-                                url: 'search/search_users.php', // PHP script to perform search
+                                url: 'search/search_users.php',
                                 type: 'POST',
-                                data: { query: searchQuery },
+                                data: { 
+                                    page: page, 
+                                    query: query, 
+                                    sort_column: sortColumn, 
+                                    sort_order: sortOrder 
+                                },
                                 success: function(response) {
-                                    $('tbody').html(response); // Replace table body with new data
+                                    $('tbody').html(response); // Update table body with data
                                 }
                             });
+                        }
+
+                        // Initial fetch on page load
+                        fetchUsers();
+
+                        // Search bar event
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+                            fetchUsers(1, searchQuery);
+                        });
+
+                        // Pagination button event
+                        $(document).on('click', '.pagination-btn', function() {
+                            var page = $(this).data('page');
+                            var searchQuery = $('#searchBar').val();
+                            fetchUsers(page, searchQuery);
+                        });
+
+                        // Column header sorting event
+                        $('.sortable-column').on('click', function() {
+                            let column = $(this).data('column');
+                            currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            currentSortColumn = column;
+
+                            // Toggle the arrow indicator directly in the column header
+                            $('.sortable-column').each(function() {
+                                // Reset all arrows to empty
+                                $(this).text($(this).data('column'));
+                            });
+
+                            // Add the appropriate arrow to the clicked column header
+                            if (currentSortOrder === 'ASC') {
+                                $(this).text($(this).data('column') + ' ↑');  // Add ascending arrow
+                            } else {
+                                $(this).text($(this).data('column') + ' ↓');  // Add descending arrow
+                            }
+
+                            let searchQuery = $('#searchBar').val();
+                            fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
                         });
                     });
                 </script>

@@ -139,3 +139,7 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Removed contact from input of adding new tenants in admintenants <br>
 - added gcash and bank columns for houseaccounts <br>
 - added realtime search bar feature for many admin pages with tables <br>
+
+11/8/2024
+- Added pagination for users, apartments, tenants, payments (pages) <br>
+- Revised search_page files to integrate pagination in order for pagination, search, and sorting to be able to work together <br>
