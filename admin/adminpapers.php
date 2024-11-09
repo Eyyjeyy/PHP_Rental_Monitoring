@@ -177,7 +177,15 @@
                     </div> -->
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
+                            <!-- <button class="btn btn-primary float-end table-buttons-update" id="new_papers"><i class="fa fa-plus"></i> New Papers</button> -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_papers"><i class="fa fa-plus"></i> New Papers</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -214,7 +222,8 @@
                             <button id="next-page" onclick="nextPage()">Next</button>
                         </div> -->
                         <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center" id="pagination-controls"></ul>
+                            <!-- <ul class="pagination justify-content-center" id="pagination-controls"></ul> -->
+                            <ul class="pagination justify-content-center" id="use commented the <uk> code commented above this line to utilize previous pagination before the search bar"></ul>
                         </nav>
                     </div>
                 </div>
@@ -468,6 +477,7 @@
                 if (data.includes('success')) {
                     // Handle successful paper addition
                     // window.location.reload(); // Reload the page to see the new paper
+                    window.location.reload(); // Reload the page to see the new paper
                     form.reset();
                 } else {
                     // Handle error in paper addition
@@ -634,7 +644,7 @@
         }
     </script> -->
 
-    <script>
+    <!-- <script>
         var allDataFiles = [];
         var currentPage = 1;
         var itemsPerPage = 5;
@@ -810,7 +820,7 @@
             if (activeElement) {
                 var directDescendant = activeElement.querySelector('.page-link');
                 if (directDescendant) {
-                    directDescendant.style.backgroundColor = '#527853';
+                    directDescendant.style.backgroundColor = '#6c757d';
                 }
             }
         }
@@ -831,7 +841,7 @@
                 updatePaginationControls();
             }
         }
-    </script>
+    </script> -->
     
     <!-- Without Pagination for papertable -->
     <!-- <script>
@@ -915,6 +925,67 @@
 
         // Poll every 3 seconds
         setInterval(fetchUnreadMessages, 3000);
+    </script>
+    <script>
+        $(document).ready(function() {
+            let currentSortColumn = 'id';
+            let currentSortOrder = 'ASC';
+
+            function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
+                $.ajax({
+                    url: 'search/search_papers.php',
+                    type: 'POST',
+                    data: { 
+                        page: page, 
+                        query: query, 
+                        sort_column: sortColumn, 
+                        sort_order: sortOrder 
+                    },
+                    success: function(response) {
+                        $('tbody#papertable').html(response); // Update table body with data
+                    }
+                });
+            }
+
+            // Initial fetch on page load
+            fetchUsers();
+
+            // Search bar event
+            $('#searchBar').on('input', function() {
+                var searchQuery = $(this).val();
+                fetchUsers(1, searchQuery);
+            });
+
+            // Pagination button event
+            $(document).on('click', '.pagination-btn', function() {
+                var page = $(this).data('page');
+                var searchQuery = $('#searchBar').val();
+                fetchUsers(page, searchQuery);
+            });
+
+            // Column header sorting event
+            $('.sortable-column').on('click', function() {
+                let column = $(this).data('column');
+                currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                currentSortColumn = column;
+
+                // Toggle the arrow indicator directly in the column header
+                $('.sortable-column').each(function() {
+                    // Check if the column header contains an arrow (↑ or ↓) and remove it
+                    let text = $(this).text().trim();
+                    if (text.endsWith('↑') || text.endsWith('↓')) {
+                        $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                    }
+                });
+
+                // Add the appropriate arrow to the clicked column header
+                let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                $(this).append(arrow);  // Append the arrow directly to the text
+
+                let searchQuery = $('#searchBar').val();
+                fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
+            });
+        });
     </script>
     <script>
         // Function to create and set the favicon

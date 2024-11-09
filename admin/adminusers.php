@@ -423,16 +423,16 @@
 
                             // Toggle the arrow indicator directly in the column header
                             $('.sortable-column').each(function() {
-                                // Reset all arrows to empty
-                                $(this).text($(this).data('column'));
+                                // Check if the column header contains an arrow (↑ or ↓) and remove it
+                                let text = $(this).text().trim();
+                                if (text.endsWith('↑') || text.endsWith('↓')) {
+                                    $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                                }
                             });
 
                             // Add the appropriate arrow to the clicked column header
-                            if (currentSortOrder === 'ASC') {
-                                $(this).text($(this).data('column') + ' ↑');  // Add ascending arrow
-                            } else {
-                                $(this).text($(this).data('column') + ' ↓');  // Add descending arrow
-                            }
+                            let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                            $(this).append(arrow);  // Append the arrow directly to the text
 
                             let searchQuery = $('#searchBar').val();
                             fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);

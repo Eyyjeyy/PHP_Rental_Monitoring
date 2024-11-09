@@ -758,40 +758,40 @@
                     let sortDirection = true; // True means ascending, false means descending
 
                     function sortTable(column) {
-                        const table = document.querySelector('table#secondTable');
-                        const tbody = table.querySelector('tbody');
-                        const rows = Array.from(tbody.querySelectorAll('tr'));
-                        const columnIndex = Array.from(document.querySelectorAll('table#secondTable thead th')).findIndex(th => th.getAttribute('data-column') === column);
+                        // const table = document.querySelector('table#secondTable');
+                        // const tbody = table.querySelector('tbody');
+                        // const rows = Array.from(tbody.querySelectorAll('tr'));
+                        // const columnIndex = Array.from(document.querySelectorAll('table#secondTable thead th')).findIndex(th => th.getAttribute('data-column') === column);
 
-                        if (columnIndex === -1) {
-                            console.error("Column not found");
-                            return;
-                        }
+                        // if (columnIndex === -1) {
+                        //     console.error("Column not found");
+                        //     return;
+                        // }
 
-                        // Sort rows based on the clicked column's cell value
-                        rows.sort((rowA, rowB) => {
-                            const cellA = rowA.children[columnIndex] ? rowA.children[columnIndex].innerText.trim() : '';
-                            const cellB = rowB.children[columnIndex] ? rowB.children[columnIndex].innerText.trim() : '';
+                        // // Sort rows based on the clicked column's cell value
+                        // rows.sort((rowA, rowB) => {
+                        //     const cellA = rowA.children[columnIndex] ? rowA.children[columnIndex].innerText.trim() : '';
+                        //     const cellB = rowB.children[columnIndex] ? rowB.children[columnIndex].innerText.trim() : '';
                             
-                            const isNumeric = !isNaN(cellA) && !isNaN(cellB);
-                            if (isNumeric) {
-                                return sortDirection ? cellA - cellB : cellB - cellA;
-                            } else {
-                                return sortDirection ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-                            }
-                        });
+                        //     const isNumeric = !isNaN(cellA) && !isNaN(cellB);
+                        //     if (isNumeric) {
+                        //         return sortDirection ? cellA - cellB : cellB - cellA;
+                        //     } else {
+                        //         return sortDirection ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+                        //     }
+                        // });
 
-                        // Append the sorted rows back into the table body
-                        rows.forEach(row => tbody.appendChild(row));
+                        // // Append the sorted rows back into the table body
+                        // rows.forEach(row => tbody.appendChild(row));
 
-                        // Update the sort arrow
-                        document.querySelectorAll('.sort-arrow').forEach(arrow => arrow.innerHTML = ''); // Clear previous arrows
-                        const arrow = document.querySelector(`.sort-arrow[data-column="${column}"]`);
-                        arrow.innerHTML = sortDirection ? '↑' : '↓'; // Set arrow based on sort direction
+                        // // Update the sort arrow
+                        // document.querySelectorAll('.sort-arrow').forEach(arrow => arrow.innerHTML = ''); // Clear previous arrows
+                        // const arrow = document.querySelector(`.sort-arrow[data-column="${column}"]`);
+                        // arrow.innerHTML = sortDirection ? '↑' : '↓'; // Set arrow based on sort direction
 
-                        // Toggle the sort direction for next time
-                        sortDirection = currentSortColumn === column ? !sortDirection : true; // Reset to ascending on new column
-                        currentSortColumn = column;
+                        // // Toggle the sort direction for next time
+                        // sortDirection = currentSortColumn === column ? !sortDirection : true; // Reset to ascending on new column
+                        // currentSortColumn = column;
                     }
 
                 </script>
@@ -881,16 +881,16 @@
 
                             // Toggle the arrow indicator directly in the column header
                             $('.sortable-column').each(function() {
-                                // Reset all arrows to empty
-                                $(this).text($(this).data('column'));
+                                // Check if the column header contains an arrow (↑ or ↓) and remove it
+                                let text = $(this).text().trim();
+                                if (text.endsWith('↑') || text.endsWith('↓')) {
+                                    $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                                }
                             });
 
                             // Add the appropriate arrow to the clicked column header
-                            if (currentSortOrder === 'ASC') {
-                                $(this).text($(this).data('column') + ' ↑');  // Add ascending arrow
-                            } else {
-                                $(this).text($(this).data('column') + ' ↓');  // Add descending arrow
-                            }
+                            let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                            $(this).append(arrow);  // Append the arrow directly to the text
 
                             let searchQuery = $('#searchBar').val();
                             fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
