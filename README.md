@@ -143,3 +143,8 @@ The project is built using PHP, MySQL for database management, and incorporates 
 11/8/2024
 - Added pagination for users, apartments, tenants, payments (pages) <br>
 - Revised search_page files to integrate pagination in order for pagination, search, and sorting to be able to work together <br>
+
+11/10/2024 - 11/12/2024
+- Added admin_contract_template.php <br>
+- Installed phpword and signaturepad libraries/api for the purpose of making admin-tenatn contracts(word file) for digital signatures and user input for admin <br>
+- base template of word file located at asset/contract.docx <br>

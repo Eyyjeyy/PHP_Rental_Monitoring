@@ -1,5 +1,6 @@
 <?php
 
+require __DIR__ . '/vendor/autoload.php';
 require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
@@ -1963,6 +1964,70 @@ $sql = "SELECT
     $stmt->close();
 
     return $result;
+  }
+
+  public function addContract($username, $signatureData) {
+    // Sanitize and validate input
+    $username = trim(htmlspecialchars($username));
+        
+    if (empty($username)) {
+      return false; // Invalid username, abort operation
+    }
+
+    // Path to the contract template file
+    $templatePath = __DIR__ . '/asset/contract.docx';
+    $savePath = __DIR__ . "/asset/user_contracts/{$username}_contract.docx"; // Save path for the new document
+    $signatureImagePath = __DIR__ . "/asset/user_contracts/{$username}_signature.png"; // Path to save signature image
+
+    // Check if template exists
+    if (!file_exists($templatePath)) {
+      return false; // Template not found, abort operation
+    }
+
+    // Convert the Base64 signature data to an image file
+    $signatureData = str_replace('data:image/png;base64,', '', $signatureData);
+    $signatureData = str_replace(' ', '+', $signatureData);
+    $signatureData = base64_decode($signatureData);
+
+    if (file_put_contents($signatureImagePath, $signatureData) === false) {
+      return false; // Failed to save the signature image
+    }
+
+
+    try {
+      // Initialize PHPWord and load the template
+      $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
+
+      // Replace placeholder in the template with the username (example)
+      $phpWord->setValue('username', $username);
+
+      // Insert the signature image at a placeholder location in the document
+      $phpWord->setImageValue('signature', 
+        [
+          'path' => $signatureImagePath,
+          'width' => 150, // Set appropriate width for the signature image
+          'height' => 75, // Set appropriate height for the signature image
+          'ratio' => true, // Maintain aspect ratio
+        ]
+      );
+
+      // Save the updated document
+      $phpWord->saveAs($savePath);
+
+      // if(true) {
+      //   $logMessage = 
+      //   'Admin, ID: ' . $expensesid . '<br>' .
+      //   'User : ' . $deleted_expenses . '<br>' .
+      //   'Document filename : ' . $deleted_expensesinfo . '<br>';
+
+      //   $this->History($this->session_id, 'Delete', $logMessage);
+      // }
+
+      return true; // Document created successfully
+    } catch (Exception $e) {
+      error_log("Error creating contract document: " . $e->getMessage());
+      return false; // Error handling
+    }
   }
 
 
