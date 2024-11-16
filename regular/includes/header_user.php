@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <?php if ($pageTitle == 'Home Page' || $pageTitle == 'Chat Page' || $pageTitle == 'Info Page' || $pageTitle == 'Profile Page'): ?>
+    <?php if ($pageTitle == 'Home Page' || $pageTitle == 'Chat Page' || $pageTitle == 'Info Page' || $pageTitle == 'Profile Page' || $pageTitle == 'Contract Page'): ?>
         <link rel="stylesheet" href="asset/user.css">
         <link rel="icon" type="image/x-icon" href="asset/Renttrack pro no word.png">
     <?php else: ?>
@@ -91,6 +91,13 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" id="iconlink">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link h-100 d-flex align-items-center" id="icontext" href="contract_user.php">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-suitcase-lg-fill" viewBox="0 0 16 16">
+                                <path d="M7 0a2 2 0 0 0-2 2H1.5A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14H2a.5.5 0 0 0 1 0h10a.5.5 0 0 0 1 0h.5a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2H11a2 2 0 0 0-2-2zM6 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1zM3 13V3h1v10zm9 0V3h1v10z"/>
                             </svg>
                         </a>
                     </li>

@@ -148,3 +148,16 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Added admin_contract_template.php <br>
 - Installed phpword and signaturepad libraries/api for the purpose of making admin-tenatn contracts(word file) for digital signatures and user input for admin <br>
 - base template of word file located at asset/contract.docx <br>
+
+11/12/2024
+- Added contracts table for mysql/phpmyadmin database <br>
+
+11/14/2024
+- Added contract_user.php page for user side <br>
+
+11/15/2024
+- Added Delete button with functionality for admin_contract_template.php table <br>
+- Added Download button for ms word contract for admin_contract_template.php table <br>
+
+11/16/2924
+- Added completeContract function in admin.php for tenant in user side to send lessee signature and witness signature of contract <br>

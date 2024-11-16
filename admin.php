@@ -1966,18 +1966,51 @@ $sql = "SELECT
     return $result;
   }
 
-  public function addContract($username, $signatureData) {
+  public function addContract($username, $lessorwitness, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId, $apartmentaddressinput, $rentprice) {
     // Sanitize and validate input
     $username = trim(htmlspecialchars($username));
+    $lessorwitness = trim(htmlspecialchars($lessorwitness));
+    $tenantusername = trim(htmlspecialchars($tenantusername));
+    // $tenantaddressinput = trim(htmlspecialchars($tenantaddressinput));
+    $apartmentaddressinput = trim(htmlspecialchars($apartmentaddressinput));
+    $datestart = trim(htmlspecialchars($datestart));
+    $deposit = trim(htmlspecialchars($deposit));
         
-    if (empty($username)) {
+    if (empty($username) || empty($lessorwitness) || empty($tenantusername) || empty($datestart) || empty($expirationdate) || empty($deposit)) {
       return false; // Invalid username, abort operation
     }
 
+    // Check if the tenantId already exists in the contracts table
+    $query = "SELECT COUNT(*) FROM contracts WHERE tenants_id = ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $tenantId); // Assuming tenantId is an integer
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    // If tenantId already exists in the contracts table, return false immediately
+    if ($count > 0) {
+      $_SESSION['error_message'] = "Only one contract per tenant is allowed";
+      return false; // Tenant already has a contract, abort operation
+    }
+
+    // Save the server's default timezone
+    $default_timezone = date_default_timezone_get();
+
+    // Set timezone to Philippines
+    date_default_timezone_set('Asia/Manila');
+    $current_time_philippines = date('Y-m-d');
+
+    // Revert to the original timezone
+    date_default_timezone_set($default_timezone);
+
     // Path to the contract template file
     $templatePath = __DIR__ . '/asset/contract.docx';
-    $savePath = __DIR__ . "/asset/user_contracts/{$username}_contract.docx"; // Save path for the new document
-    $signatureImagePath = __DIR__ . "/asset/user_contracts/{$username}_signature.png"; // Path to save signature image
+    $savePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.docx"; // Save path for the new document
+    $signatureImagePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature.png"; // Path to save signature image
+    $signatureImagePath2 = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature2.png";
+    $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
 
     // Check if template exists
     if (!file_exists($templatePath)) {
@@ -1993,13 +2026,31 @@ $sql = "SELECT
       return false; // Failed to save the signature image
     }
 
+    // Decode and save the second signature image
+    $signatureData2 = str_replace('data:image/png;base64,', '', $signatureData2);
+    $signatureData2 = str_replace(' ', '+', $signatureData2);
+    $signatureData2 = base64_decode($signatureData2);
+
+    if (file_put_contents($signatureImagePath2, $signatureData2) === false) {
+      return false;
+    }
 
     try {
       // Initialize PHPWord and load the template
       $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
 
-      // Replace placeholder in the template with the username (example)
+      // Replace placeholder in the template with the variables
       $phpWord->setValue('username', $username);
+      $phpWord->setValue('tenant', $tenantusername);
+      $phpWord->setValue('datestart', $datestart);
+      $phpWord->setValue('formattedDay', $formattedDay);
+      $phpWord->setValue('deposit', $deposit);
+      $phpWord->setValue('date', $current_time_philippines);
+      // $phpWord->setValue('tenantaddress', $tenantaddressinput);
+      $phpWord->setValue('apartmentaddress', $apartmentaddressinput);
+      $phpWord->setValue('rentprice', $rentprice);
+      $phpWord->setValue('dateexpiry', $expirationdate);
+      $phpWord->setValue('lessorwitness', $lessorwitness);
 
       // Insert the signature image at a placeholder location in the document
       $phpWord->setImageValue('signature', 
@@ -2010,9 +2061,27 @@ $sql = "SELECT
           'ratio' => true, // Maintain aspect ratio
         ]
       );
+      $phpWord->setImageValue('signature2', [
+        'path' => $signatureImagePath2,
+        'width' => 150,
+        'height' => 75,
+        'ratio' => true,
+      ]);
 
       // Save the updated document
       $phpWord->saveAs($savePath);
+
+      // Insert contract details into the contracts table
+      $query = "INSERT INTO contracts (adminname, tenantname, tenants_id, filename, fileurl, datestart, expirationdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $this->conn->prepare($query);
+      $filename = "{$tenantusername}_contract.docx"; // File name for database insertion
+      $stmt->bind_param("sssssss", $username, $tenantusername, $tenantId, $filename, $fileUrl, $datestart, $expirationdate);
+
+      if ($stmt->execute()) {
+        return true; // Document created and record inserted successfully
+      } else {
+        return false; // Failed to insert record into contracts table
+      }
 
       // if(true) {
       //   $logMessage = 
@@ -2023,12 +2092,186 @@ $sql = "SELECT
       //   $this->History($this->session_id, 'Delete', $logMessage);
       // }
 
-      return true; // Document created successfully
     } catch (Exception $e) {
       error_log("Error creating contract document: " . $e->getMessage());
       return false; // Error handling
     }
   }
+
+  public function updateContract($username, $tenantusername, $signatureData, $witnessData, $previousAddress) {
+    // Path to the existing contract file
+    $filePath = __DIR__ . "/asset/user_contracts/{$username}_contract.docx";
+    $signatureImagePath = __DIR__ . "/asset/user_contracts/{$username}_signature.png"; // Path to save tenant's signature image
+    $witnessImagePath = __DIR__ . "/asset/user_contracts/{$username}_witness_signature.png"; // Path to save lessee's witness signature image
+
+    // Check if the contract file exists
+    if (!file_exists($filePath)) {
+      $_SESSION['error_message'] = "Contract file does not exist for {$username}.";
+      return false; // File not found, abort operation
+    }
+
+    // Convert the tenant's Base64 signature data to an image file
+    $signatureData = str_replace('data:image/png;base64,', '', $signatureData);
+    $signatureData = str_replace(' ', '+', $signatureData);
+    $signatureData = base64_decode($signatureData);
+
+    if (file_put_contents($signatureImagePath, $signatureData) === false) {
+      return false; // Failed to save tenant's signature image
+    }
+
+    // Convert the lessee witness's Base64 signature data to an image file
+    $witnessData = str_replace('data:image/png;base64,', '', $witnessData);
+    $witnessData = str_replace(' ', '+', $witnessData);
+    $witnessData = base64_decode($witnessData);
+
+    if (file_put_contents($witnessImagePath, $witnessData) === false) {
+      return false; // Failed to save lessee witness's signature image
+    }
+
+    try {
+      // Initialize PHPWord and load the existing document
+      $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($filePath);
+
+      // Update the tenant's signature image
+      $phpWord->setImageValue('tenantsignature', 
+        [
+          'path' => $signatureImagePath,
+          'width' => 150, // Set appropriate width for the signature image
+          'height' => 75, // Set appropriate height for the signature image
+          'ratio' => true, // Maintain aspect ratio
+        ]
+      );
+
+      // Update the lessee's witness signature image
+      $phpWord->setImageValue('lesseewitness', 
+        [
+          'path' => $witnessImagePath,
+          'width' => 150, // Set appropriate width for the witness signature image
+          'height' => 75, // Set appropriate height for the witness signature image
+          'ratio' => true, // Maintain aspect ratio
+        ]
+      );
+
+      // Update the previous address text field
+      $phpWord->setValue('previousaddress', htmlspecialchars($previousAddress));
+
+      // Save changes to the same file
+      $phpWord->saveAs($filePath);
+
+      return true; // Successfully updated the document
+
+    } catch (Exception $e) {
+      error_log("Error updating contract document: " . $e->getMessage());
+      return false; // Error handling
+    }
+  }
+
+  public function deleteContract($deletecontractid) {
+    $retrievesql = "SELECT * FROM contracts WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $deletecontractid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    if ($retrieveResult === false || $retrieveResult->num_rows === 0) {
+      // If the SELECT query fails or returns no results, return false
+      return false;
+    }
+
+    // Fetch the expenses record as an associative array
+    $contractRecord = $retrieveResult->fetch_assoc();
+    $deleted_contracts = $contractRecord['tenantname'];
+    $fileurl = $contractRecord['fileurl'];
+
+    // First, delete the actual file from the directory
+    if (!empty($fileurl) && file_exists(__DIR__ . $fileurl)) {
+      $filePath = __DIR__ . $fileurl;
+      if (!unlink($filePath)) {
+        // File deletion failed, return false and exit
+        return false; 
+      }
+    } else {
+      // If the file doesn't exist, fail
+      return false; 
+    }
+
+    $sql = "DELETE FROM contracts WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $deletecontractid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      
+      $logMessage = 'Deleted Contract, ID: ' . $deletecontractid . '<br>';
+      $logMessage .= 'Contract Tenant Name: ' . $deleted_contracts . '<br>';
+
+      $this->History($this->session_id, 'Delete', $logMessage);
+
+      return true; // Deletion successful
+    } else {
+      return false; // Deletion failed
+    }
+  }
+  
+  public function completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2) {
+    // Database query to retrieve the contract
+    $loadsql = "SELECT contracts.* FROM contracts 
+                INNER JOIN tenants ON contracts.tenants_id = tenants.id
+                INNER JOIN users ON tenants.users_id = users.id
+                WHERE users.id = ?";
+    $loadstmt = $this->conn->prepare($loadsql);
+    $loadstmt->bind_param("i", $this->session_id);
+    $loadstmt->execute();
+    $result = $loadstmt->get_result();
+
+    if ($result->num_rows > 0) {
+      $contract = $result->fetch_assoc();
+
+      // Load the Word file using PHPWord
+      $fileUrl = $contract['fileurl'];
+      $lessee = $contract['tenantname'];
+      if (file_exists(__DIR__ . $fileUrl)) {
+        $templateProcessor = new PhpOffice\PhpWord\TemplateProcessor(__DIR__ . $fileUrl);
+
+        // Set placeholders with form data
+        $templateProcessor->setValue('lesseewitness', $lesseewitness);
+        $templateProcessor->setValue('tenantaddress', $previousaddressinput);
+
+        // Handle signatures (decode base64 data and save as images)
+        $signaturePath = __DIR__ . "/asset/user_contracts/{$lessee}_signature.png";
+        $signaturePath2 = __DIR__ . "/asset/user_contracts/{$lesseewitness}_witness_signature.png";
+        file_put_contents($signaturePath, base64_decode(explode(',', $signatureData)[1]));
+        file_put_contents($signaturePath2, base64_decode(explode(',', $signatureData2)[1]));
+
+        // Replace placeholders with signature images
+        $templateProcessor->setImageValue('tenantsignature', ['path' => $signaturePath, 'width' => 100, 'height' => 50]);
+        $templateProcessor->setImageValue('lesseewitness_signature', ['path' => $signaturePath2, 'width' => 100, 'height' => 50]);
+
+        // Save the updated Word document using the original file name
+        $originalFileName = basename($fileUrl); // Extract the file name from the original URL
+        $updatedFileUrl = __DIR__ . "/asset/user_contracts/" . $originalFileName;
+        $templateProcessor->saveAs($updatedFileUrl);
+
+        // Optional: Update the database with the completed contract URL
+        $updatesql = "UPDATE contracts SET fileurl = ?, tenantapproval = 'true' WHERE id = ?";
+        $updatestmt = $this->conn->prepare($updatesql);
+        $updatestmt->bind_param("si", $fileUrl, $contract['id']);
+        $updatestmt->execute();
+
+        // Return success
+        return true;
+      } else {
+        // File not found
+        $_SESSION['error_message'] = "Contract file not found.";
+        return false;
+      }
+    } else {
+      // No contract found
+      $_SESSION['error_message'] = "No contract found for the user.";
+      return false;
+    }
+  }
+
+
 
 
 

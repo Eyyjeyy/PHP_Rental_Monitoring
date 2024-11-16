@@ -323,7 +323,7 @@
                                     <th scope="col">Actions</th> -->
                                     <th scope="col" class="sortable-column" data-column="id" onclick="sortTable('id')"># <span class="sort-arrow" data-column="id"></span></th>
                                     <th scope="col" class="sortable-column" data-column="house_name" onclick="sortTable('house_name')" style="cursor: pointer;">Apartment Name <span class="sort-arrow" data-column="house_name"></span></th>
-                                    <th scope="col" class="sortable-column" data-column="price" onclick="sortTable('price')" style="cursor: pointer;">Rent <span class="sort-arrow" data-column="price"></span></th>
+                                    <th scope="col" class="sortable-column" data-column="price" onclick="sortTable('price')" style="cursor: pointer;">Rent Amount <span class="sort-arrow" data-column="price"></span></th>
                                     <th scope="col" class="sortable-column" data-column="category_name" onclick="sortTable('category_name')" style="cursor: pointer;">Apartment Type <span class="sort-arrow" data-column="category_name"></span></th>
                                     <th scope="col" class="sortable-column" data-column="elec_accnum" style="max-width: 80px; cursor: pointer;" onclick="sortTable('elec_accnum')">Meralco # <span class="sort-arrow" data-column="elec_accnum"></span></th>
                                     <th scope="col" class="sortable-column" data-column="elec_accname" onclick="sortTable('elec_accname')" style="cursor: pointer;">Meralco Account Name <span class="sort-arrow" data-column="elec_accname"></span></th>

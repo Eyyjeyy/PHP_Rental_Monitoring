@@ -267,6 +267,14 @@
                         </a>
                     </div>
                     <div class="hover-container">
+                        <a class="nav-link <?= $page == 'admincontracts' ? 'active' : '' ?>" href="admin_contract_template.php">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-suitcase-lg-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M7 0a2 2 0 0 0-2 2H1.5A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14H2a.5.5 0 0 0 1 0h10a.5.5 0 0 0 1 0h.5a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2H11a2 2 0 0 0-2-2zM6 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1zM3 13V3h1v10zm9 0V3h1v10z"/>
+                            </svg>
+                            <p>Contracts</p>
+                        </a>
+                    </div>
+                    <div class="hover-container">
                         <a class="nav-link <?= $page == 'adminexpenses' ? 'active' : '' ?>" href="adminexpenses.php">
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chat-left-text-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
                                 <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2h6a.5.5 0 0 1 .5.5c0 .253.08.644.306.958.207.288.557.542 1.194.542s.987-.254 1.194-.542C9.42 6.644 9.5 6.253 9.5 6a.5.5 0 0 1 .5-.5h6v-2A1.5 1.5 0 0 0 14.5 2z"></path>
