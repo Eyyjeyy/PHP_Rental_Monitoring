@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2024 at 10:21 AM
+-- Generation Time: Nov 16, 2024 at 01:47 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -42,6 +42,32 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 (75, 'Micro Studio'),
 (76, 'Loft'),
 (77, 'Land');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contracts`
+--
+
+CREATE TABLE `contracts` (
+  `id` int(50) NOT NULL,
+  `tenants_id` int(50) NOT NULL,
+  `adminname` varchar(500) NOT NULL,
+  `tenantname` varchar(500) NOT NULL,
+  `filename` varchar(500) NOT NULL,
+  `fileurl` varchar(500) NOT NULL,
+  `tenantapproval` varchar(50) NOT NULL,
+  `datestart` date DEFAULT current_timestamp(),
+  `expirationdate` date NOT NULL DEFAULT current_timestamp(),
+  `upload_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contracts`
+--
+
+INSERT INTO `contracts` (`id`, `tenants_id`, `adminname`, `tenantname`, `filename`, `fileurl`, `tenantapproval`, `datestart`, `expirationdate`, `upload_date`) VALUES
+(38, 75, 'Jerson Wayas Lippad', 'Jan West Nuevo', 'Jan West Nuevo_contract.docx', '/asset/user_contracts/Jan West Nuevo_contract.docx', 'true', '2024-11-16', '2024-11-23', '2024-11-16 10:03:17');
 
 -- --------------------------------------------------------
 
@@ -347,7 +373,19 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (258, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-02 06:33:54'),
 (259, 84, 'Declined', 'Payment Declined, ID: 22<br>Approval: Accepted -> Declined', '2024-11-02 06:33:57'),
 (260, 84, 'Add', 'Added User, ID: 88<br> Username: ella', '2024-11-07 01:46:08'),
-(261, 84, 'Add', 'Added Tenant, ID: 77<br>First Name: mae<br>Middle Name: deves<br>Last Name: cruz<br>Contact: <br>User ID: 88<br>Username: ella<br>House ID: 862<br>House Category: Studio', '2024-11-07 01:51:00');
+(261, 84, 'Add', 'Added Tenant, ID: 77<br>First Name: mae<br>Middle Name: deves<br>Last Name: cruz<br>Contact: <br>User ID: 88<br>Username: ella<br>House ID: 862<br>House Category: Studio', '2024-11-07 01:51:00'),
+(262, 84, 'Add', 'Added User, ID: 89<br> Username: lupercal', '2024-11-08 10:31:56'),
+(263, 84, 'Add', 'Added Paper, ID: 43<br>Category Name : Lagro Paper<br>File Name : GAMEPOSTER_672f05ed6d1b5.jpg<br>', '2024-11-09 06:49:17'),
+(264, 84, 'Add', 'Added Paper, ID: 44<br>Category Name : Roxasville Paper<br>File Name : Untitled_672f09f9630fb.png<br>', '2024-11-09 07:06:33'),
+(265, 84, 'Add', 'Added Paper Category, ID: 93<br>Category Name, : <br>', '2024-11-09 07:08:08'),
+(266, 84, 'Add', 'Added Paper, ID: 45<br>Category Name : Roxasville Paper<br>File Name : received_993104588452786_672f0a585df10.jpeg<br>', '2024-11-09 07:08:08'),
+(267, 84, 'Add', 'Added Paper Category, ID: 94<br>Category Name, : <br>', '2024-11-09 07:09:01'),
+(268, 84, 'Add', 'Added Paper Category, ID: 95<br>Category Name, : <br>', '2024-11-09 07:09:02'),
+(269, 84, 'Add', 'Added Paper, ID: 46<br>Category Name : Roxasville Paper<br>File Name : Untitled_672f0b419e774.png<br>', '2024-11-09 07:12:01'),
+(270, 84, 'Add', 'Added Paper, ID: 47<br>Category Name : Roxasville Paper<br>File Name : Untitled_672f0bdc64a6f.png<br>', '2024-11-09 07:14:36'),
+(271, 84, 'Delete', 'Deleted Expense, ID: 33<br>Contract Tenant Name : Jerson Wayas Lippad<br>', '2024-11-15 13:53:18'),
+(272, 84, 'Delete', 'Deleted Contract, ID: 34<br>Contract Tenant Name: Jan West Nuevo<br>', '2024-11-15 14:36:59'),
+(273, 84, 'Delete', 'Deleted Contract, ID: 37<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 10:02:56');
 
 -- --------------------------------------------------------
 
@@ -453,7 +491,10 @@ INSERT INTO `paper_categories` (`id`, `name`, `created_at`) VALUES
 (89, 'Roxasville Paper', '2024-11-02 06:02:47'),
 (90, 'Bagatua Paper', '2024-11-02 06:02:51'),
 (91, 'Regalado Paper', '2024-11-02 06:02:55'),
-(92, 'Lagro Paper', '2024-11-02 06:03:09');
+(92, 'Lagro Paper', '2024-11-02 06:03:09'),
+(93, '', '2024-11-09 07:08:08'),
+(94, '', '2024-11-09 07:09:01'),
+(95, '', '2024-11-09 07:09:02');
 
 -- --------------------------------------------------------
 
@@ -475,7 +516,12 @@ CREATE TABLE `paper_files` (
 --
 
 INSERT INTO `paper_files` (`id`, `category_id`, `category_name`, `file_name`, `file_url`, `uploaded_at`) VALUES
-(42, 89, 'Roxasville Paper', 'paper_6725c125f2292.jpeg', '../uploads/paper_6725c125f2292.jpeg', '2024-11-02 06:05:25');
+(42, 89, 'Roxasville Paper', 'paper_6725c125f2292.jpeg', '../uploads/paper_6725c125f2292.jpeg', '2024-11-02 06:05:25'),
+(43, 92, 'Lagro Paper', 'GAMEPOSTER_672f05ed6d1b5.jpg', '../uploads/GAMEPOSTER_672f05ed6d1b5.jpg', '2024-11-09 06:49:17'),
+(44, 89, 'Roxasville Paper', 'Untitled_672f09f9630fb.png', '../uploads/Untitled_672f09f9630fb.png', '2024-11-09 07:06:33'),
+(45, 89, 'Roxasville Paper', 'received_993104588452786_672f0a585df10.jpeg', '../uploads/received_993104588452786_672f0a585df10.jpeg', '2024-11-09 07:08:08'),
+(46, 89, 'Roxasville Paper', 'Untitled_672f0b419e774.png', '../uploads/Untitled_672f0b419e774.png', '2024-11-09 07:12:01'),
+(47, 89, 'Roxasville Paper', 'Untitled_672f0bdc64a6f.png', '../uploads/Untitled_672f0bdc64a6f.png', '2024-11-09 07:14:36');
 
 -- --------------------------------------------------------
 
@@ -576,6 +622,12 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `contracts`
+--
+ALTER TABLE `contracts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -648,6 +700,12 @@ ALTER TABLE `categories`
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
+-- AUTO_INCREMENT for table `contracts`
+--
+ALTER TABLE `contracts`
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -657,7 +715,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=262;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -681,13 +739,13 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `paper_categories`
 --
 ALTER TABLE `paper_categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `paper_files`
 --
 ALTER TABLE `paper_files`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -705,7 +763,7 @@ ALTER TABLE `tenants`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- Constraints for dumped tables
