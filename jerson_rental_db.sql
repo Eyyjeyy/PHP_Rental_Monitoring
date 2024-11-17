@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2024 at 01:47 PM
+-- Generation Time: Nov 17, 2024 at 05:39 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -67,7 +67,8 @@ CREATE TABLE `contracts` (
 --
 
 INSERT INTO `contracts` (`id`, `tenants_id`, `adminname`, `tenantname`, `filename`, `fileurl`, `tenantapproval`, `datestart`, `expirationdate`, `upload_date`) VALUES
-(38, 75, 'Jerson Wayas Lippad', 'Jan West Nuevo', 'Jan West Nuevo_contract.docx', '/asset/user_contracts/Jan West Nuevo_contract.docx', 'true', '2024-11-16', '2024-11-23', '2024-11-16 10:03:17');
+(38, 75, 'Jerson Wayas Lippad', 'Jan West Nuevo', 'Jan West Nuevo_contract.docx', '/asset/user_contracts/Jan West Nuevo_contract.docx', 'true', '2024-11-16', '2024-11-23', '2024-11-16 10:03:17'),
+(43, 74, 'Jerson Wayas Lippad', 'Jerson Wayas Lippad', 'Jerson Wayas Lippad_contract.docx', '/asset/user_contracts/Jerson Wayas Lippad_contract.docx', '', '2024-11-16', '2024-11-21', '2024-11-16 15:44:06');
 
 -- --------------------------------------------------------
 
@@ -385,7 +386,12 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (270, 84, 'Add', 'Added Paper, ID: 47<br>Category Name : Roxasville Paper<br>File Name : Untitled_672f0bdc64a6f.png<br>', '2024-11-09 07:14:36'),
 (271, 84, 'Delete', 'Deleted Expense, ID: 33<br>Contract Tenant Name : Jerson Wayas Lippad<br>', '2024-11-15 13:53:18'),
 (272, 84, 'Delete', 'Deleted Contract, ID: 34<br>Contract Tenant Name: Jan West Nuevo<br>', '2024-11-15 14:36:59'),
-(273, 84, 'Delete', 'Deleted Contract, ID: 37<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 10:02:56');
+(273, 84, 'Delete', 'Deleted Contract, ID: 37<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 10:02:56'),
+(274, 85, 'Declined Contract', 'Contract Declined for Tenant: Jerson Wayas Lippad<br>Approval: Pending -> Declined', '2024-11-16 15:12:23'),
+(275, 84, 'Delete', 'Deleted Contract, ID: 39<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:17:45'),
+(276, 84, 'Delete', 'Deleted Contract, ID: 40<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:23:55'),
+(277, 84, 'Delete', 'Deleted Contract, ID: 41<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:32:47'),
+(278, 84, 'Delete', 'Deleted Contract, ID: 42<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:34:19');
 
 -- --------------------------------------------------------
 
@@ -552,6 +558,28 @@ INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `file
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `physical_contracts`
+--
+
+CREATE TABLE `physical_contracts` (
+  `id` int(150) NOT NULL,
+  `tenantid` int(150) NOT NULL,
+  `adminid` int(150) NOT NULL,
+  `fileurl` varchar(500) NOT NULL,
+  `datestart` date NOT NULL DEFAULT current_timestamp(),
+  `expirationdate` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `physical_contracts`
+--
+
+INSERT INTO `physical_contracts` (`id`, `tenantid`, `adminid`, `fileurl`, `datestart`, `expirationdate`) VALUES
+(1, 75, 84, '1731839245_57cb1ae4-7ed7-4662-9658-f0ba4fc6b6cd.jfif', '2024-11-18', '2024-11-23');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tenants`
 --
 
@@ -678,6 +706,12 @@ ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `physical_contracts`
+--
+ALTER TABLE `physical_contracts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tenants`
 --
 ALTER TABLE `tenants`
@@ -703,7 +737,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `contracts`
 --
 ALTER TABLE `contracts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -715,7 +749,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=279;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -752,6 +786,12 @@ ALTER TABLE `paper_files`
 --
 ALTER TABLE `payments`
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `physical_contracts`
+--
+ALTER TABLE `physical_contracts`
+  MODIFY `id` int(150) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tenants`
