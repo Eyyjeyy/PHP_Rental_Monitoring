@@ -127,6 +127,60 @@
         $deleted = $admin->deleteContract($contractid);
         if($deleted) {
             header("Location: admin_contract_template.php?contract_deleted=1");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Deletion Failed due to an error";
+            }
+            header("Location: admin_contract_template.php?error=delete");
+            exit();
+        }
+    }
+
+    if (isset($_POST['upload_contract_file'])) {
+        $uploadtenantid = $_POST['uploadtenantid'];
+        $uploaddatestart = $_POST['uploaddatestart'];
+        $uploadexpirationdate = $_POST['uploadexpirationdate'];
+        
+        // Check if a file was uploaded
+        if (isset($_FILES['contractFile']) && $_FILES['contractFile']['error'] == 0) {
+            $fileData = [
+                'tmp_name' => $_FILES['contractFile']['tmp_name'],
+                'name' => $_FILES['contractFile']['name'],
+                'size' => $_FILES['contractFile']['size'],
+                'type' => $_FILES['contractFile']['type'],
+                'error' => $_FILES['contractFile']['error']
+            ];
+
+            // Pass the file data and other parameters to the function
+            $uploaded = $admin->uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData);
+
+            if ($uploaded) {
+                header("Location: admin_contract_template.php?contract_upload=1");
+                exit();
+            } else {
+                if(empty($_SESSION['error_message'])) {
+                    $_SESSION['error_message'] = "Upload Failed due to an error.";
+                }
+            }
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "No file uploaded or file upload error.";
+            }
+        }
+        // header("Location: admin_contract_template.php?error=upload");
+        // exit();
+    }
+
+    // Physical Contracts
+    if (isset($_POST['delete_physicalcontract'])) {
+        // Get the contract ID owning the contract to be deleted
+        $physicalcontractid = $_POST['physicalcontractid'];
+        // Call the deleteContract method to delete the contract
+        // $deleted = $admin->deletePhysicalContract($physicalcontractid);
+        if($deleted) {
+            header("Location: admin_contract_template.php?physicalcontract_deleted=1");
+            exit();
         } else {
             if(empty($_SESSION['error_message'])) {
                 $_SESSION['error_message'] = "Deletion Failed due to an error";
@@ -147,8 +201,19 @@
     $sql = "SELECT * FROM users WHERE role = 'admin'";
     $result = $admin->conn->query($sql);
 
+    $sql_upload = "SELECT * FROM users WHERE role = 'admin'";
+    $result_upload = $admin->conn->query($sql_upload);
+
     $sql_tenant = "SELECT * FROM tenants";
     $result_tenant = $admin->conn->query($sql_tenant);
+
+    $sql_tenant_upload = "SELECT * FROM tenants";
+    $result_tenant_upload = $admin->conn->query($sql_tenant_upload);
+
+    $sql_physical = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS full_name
+    FROM physical_contracts
+    JOIN tenants ON physical_contracts.tenantid = tenants.id";
+    $result_physical = $admin->conn->query($sql_physical);
 
     $sql_tenant_table = "SELECT * FROM contracts";
     $result_tenant_table = $admin->conn->query($sql_tenant_table);
@@ -187,17 +252,26 @@
                 <div class="card-body" style="margin-top: 12px;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
-                            <button class="btn btn-primary float-end table-buttons-update" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update ms-2" id="upload_contract"><i class="fa fa-plus"></i> Upload Contract</button>
+                                    <button class="btn btn-primary float-end table-buttons-update" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
+                                </div>
+                            </div>                            
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered" id="contractTable">
                             <thead>
                                 <tr>
+                                    <!-- <th scope="col" class="sortable-column" data-column="house_name" onclick="sortTable('house_name')" style="cursor: pointer;">Apartment Name <span class="sort-arrow" data-column="house_name"></span></th> -->
                                     <th scope="col">#</th>
-                                    <th scope="col" data-column="tenantname" class="sortable-column">
+                                    <th scope="col" data-column="tenantname" class="sortable-column" data-column="tenantname" style="cursor: pointer;">
                                         Tenant
-                                        <span id="tenantnameSortArrow"></span>
+                                        <span class="sort-arrow" data-column="tenantname"></span>
                                     </th>
                                     <th scope="col" data-column="tenantapproval" class="sortable-column">
                                         Status
@@ -216,7 +290,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="contractTableBody">
                                 <?php
                                 if ($result_tenant_table->num_rows > 0) {
                                     // Output data of each row
@@ -251,6 +325,90 @@
                                     echo "<tr><td colspan='6' class='text-center'>No contracts found</td></tr>";
                                 }
                                 $admin->conn->close();
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12" id="tableheader">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" id="physical_contract_searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="table-responsive"  id="tablelimiter">
+                        <table class="table table-striped table-bordered" id="physicalcontractsTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" data-column="full_name" class="sortable-column" data-column="full_name" style="cursor: pointer;">
+                                        Tenant
+                                        <span class="sort-arrow" data-column="full_name"></span>
+                                    </th>
+                                    <th scope="col" data-column="datestart" class="sortable-column">
+                                        Contract Start
+                                        <span id="datestartSortArrow"></span>
+                                    </th>
+                                    <th scope="col" data-column="expirationdate" class="sortable-column">
+                                        Contract Expiry
+                                        <span id="expirationdateSortArrow"></span>
+                                    </th>
+                                    <th scope="col" data-column="fileurl" class="sortable-column">
+                                        Contract Picture
+                                        <!-- <span id="expirationdateSortArrow"></span> -->
+                                    </th>
+                                    <th scope="col">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="physicalcontractsTableBody">
+                                <?php
+                                if ($result_tenant_table->num_rows > 0) {
+                                    // Output data of each row
+                                    while($row_physical = $result_physical->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<th scope='row'>" . $row_physical['id'] . "</th>";
+                                        echo "<td>" . htmlspecialchars($row_physical['full_name']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row_physical['datestart']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row_physical['expirationdate']) . "</td>";
+                                        echo "<td>";
+                                            if (!empty($row_physical['fileurl'])) {
+                                                $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']);
+                                                echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showImageModal('$fileUrl')\">";
+                                                echo "<img src='$fileUrl' alt='Tenant Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
+                                                echo "</a>";
+                                            } else {
+                                                echo "<img src='../asset/physical_contracts/default.png' alt='Default Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
+                                            }
+                                        echo "</td>";
+                                        echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
+                                        echo "<div class='row justify-content-center m-0'>";
+                                            echo "<div class='col-xl-6 px-2'>";
+                                                // Add a form with a delete button for each record
+                                                echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
+                                                    echo "<input type='hidden' name='physicalcontractid' value='" . $row_physical['id'] . "'>";
+                                                    echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+                                                echo "</form>";
+                                            echo "</div>";
+                                            echo "<div class='col-xl-6 px-2'>";
+                                                if (!empty($row_physical['fileurl'])) { // Ensure fileurl is not empty
+                                                    echo "<a href='". '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+                                                } else {
+                                                    echo "<span>No file available</span>";
+                                                }
+                                            echo "</div>";
+                                        echo "</div>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6' class='text-center'>No contracts found</td></tr>";
+                                }
+                                // $admin->conn->close();
                                 ?>
                             </tbody>
                         </table>
@@ -292,10 +450,7 @@
                                             ?>
                                         </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="lessorwitness" class="form-label">Lessor Witness</label>
-                                        <input type="text" class="form-control" id="lessorwitness" name="lessorwitness" required>
-                                    </div>
+                                    
                                     <div class="mb-3">
                                         <label for="tenantid" class="form-label">Lessee</label>
                                         <select class="form-select" id="tenantid" name="tenantid" required>
@@ -343,6 +498,10 @@
                                             <canvas id="signature-pad" class="signature-pad"></canvas>
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="lessorwitness" class="form-label">Lessor Witness</label>
+                                        <input type="text" class="form-control" id="lessorwitness" name="lessorwitness" required>
+                                    </div>
                                     <div class="mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
                                         <label for="signature-pad-2" class="form-label">Lessor Witness's Signature</label>
                                         <div class="wrapper">
@@ -359,6 +518,88 @@
                         </div>
                     </div>
                 </div>
+                <!-- Upload Contract Modal -->
+                <div class="modal fade" id="uploadContractModal" tabindex="-1" aria-labelledby="uploadContractModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="uploadContractModalLabel">Upload Contract</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                        </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="uploadContractForm" method="POST" action="admin_contract_template.php" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <!-- <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" name="username" required> -->
+                                        <input type="hidden" id="signature" name="signature">
+                                        <input type="hidden" id="signature2" name="signature2">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="uploadadminuserid" class="form-label">Lessor</label>
+                                        <select class="form-select" id="uploadadminuserid" readonly>
+                                            <?php
+                                                if ($result_upload->num_rows > 0) {
+                                                    // Output options for each category
+                                                    while ($row_upload = $result_upload->fetch_assoc()) {
+                                                        echo "<option value='" . htmlspecialchars($row_upload['id']) . "'>" . htmlspecialchars($row_upload['firstname']) . " " . htmlspecialchars($row_upload['middlename']) . " " . htmlspecialchars($row_upload['lastname']) . "</option>";
+                                                    }
+                                                } else {
+                                                    echo "<option value=''>No admin found</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="uploadtenantid" class="form-label">Lessee</label>
+                                        <select class="form-select" id="uploadtenantid" name="uploadtenantid" required>
+                                            <?php
+                                                if ($result_tenant->num_rows > 0) {
+                                                    // Output options for each category
+                                                    while ($row_tenant_upload = $result_tenant_upload->fetch_assoc()) {
+                                                        echo "<option value='" . htmlspecialchars($row_tenant_upload['id']) . "'>" . htmlspecialchars($row_tenant_upload['fname']) . " " . htmlspecialchars($row_tenant_upload['mname']) . " " . htmlspecialchars($row_tenant_upload['lname']) . "</option>";
+                                                    }
+                                                } else {
+                                                    echo "<option value=''>No tenant found</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="uploaddatestart" class="form-label">Date Start</label>
+                                        <input type="date" class="form-control" id="uploaddatestart" name="uploaddatestart" value="<?php echo date('Y-m-d'); ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="uploadexpirationdate" class="form-label">Expiration Date</label>
+                                        <input type="date" class="form-control" id="uploadexpirationdate" name="uploadexpirationdate" value="" required>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="inputGroupFile04" name="contractFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                                    </div>
+                                    <button type="submit" name="upload_contract_file" class="btn btn-primary table-buttons-update">Upload Contract</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Image Preview Modal -->
+                <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imagePreviewLabel">Image Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <script>
                     document.getElementById('new_contract').addEventListener('click', function () {
@@ -366,6 +607,155 @@
                             keyboard: false
                         });
                         newContractModal.show();
+                    });
+                    document.getElementById('upload_contract').addEventListener('click', function () {
+                        var uploadContractModal = new bootstrap.Modal(document.getElementById('uploadContractModal'), {
+                            keyboard: false
+                        });
+                        uploadContractModal.show();
+                    });
+                </script>
+
+                <!-- Include jQuery library -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script>
+                    // $(document).ready(function() {
+                    //     $('#searchBar').on('input', function() {
+                    //         var searchQuery = $(this).val(); // Get the value of the search input
+
+                    //         $.ajax({
+                    //             url: 'search/search_contract.php', // Path to your search PHP script
+                    //             type: 'POST',
+                    //             data: { query: searchQuery }, // Send the search query via POST
+                    //             success: function(response) {
+                    //                 $('tbody#contractTableBody').html(response); // Replace the table body with the new data
+                    //             },
+                    //             error: function() {
+                    //                 alert("Error in search!"); // Show an error message in case of failure
+                    //             }
+                    //         });
+                    //     });
+                    // });
+
+                    // $(document).ready(function() {
+                    //     let currentSortColumn = 'id';
+                    //     let currentSortOrder = 'ASC';
+
+                    //     function fetchUsers(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
+                    //         $.ajax({
+                    //             url: 'search/search_contract.php',
+                    //             type: 'POST',
+                    //             data: { 
+                    //                 page: page, 
+                    //                 query: query, 
+                    //                 sort_column: sortColumn, 
+                    //                 sort_order: sortOrder 
+                    //             },
+                    //             success: function(response) {
+                    //                 $('tbody#contractTableBody').html(response); // Update table body with data
+                    //             }
+                    //         });
+                    //     }
+
+                    //     // Initial fetch on page load
+                    //     fetchUsers();
+
+                    //     // Search bar event
+                    //     $('#searchBar').on('input', function() {
+                    //         var searchQuery = $(this).val();
+                    //         fetchUsers(1, searchQuery);
+                    //     });
+
+                    //     // Pagination button event
+                    //     $(document).on('click', '.pagination-btn', function() {
+                    //         var page = $(this).data('page');
+                    //         var searchQuery = $('#searchBar').val();
+                    //         fetchUsers(page, searchQuery);
+                    //     });
+
+                    //     // Column header sorting event
+                    //     $('.sortable-column').on('click', function() {
+                    //         let column = $(this).data('column');
+                    //         currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                    //         currentSortColumn = column;
+
+                    //         // Toggle the arrow indicator directly in the column header
+                    //         $('.sortable-column').each(function() {
+                    //             // Check if the column header contains an arrow (↑ or ↓) and remove it
+                    //             let text = $(this).text().trim();
+                    //             if (text.endsWith('↑') || text.endsWith('↓')) {
+                    //                 $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                    //             }
+                    //         });
+
+                    //         // Add the appropriate arrow to the clicked column header
+                    //         let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                    //         $(this).append(arrow);  // Append the arrow directly to the text
+
+                    //         let searchQuery = $('#searchBar').val();
+                    //         fetchUsers(1, searchQuery, currentSortColumn, currentSortOrder);
+                    //     });
+                    // });
+
+
+
+                    $(document).ready(function () {
+                        // Common function to fetch data for any table
+                        function fetchTableData(tableId, url, page = 1, query = '', sortColumn = 'id', sortOrder = 'ASC') {
+                            $.ajax({
+                                url: url,
+                                type: 'POST',
+                                data: {
+                                    page: page,
+                                    query: query,
+                                    sort_column: sortColumn,
+                                    sort_order: sortOrder,
+                                },
+                                success: function (response) {
+                                    $(`#${tableId} tbody`).html(response); // Update the corresponding table body
+                                },
+                            });
+                        }
+
+                        // Table 1: Contracts Table
+                        let table1SortColumn = 'id';
+                        let table1SortOrder = 'ASC';
+                        $('#searchBar').on('input', function () {
+                            const query = $(this).val();
+                            fetchTableData('contractTable', 'search/search_contract.php', 1, query, table1SortColumn, table1SortOrder);
+                        });
+                        $(document).on('click', '#contractTable .pagination-btn', function () {
+                            const page = $(this).data('page');
+                            const query = $('#searchBar').val();
+                            fetchTableData('contractTable', 'search/search_contract.php', page, query, table1SortColumn, table1SortOrder);
+                        });
+                        $('#contractTable .sortable-column').on('click', function () {
+                            const column = $(this).data('column');
+                            table1SortOrder = (table1SortColumn === column && table1SortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            table1SortColumn = column;
+                            const query = $('#searchBar').val();
+                            fetchTableData('contractTable', 'search/search_contract.php', 1, query, table1SortColumn, table1SortOrder);
+                        });
+
+                        // Table 2: Physical Contracts Table
+                        let table2SortColumn = 'id';
+                        let table2SortOrder = 'ASC';
+                        $('#physical_contract_searchBar').on('input', function () {
+                            const query = $(this).val();
+                            fetchTableData('physicalcontractsTable', 'search/search_physical_contract.php', 1, query, table2SortColumn, table2SortOrder);
+                        });
+                        $(document).on('click', '#physicalcontractsTable .pagination-btn', function () {
+                            const page = $(this).data('page');
+                            const query = $('#physical_contract_searchBar').val();
+                            fetchTableData('physicalcontractsTable', 'search/search_physical_contract.php', page, query, table2SortColumn, table2SortOrder);
+                        });
+                        $('#physicalcontractsTable .sortable-column').on('click', function () {
+                            const column = $(this).data('column');
+                            table2SortOrder = (table2SortColumn === column && table2SortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            table2SortColumn = column;
+                            const query = $('#physical_contract_searchBar').val();
+                            fetchTableData('physicalcontractsTable', 'search/search_physical_contract.php', 1, query, table2SortColumn, table2SortOrder);
+                        });
                     });
                 </script>
 
@@ -499,6 +889,11 @@
                     document.addEventListener('DOMContentLoaded', () => {
                     setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
                     });
+                </script>
+                <script>
+                    function showImageModal(imageUrl) {
+                        document.getElementById('modalImage').src = imageUrl;
+                    }
                 </script>
             </div>
         </div>

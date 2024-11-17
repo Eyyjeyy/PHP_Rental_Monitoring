@@ -42,6 +42,23 @@
         }
     }
 
+    if(isset($_POST['decline_contract'])) {
+        // Get the contract ID to be approved
+        $contractsid = $_POST['contractsid'];
+
+        $declined = $admin->declineContract($contractsid);
+        if($declined) {
+            header("Location: contract_user.php?contract=declined");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Decline Failed due to an error";
+            }
+            header("Location: contract_user.php?error=declined");
+            exit();
+        }
+    }
+
     // Check if there's an error message stored in the session
     if (isset($_SESSION['error_message'])) {
         // Display the error message as an alert
@@ -109,16 +126,27 @@
                                                 echo "<td class='text-center'>" . htmlspecialchars($expirationdate) . "</td>";
                                                 echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                     echo "<div class='row justify-content-center m-0'>";
-                                                        echo "<div class='col-xxl-6 px-2'>";
-                                                            echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
+                                                        echo "<div class='col-xxl-4 px-2'>";
+                                                            // echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                             if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                                 echo "
                                                                 <button type='button' class='btn btn-primary float-end' id='complete_contract' style='background-color: #527853;border-color: #527853;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Complete</button>";
                                                             }
                                                         echo "</div>";
-                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-6 " : "") . "px-2'>";
+                                                        if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
+                                                            echo "<div class='col-xxl-4 px-2'>";
+                                                                echo "<form method='POST' action='contract_user.php' class='float-xxl-end align-items-center'>";
+                                                                    echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
+                                                                    if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
+                                                                        echo "
+                                                                        <button type='submit' class='btn btn-danger float-end' name='decline_contract' style='background-color: #EE7214;border-color: #EE7214;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Decline</button>";
+                                                                    }
+                                                                echo "</form>";
+                                                            echo "</div>";
+                                                        }
+                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 " : "") . "px-2'>";
                                                             if (!empty($row['fileurl'])) { // Ensure fileurl is not empty
-                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;height:41px;'>Download</a>";
                                                             } else {
                                                                 echo "<span>No file available</span>";
                                                             }
@@ -141,12 +169,12 @@
     </div>
 </div>
 
-<!-- New Contract Modal -->
+<!-- Complete Contract Modal -->
 <div class="modal fade" id="completeContractModal" tabindex="-1" aria-labelledby="newCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #527853;">
-                <h5 class="modal-title text-white" id="newcategoryModalLabel">New Contract</h5>
+                <h5 class="modal-title text-white" id="newcategoryModalLabel">Complete Contract</h5>
                 <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
                             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -166,12 +194,12 @@
                         <input type="text" class="form-control" id="lessee" value="<?php echo $tenantname ?>" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="lesseewitness" class="form-label">Lessee Witness</label>
-                        <input type="text" class="form-control" id="lesseewitness" name="lesseewitness" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="previousaddress-input" class="form-label">Previous Address</label>
                         <textarea name="previousaddress-input" id="previousaddress-input" class="d-block w-100" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lesseewitness" class="form-label">Lessee Witness</label>
+                        <input type="text" class="form-control" id="lesseewitness" name="lesseewitness" required>
                     </div>
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
                         <label for="signature-pad" class="form-label">Lessee Signature</label>
@@ -189,7 +217,7 @@
                         <button id="clear" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
                         <!-- <button id="save">Save Signature</button> -->
                     </div>
-                    <button type="submit" name="finish_contract" class="btn btn-primary table-buttons-update">Add Contract</button>
+                    <button type="submit" name="finish_contract" class="btn btn-primary table-buttons-update">Complete Contract</button>
                 </form>
             </div>
         </div>

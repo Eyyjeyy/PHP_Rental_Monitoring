@@ -2078,6 +2078,13 @@ $sql = "SELECT
       $stmt->bind_param("sssssss", $username, $tenantusername, $tenantId, $filename, $fileUrl, $datestart, $expirationdate);
 
       if ($stmt->execute()) {
+        // Delete the signature files
+        if (file_exists($signatureImagePath)) {
+          unlink($signatureImagePath);
+        }
+        if (file_exists($signatureImagePath2)) {
+          unlink($signatureImagePath2);
+        }
         return true; // Document created and record inserted successfully
       } else {
         return false; // Failed to insert record into contracts table
@@ -2211,6 +2218,69 @@ $sql = "SELECT
       return false; // Deletion failed
     }
   }
+
+  public function uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData) {
+    // Validate the input data
+    if (empty($uploadtenantid) || empty($uploaddatestart) || empty($uploadexpirationdate) || empty($fileData)) {
+      return false; // Invalid input
+    }
+
+    // Validate the file
+    if ($fileData['error'] !== 0) {
+      return false; // File upload error
+    }
+
+    // Optional: Validate file type and size (e.g., PDF, max 5MB)
+    $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+    $maxFileSize = 5 * 1024 * 1024; // 5MB
+
+    if (!in_array($fileData['type'], $allowedTypes) || $fileData['size'] > $maxFileSize) {
+      return false; // Invalid file type or size
+    }
+
+    $sessionId = $this->session_id; // Assuming this->session_id holds the current session ID
+    $query = "SELECT id FROM users WHERE id = ? LIMIT 1"; // Query to find the user by session_id
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $sessionId);
+    $stmt->execute();
+    $stmt->bind_result($adminId);
+    $stmt->fetch();
+    $stmt->close();
+
+    if (empty($adminId)) {
+      return false; // Admin not found for the given session
+    }
+
+    // Define the upload directory
+    $uploadDir = __DIR__ . '/asset/physical_contracts/';
+    if (!is_dir($uploadDir)) {
+      if (!mkdir($uploadDir, 0777, true)) {
+        return false; // Failed to create directory
+      }
+    }
+
+    // Generate a unique filename to avoid overwriting
+    $uniqueFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $fileData['name']);
+    $filePath = $uploadDir . $uniqueFileName;
+
+    // Move the uploaded file
+    if (!move_uploaded_file($fileData['tmp_name'], $filePath)) {
+      return false; // File move failed
+    }
+
+    // Save contract details in the database
+    $query = "INSERT INTO physical_contracts (tenantid, datestart, expirationdate, fileurl, adminid) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("isssi", $uploadtenantid, $uploaddatestart, $uploadexpirationdate, $uniqueFileName, $adminId);
+
+    if ($stmt->execute()) {
+      return true; // Successfully uploaded and saved
+    } else {
+      // Optionally: Remove the file if DB save fails
+      unlink($filePath);
+      return false;
+    }
+  }
   
   public function completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2) {
     // Database query to retrieve the contract
@@ -2257,6 +2327,14 @@ $sql = "SELECT
         $updatestmt->bind_param("si", $fileUrl, $contract['id']);
         $updatestmt->execute();
 
+        // Delete the signature files
+        if (file_exists($signaturePath)) {
+          unlink($signaturePath);
+        }
+        if (file_exists($signaturePath2)) {
+          unlink($signaturePath2);
+        }
+
         // Return success
         return true;
       } else {
@@ -2268,6 +2346,51 @@ $sql = "SELECT
       // No contract found
       $_SESSION['error_message'] = "No contract found for the user.";
       return false;
+    }
+  }
+
+  public function declineContract($contractsid) {
+    $retrievesql = "SELECT * FROM contracts WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $contractsid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    // Fetch the contract record as an associative array
+    $contractRecord = $retrieveResult->fetch_assoc();
+
+    // Contract record not found
+    if (!$contractRecord) {
+      return false;
+    }
+
+    // Retrieve necessary data for logging
+    $tenantName = $contractRecord['tenantname'] ?? 'Unknown Tenant';
+    $currentApprovalStatus = $contractRecord['tenantapproval'] ?? 'Pending';
+
+    $changes = [];
+
+    // Log the change if applicable
+    if ($currentApprovalStatus != 'false') {
+      $changes[] = 'Approval: ' . ($currentApprovalStatus == null ? 'Pending' : 'Accepted') . ' -> Declined';
+    }
+
+    // Update the contract to set tenantapproval to "false"
+    $updatesql = "UPDATE contracts SET tenantapproval = 'false' WHERE id = ?";
+    $updatestmt = $this->conn->prepare($updatesql);
+    $updatestmt->bind_param("i", $contractsid);
+    $updatestmt->execute();
+
+    if ($updatestmt->affected_rows > 0) {
+      // Combine all changes into a single log message
+      $logMessage = 'Contract Declined for Tenant: ' . htmlspecialchars($tenantName) . '<br>' . implode('<br>', $changes);
+
+      // Call the history logging function
+      $this->History($this->session_id, 'Declined Contract', $logMessage);
+
+      return true; // Decline successful
+    } else {
+      return false; // Decline failed
     }
   }
 

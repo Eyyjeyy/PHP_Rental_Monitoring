@@ -161,3 +161,8 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 11/16/2924
 - Added completeContract function in admin.php for tenant in user side to send lessee signature and witness signature of contract <br>
+
+11/17/2024
+- Created physical_contracts database table in phpmyadmin <br>
+- Added search_physical_contract.php and search_contract.php for pagination and search functionality for admin_contract_template.php <br>
+- Applied proper javascript and jquery for admin_contract_template.php <br>
