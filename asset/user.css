@@ -95,6 +95,13 @@ thead {
     padding: 7.5px 20px; /* Example padding */
     border-radius: 4px; /* Example border radius */
 }
+.btn.complete {
+    background-color: #527853; /* Example background color */
+    border-color: #527853;
+    color: white; /* Example text color */
+    padding: 7.5px 20px; /* Example padding */
+    border-radius: 4px; /* Example border radius */
+}
 
 .btn.receipt:hover {
     background-color: #3A583C; /* Change color on hover */

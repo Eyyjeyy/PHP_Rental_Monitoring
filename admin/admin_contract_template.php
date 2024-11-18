@@ -176,8 +176,8 @@
     if (isset($_POST['delete_physicalcontract'])) {
         // Get the contract ID owning the contract to be deleted
         $physicalcontractid = $_POST['physicalcontractid'];
-        // Call the deleteContract method to delete the contract
-        // $deleted = $admin->deletePhysicalContract($physicalcontractid);
+        
+        $deleted = $admin->deletePhysicalContract($physicalcontractid);
         if($deleted) {
             header("Location: admin_contract_template.php?physicalcontract_deleted=1");
             exit();
@@ -257,10 +257,14 @@
                                     <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
                                 </div>
                                 <div class="col-6">
-                                    <button class="btn btn-primary float-end table-buttons-update ms-2" id="upload_contract"><i class="fa fa-plus"></i> Upload Contract</button>
                                     <button class="btn btn-primary float-end table-buttons-update" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
                                 </div>
                             </div>                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="fw-bold">Digital Contracts</h3>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -336,7 +340,15 @@
                                 <div class="col-6">
                                     <input type="text" id="physical_contract_searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
                                 </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary float-end table-buttons-update" id="upload_contract"><i class="fa fa-plus"></i>Upload Contract</button>
+                                </div>
                             </div>                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="fw-bold">Physical Contracts</h3>
                         </div>
                     </div>
                     <div class="table-responsive"  id="tablelimiter">
@@ -367,7 +379,7 @@
                             </thead>
                             <tbody id="physicalcontractsTableBody">
                                 <?php
-                                if ($result_tenant_table->num_rows > 0) {
+                                if ($result_physical->num_rows > 0) {
                                     // Output data of each row
                                     while($row_physical = $result_physical->fetch_assoc()) {
                                         echo "<tr>";
@@ -499,9 +511,18 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <button id="clear1">Clear</button>
+                                            </div>
+                                        </div>
+                                        <!-- <button id="save">Save Signature</button> -->
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="lessorwitness" class="form-label">Lessor Witness</label>
                                         <input type="text" class="form-control" id="lessorwitness" name="lessorwitness" required>
                                     </div>
+                                    
                                     <div class="mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
                                         <label for="signature-pad-2" class="form-label">Lessor Witness's Signature</label>
                                         <div class="wrapper">
@@ -509,9 +530,17 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <button id="clear">Clear</button>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <button id="clear2">Clear</button>
+                                            </div>
+                                        </div>
+                                        <!-- <button id="clear2">Clear</button> -->
                                         <!-- <button id="save">Save Signature</button> -->
                                     </div>
+                                    <!-- <div class="mb-3">
+                                        <button id="clear">Clear</button>
+                                    </div> -->
                                     <button type="submit" name="add_contract" class="btn btn-primary table-buttons-update">Add Contract</button>
                                 </form>
                             </div>
@@ -826,8 +855,10 @@
                     }
 
                     // Clear both signature pads
-                    document.getElementById("clear").addEventListener("click", () => {
+                    document.getElementById("clear1").addEventListener("click", () => {
                         signaturePad1.clear();
+                    });
+                    document.getElementById("clear2").addEventListener("click", () => {
                         signaturePad2.clear();
                     });
 

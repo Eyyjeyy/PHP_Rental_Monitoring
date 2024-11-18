@@ -130,23 +130,23 @@
                                                             // echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                             if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                                 echo "
-                                                                <button type='button' class='btn btn-primary float-end' id='complete_contract' style='background-color: #527853;border-color: #527853;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Complete</button>";
+                                                                <button type='button' class='btn btn-primary float-xxl-end' id='complete_contract' style='background-color: #527853;border-color: #527853;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Complete</button>";
                                                             }
                                                         echo "</div>";
                                                         if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                             echo "<div class='col-xxl-4 px-2'>";
-                                                                echo "<form method='POST' action='contract_user.php' class='float-xxl-end align-items-center'>";
+                                                                echo "<form method='POST' action='contract_user.php' class='align-items-center'>";
                                                                     echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                                     if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                                         echo "
-                                                                        <button type='submit' class='btn btn-danger float-end' name='decline_contract' style='background-color: #EE7214;border-color: #EE7214;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Decline</button>";
+                                                                        <button type='submit' class='btn btn-danger' name='decline_contract' style='background-color: #EE7214;border-color: #EE7214;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Decline</button>";
                                                                     }
                                                                 echo "</form>";
                                                             echo "</div>";
                                                         }
                                                         echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 " : "") . "px-2'>";
                                                             if (!empty($row['fileurl'])) { // Ensure fileurl is not empty
-                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;height:41px;'>Download</a>";
+                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download " . ($row["tenantapproval"] === "true" ? "" : "float-xxl-start ") . "justify-content-center' style='width: 120px;height:41px;'>Download</a>";
                                                             } else {
                                                                 echo "<span>No file available</span>";
                                                             }
@@ -207,6 +207,10 @@
                             <canvas id="signature-pad" class="signature-pad"></canvas>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                        <!-- <button id="save">Save Signature</button> -->
+                    </div>
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
                         <label for="signature-pad-2" class="form-label">Lessee Witness's Signature</label>
                         <div class="wrapper">
@@ -214,10 +218,19 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button id="clear" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                        <button id="clear2" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
                         <!-- <button id="save">Save Signature</button> -->
                     </div>
-                    <button type="submit" name="finish_contract" class="btn btn-primary table-buttons-update">Complete Contract</button>
+                    <!-- <div class="mb-3">
+                        <button id="clear" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                        <button id="save">Save Signature</button>
+                    </div> -->
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                        <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button>
+                        </div>
+                    </div>
+                    <!-- <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button> -->
                 </form>
             </div>
         </div>
@@ -300,8 +313,10 @@
     }
 
     // Clear both signature pads
-    document.getElementById("clear").addEventListener("click", () => {
+    document.getElementById("clear1").addEventListener("click", () => {
         signaturePad1.clear();
+    });
+    document.getElementById("clear2").addEventListener("click", () => {
         signaturePad2.clear();
     });
 

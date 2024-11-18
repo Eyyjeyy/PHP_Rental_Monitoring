@@ -2281,6 +2281,55 @@ $sql = "SELECT
       return false;
     }
   }
+
+  public function deletePhysicalContract ($physicalcontractid) {
+    $retrievesql = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname 
+        FROM physical_contracts 
+        JOIN tenants ON physical_contracts.tenantid = tenants.id 
+        WHERE physical_contracts.id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $physicalcontractid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    if ($retrieveResult === false || $retrieveResult->num_rows === 0) {
+      // If the SELECT query fails or returns no results, return false
+      return false;
+    }
+
+    // Fetch the expenses record as an associative array
+    $contractRecord = $retrieveResult->fetch_assoc();
+    $deleted_contracts = $contractRecord['tenantname'];
+    $fileurl = $contractRecord['fileurl'];
+
+    // First, delete the actual file from the directory
+    if (!empty(__DIR__ . '/asset/physical_contracts/' . $fileurl) && file_exists(__DIR__ . '/asset/physical_contracts/' . $fileurl)) {
+      $filePath = __DIR__ . '/asset/physical_contracts/' . $fileurl;
+      if (!unlink($filePath)) {
+        // File deletion failed, return false and exit
+        return false; 
+      }
+    } else {
+      // If the file doesn't exist, fail
+      return false; 
+    }
+
+    $sql = "DELETE FROM physical_contracts WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $physicalcontractid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      
+      $logMessage = 'Deleted Contract, ID: ' . $physicalcontractid . '<br>';
+      $logMessage .= 'Contract Tenant Name: ' . $deleted_contracts . '<br>';
+
+      $this->History($this->session_id, 'Delete', $logMessage);
+
+      return true; // Deletion successful
+    } else {
+      return false; // Deletion failed
+    }
+  }
   
   public function completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2) {
     // Database query to retrieve the contract

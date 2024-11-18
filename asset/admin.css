@@ -293,6 +293,9 @@ button {
 button:hover {
     background-color: #EE7214; /* Bright orange color */
 }
+button#clear:hover {
+    background-color: #527853;
+}
 
 .table-buttons-update {
     color: #fff;
