@@ -166,3 +166,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Created physical_contracts database table in phpmyadmin <br>
 - Added search_physical_contract.php and search_contract.php for pagination and search functionality for admin_contract_template.php <br>
 - Applied proper javascript and jquery for admin_contract_template.php <br>
+
+11/19/2024
+- Enabled multiple file upload for physical contracts, allowed to upload pdf, displays pdf file <br>

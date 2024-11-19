@@ -102,6 +102,10 @@ thead {
     padding: 7.5px 20px; /* Example padding */
     border-radius: 4px; /* Example border radius */
 }
+.btn.complete:hover {
+    background-color: #3A583C; /* Change color on hover */
+    border-color: #3A583C;
+}
 
 .btn.receipt:hover {
     background-color: #3A583C; /* Change color on hover */

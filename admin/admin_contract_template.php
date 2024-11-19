@@ -137,40 +137,76 @@
         }
     }
 
+    // if (isset($_POST['upload_contract_file'])) {
+    //     $uploadtenantid = $_POST['uploadtenantid'];
+    //     $uploaddatestart = $_POST['uploaddatestart'];
+    //     $uploadexpirationdate = $_POST['uploadexpirationdate'];
+        
+    //     // Check if a file was uploaded
+    //     if (isset($_FILES['contractFile']) && $_FILES['contractFile']['error'] == 0) {
+    //         $fileData = [
+    //             'tmp_name' => $_FILES['contractFile']['tmp_name'],
+    //             'name' => $_FILES['contractFile']['name'],
+    //             'size' => $_FILES['contractFile']['size'],
+    //             'type' => $_FILES['contractFile']['type'],
+    //             'error' => $_FILES['contractFile']['error']
+    //         ];
+
+    //         // Pass the file data and other parameters to the function
+    //         $uploaded = $admin->uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData);
+
+    //         if ($uploaded) {
+    //             header("Location: admin_contract_template.php?contract_upload=1");
+    //             exit();
+    //         } else {
+    //             if(empty($_SESSION['error_message'])) {
+    //                 $_SESSION['error_message'] = "Upload Failed due to an error.";
+    //             }
+    //         }
+    //     } else {
+    //         if(empty($_SESSION['error_message'])) {
+    //             $_SESSION['error_message'] = "No file uploaded or file upload error.";
+    //         }
+    //     }
+    //     // header("Location: admin_contract_template.php?error=upload");
+    //     // exit();
+    // }
+
     if (isset($_POST['upload_contract_file'])) {
         $uploadtenantid = $_POST['uploadtenantid'];
         $uploaddatestart = $_POST['uploaddatestart'];
         $uploadexpirationdate = $_POST['uploadexpirationdate'];
         
-        // Check if a file was uploaded
-        if (isset($_FILES['contractFile']) && $_FILES['contractFile']['error'] == 0) {
-            $fileData = [
-                'tmp_name' => $_FILES['contractFile']['tmp_name'],
-                'name' => $_FILES['contractFile']['name'],
-                'size' => $_FILES['contractFile']['size'],
-                'type' => $_FILES['contractFile']['type'],
-                'error' => $_FILES['contractFile']['error']
-            ];
-
-            // Pass the file data and other parameters to the function
-            $uploaded = $admin->uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData);
-
-            if ($uploaded) {
-                header("Location: admin_contract_template.php?contract_upload=1");
-                exit();
-            } else {
-                if(empty($_SESSION['error_message'])) {
-                    $_SESSION['error_message'] = "Upload Failed due to an error.";
-                }
-            }
-        } else {
-            if(empty($_SESSION['error_message'])) {
-                $_SESSION['error_message'] = "No file uploaded or file upload error.";
+        // Check if contractImages[] was uploaded
+        $contractImages = [];
+        if (!empty($_FILES['contractImages']['name'][0])) {
+            foreach ($_FILES['contractImages']['name'] as $key => $imageName) {
+                $contractImages[] = [
+                    'tmp_name' => $_FILES['contractImages']['tmp_name'][$key],
+                    'name' => $_FILES['contractImages']['name'][$key],
+                    'size' => $_FILES['contractImages']['size'][$key],
+                    'type' => $_FILES['contractImages']['type'][$key],
+                    'error' => $_FILES['contractImages']['error'][$key]
+                ];
             }
         }
-        // header("Location: admin_contract_template.php?error=upload");
-        // exit();
+    
+        // Call the function and pass the file and images
+        $uploaded = $admin->uploadContract(
+            $uploadtenantid, 
+            $uploaddatestart, 
+            $uploadexpirationdate, 
+            $contractImages // Pass the images array
+        );
+    
+        if ($uploaded) {
+            header("Location: admin_contract_template.php?contract_upload=1");
+            exit();
+        } else {
+            $_SESSION['error_message'] = $_SESSION['error_message'] ?? "Upload failed due to an error.";
+        }
     }
+    
 
     // Physical Contracts
     if (isset($_POST['delete_physicalcontract'])) {
@@ -210,9 +246,18 @@
     $sql_tenant_upload = "SELECT * FROM tenants";
     $result_tenant_upload = $admin->conn->query($sql_tenant_upload);
 
-    $sql_physical = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS full_name
+    // $sql_physical = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS full_name
+    // FROM physical_contracts
+    // JOIN tenants ON physical_contracts.tenantid = tenants.id";
+    $sql_physical = "
+    SELECT 
+        physical_contracts.*, 
+        CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS full_name, 
+        GROUP_CONCAT(contract_images.image_path SEPARATOR ',') AS image_paths
     FROM physical_contracts
-    JOIN tenants ON physical_contracts.tenantid = tenants.id";
+    JOIN tenants ON physical_contracts.tenantid = tenants.id
+    LEFT JOIN contract_images ON physical_contracts.id = contract_images.physical_contract_id
+    GROUP BY physical_contracts.id";
     $result_physical = $admin->conn->query($sql_physical);
 
     $sql_tenant_table = "SELECT * FROM contracts";
@@ -252,6 +297,11 @@
                 <div class="card-body" style="margin-top: 12px;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <h3 class="fw-bold">Digital Contracts</h3>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-6">
                                     <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
@@ -262,11 +312,11 @@
                             </div>                            
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12">
                             <h3 class="fw-bold">Digital Contracts</h3>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered" id="contractTable">
                             <thead>
@@ -336,6 +386,11 @@
 
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <h3 class="fw-bold">Physical Contracts</h3>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-6">
                                     <input type="text" id="physical_contract_searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
@@ -346,11 +401,11 @@
                             </div>                            
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12">
                             <h3 class="fw-bold">Physical Contracts</h3>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered" id="physicalcontractsTable">
                             <thead>
@@ -379,40 +434,133 @@
                             </thead>
                             <tbody id="physicalcontractsTableBody">
                                 <?php
+                                // if ($result_physical->num_rows > 0) {
+                                //     // Output data of each row
+                                //     while($row_physical = $result_physical->fetch_assoc()) {
+                                //         echo "<tr>";
+                                //         echo "<th scope='row'>" . $row_physical['id'] . "</th>";
+                                //         echo "<td>" . htmlspecialchars($row_physical['full_name']) . "</td>";
+                                //         echo "<td>" . htmlspecialchars($row_physical['datestart']) . "</td>";
+                                //         echo "<td>" . htmlspecialchars($row_physical['expirationdate']) . "</td>";
+                                //         echo "<td>";
+                                //             if (!empty($row_physical['fileurl'])) {
+                                //                 $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']);
+                                //                 echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showImageModal('$fileUrl')\">";
+                                //                 echo "<img src='$fileUrl' alt='Tenant Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
+                                //                 echo "</a>";
+                                //             } else {
+                                //                 echo "<img src='../asset/physical_contracts/default.png' alt='Default Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
+                                //             }
+                                //         echo "</td>";
+                                //         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
+                                //         echo "<div class='row justify-content-center m-0'>";
+                                //             echo "<div class='col-xl-6 px-2'>";
+                                //                 // Add a form with a delete button for each record
+                                //                 echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
+                                //                     echo "<input type='hidden' name='physicalcontractid' value='" . $row_physical['id'] . "'>";
+                                //                     echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+                                //                 echo "</form>";
+                                //             echo "</div>";
+                                //             echo "<div class='col-xl-6 px-2'>";
+                                //                 if (!empty($row_physical['fileurl'])) { // Ensure fileurl is not empty
+                                //                     echo "<a href='". '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+                                //                 } else {
+                                //                     echo "<span>No file available</span>";
+                                //                 }
+                                //             echo "</div>";
+                                //         echo "</div>";
+                                //         echo "</td>";
+                                //         echo "</tr>";
+                                //     }
+                                // } else {
+                                //     echo "<tr><td colspan='6' class='text-center'>No contracts found</td></tr>";
+                                // }
+                                // $admin->conn->close();
                                 if ($result_physical->num_rows > 0) {
                                     // Output data of each row
-                                    while($row_physical = $result_physical->fetch_assoc()) {
+                                    while ($row_physical = $result_physical->fetch_assoc()) {
                                         echo "<tr>";
                                         echo "<th scope='row'>" . $row_physical['id'] . "</th>";
                                         echo "<td>" . htmlspecialchars($row_physical['full_name']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row_physical['datestart']) . "</td>";
                                         echo "<td>" . htmlspecialchars($row_physical['expirationdate']) . "</td>";
+                                        
+                                        // Display images
                                         echo "<td>";
-                                            if (!empty($row_physical['fileurl'])) {
-                                                $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']);
-                                                echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showImageModal('$fileUrl')\">";
-                                                echo "<img src='$fileUrl' alt='Tenant Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
-                                                echo "</a>";
-                                            } else {
-                                                echo "<img src='../asset/physical_contracts/default.png' alt='Default Picture' class='img-fluid' style='width: 150px; height: 150px; object-fit: cover;'>";
-                                            }
+                                        // if (!empty($row_physical['image_paths'])) {
+                                        //     $imagePaths = explode(',', $row_physical['image_paths']); // Split the concatenated string into an array
+                                        //     foreach ($imagePaths as $imagePath) {
+                                        //         $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($imagePath);
+                                        //         echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showImageModal('$fileUrl')\">";
+                                        //         // echo "<img src='$fileUrl' alt='Contract Image' class='img-fluid' style='width: 80px; height: 80px; object-fit: cover; margin: 5px;'>";
+                                        //         echo "<img src='$fileUrl' alt='Contract Image' class='img-fluid' style='width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>";
+                                        //         echo "</a>";
+                                        //     }
+                                        // } else {
+                                        //     echo "<img src='../asset/physical_contracts/default.png' alt='Default Picture' class='img-fluid' style='width: 80px; height: 80px; object-fit: cover;'>";
+                                        // }
+                                        $filePaths = explode(',', $row_physical['image_paths']);
+foreach ($filePaths as $filePath) {
+    $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
+    if (!empty($filePath)) {
+        // Check file extension to determine if it's a PDF
+        $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        if ($fileExtension === 'pdf') {
+            // Display PDF file icon
+            echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
+            echo "<img src='../asset/pdf-file.webp' alt='PDF File' class='img-fluid' style='width: 100px; height: 100px; object-fit: contain; margin-right: 5px;'>";
+            echo "</a>";
+        } else {
+            // Display image file
+            echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
+            echo "<img src='$fileUrl' alt='Contract Image' class='img-fluid' style='width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>";
+            echo "</a>";
+        }
+    }
+}
                                         echo "</td>";
+                                        
+                                        // Actions
                                         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                         echo "<div class='row justify-content-center m-0'>";
-                                            echo "<div class='col-xl-6 px-2'>";
-                                                // Add a form with a delete button for each record
-                                                echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
-                                                    echo "<input type='hidden' name='physicalcontractid' value='" . $row_physical['id'] . "'>";
-                                                    echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
-                                                echo "</form>";
-                                            echo "</div>";
-                                            echo "<div class='col-xl-6 px-2'>";
-                                                if (!empty($row_physical['fileurl'])) { // Ensure fileurl is not empty
-                                                    echo "<a href='". '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
-                                                } else {
-                                                    echo "<span>No file available</span>";
+                                        echo "<div class='col-xl-6 px-2'>";
+                                        // Add a form with a delete button for each record
+                                        echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
+                                        echo "<input type='hidden' name='physicalcontractid' value='" . $row_physical['id'] . "'>";
+                                        echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+                                        echo "</form>";
+                                        echo "</div>";
+                                        echo "<div class='col-xl-6 px-2'>";
+                                        // if (!empty($row_physical['fileurl'])) { // Ensure fileurl is not empty
+                                        //     echo "<a href='" . '../asset/physical_contracts/' . htmlspecialchars($row_physical['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+                                        // } else {
+                                        //     echo "<span>No file available</span>";
+                                        // }
+                                        // Add download links for each image
+
+                                        // if (!empty($row_physical['image_paths'])) {
+                                        //     foreach ($imagePaths as $imagePath) {
+                                        //         $downloadUrl = '../asset/physical_contracts/' . htmlspecialchars($imagePath);
+                                        //         if (!empty($imagePath)) {
+                                        //             echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
+                                        //         }
+                                        //     }
+                                        // } else {
+                                        //     echo "<span>No file available</span>";
+                                        // }
+                                        if (!empty($row_physical['image_paths'])) {
+                                            foreach ($filePaths as $filePath) {
+                                                $downloadUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
+                                                if (!empty($filePath)) {
+                                                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
                                                 }
-                                            echo "</div>";
+                                            }
+                                        } else {
+                                            echo "<span>No file available</span>";
+                                        }
+
+                                        echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "</tr>";
@@ -420,7 +568,6 @@
                                 } else {
                                     echo "<tr><td colspan='6' class='text-center'>No contracts found</td></tr>";
                                 }
-                                // $admin->conn->close();
                                 ?>
                             </tbody>
                         </table>
@@ -513,7 +660,7 @@
                                     <div class="mb-3">
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
-                                                <button id="clear1">Clear</button>
+                                                <button id="clear1" type="button">Clear</button>
                                             </div>
                                         </div>
                                         <!-- <button id="save">Save Signature</button> -->
@@ -532,7 +679,7 @@
                                     <div class="mb-3">
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
-                                                <button id="clear2">Clear</button>
+                                                <button id="clear2" type="button">Clear</button>
                                             </div>
                                         </div>
                                         <!-- <button id="clear2">Clear</button> -->
@@ -541,7 +688,7 @@
                                     <!-- <div class="mb-3">
                                         <button id="clear">Clear</button>
                                     </div> -->
-                                    <button type="submit" name="add_contract" class="btn btn-primary table-buttons-update">Add Contract</button>
+                                    <button type="submit" name="add_contract" class="btn btn-primary table-buttons-update addcontract">Add Contract</button>
                                 </form>
                             </div>
                         </div>
@@ -606,10 +753,14 @@
                                         <label for="uploadexpirationdate" class="form-label">Expiration Date</label>
                                         <input type="date" class="form-control" id="uploadexpirationdate" name="uploadexpirationdate" value="" required>
                                     </div>
-                                    <div class="input-group mb-3">
+                                    <!-- <div class="input-group mb-3">
                                         <input type="file" class="form-control" id="inputGroupFile04" name="contractFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                                    </div> -->
+                                    <div class="mb-3">
+                                        <label for="contractImages" class="form-label">Upload Contract Images</label>
+                                        <input type="file" class="form-control" id="contractImages" name="contractImages[]" multiple>
                                     </div>
-                                    <button type="submit" name="upload_contract_file" class="btn btn-primary table-buttons-update">Upload Contract</button>
+                                    <button type="submit" name="upload_contract_file" class="btn btn-primary table-buttons-update uploadcontract">Upload Contract</button>
                                 </form>
                             </div>
                         </div>
@@ -625,6 +776,8 @@
                             </div>
                             <div class="modal-body text-center">
                                 <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid">
+                                <!-- PDF Preview -->
+                                <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none;"></iframe>
                             </div>
                         </div>
                     </div>
@@ -922,8 +1075,23 @@
                     });
                 </script>
                 <script>
-                    function showImageModal(imageUrl) {
-                        document.getElementById('modalImage').src = imageUrl;
+                    // function showImageModal(imageUrl) {
+                    //     document.getElementById('modalImage').src = imageUrl;
+                    // }
+                    function showFileModal(fileUrl) {
+                        var fileExtension = fileUrl.split('.').pop().toLowerCase();
+                        
+                        if (fileExtension === 'pdf') {
+                            // If it's a PDF, show the PDF preview
+                            document.getElementById('modalImage').style.display = 'none';
+                            document.getElementById('modalPDF').style.display = 'block';
+                            document.getElementById('modalPDF').src = fileUrl;
+                        } else {
+                            // If it's an image, show the image preview
+                            document.getElementById('modalImage').style.display = 'block';
+                            document.getElementById('modalPDF').style.display = 'none';
+                            document.getElementById('modalImage').src = fileUrl;
+                        }
                     }
                 </script>
             </div>

@@ -2219,24 +2219,78 @@ $sql = "SELECT
     }
   }
 
-  public function uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData) {
+  // public function uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $fileData) {
+  //   // Validate the input data
+  //   if (empty($uploadtenantid) || empty($uploaddatestart) || empty($uploadexpirationdate) || empty($fileData)) {
+  //     return false; // Invalid input
+  //   }
+
+  //   // Validate the file
+  //   if ($fileData['error'] !== 0) {
+  //     return false; // File upload error
+  //   }
+
+  //   // Optional: Validate file type and size (e.g., PDF, max 5MB)
+  //   $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+  //   $maxFileSize = 5 * 1024 * 1024; // 5MB
+
+  //   if (!in_array($fileData['type'], $allowedTypes) || $fileData['size'] > $maxFileSize) {
+  //     return false; // Invalid file type or size
+  //   }
+
+  //   $sessionId = $this->session_id; // Assuming this->session_id holds the current session ID
+  //   $query = "SELECT id FROM users WHERE id = ? LIMIT 1"; // Query to find the user by session_id
+  //   $stmt = $this->conn->prepare($query);
+  //   $stmt->bind_param("i", $sessionId);
+  //   $stmt->execute();
+  //   $stmt->bind_result($adminId);
+  //   $stmt->fetch();
+  //   $stmt->close();
+
+  //   if (empty($adminId)) {
+  //     return false; // Admin not found for the given session
+  //   }
+
+  //   // Define the upload directory
+  //   $uploadDir = __DIR__ . '/asset/physical_contracts/';
+  //   if (!is_dir($uploadDir)) {
+  //     if (!mkdir($uploadDir, 0777, true)) {
+  //       return false; // Failed to create directory
+  //     }
+  //   }
+
+  //   // Generate a unique filename to avoid overwriting
+  //   $uniqueFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $fileData['name']);
+  //   $filePath = $uploadDir . $uniqueFileName;
+
+  //   // Move the uploaded file
+  //   if (!move_uploaded_file($fileData['tmp_name'], $filePath)) {
+  //     return false; // File move failed
+  //   }
+
+  //   // Save contract details in the database
+  //   $query = "INSERT INTO physical_contracts (tenantid, datestart, expirationdate, fileurl, adminid) VALUES (?, ?, ?, ?, ?)";
+  //   $stmt = $this->conn->prepare($query);
+  //   $stmt->bind_param("isssi", $uploadtenantid, $uploaddatestart, $uploadexpirationdate, $uniqueFileName, $adminId);
+
+  //   if ($stmt->execute()) {
+  //     return true; // Successfully uploaded and saved
+  //   } else {
+  //     // Optionally: Remove the file if DB save fails
+  //     unlink($filePath);
+  //     return false;
+  //   }
+  // }
+
+  public function uploadContract($uploadtenantid, $uploaddatestart, $uploadexpirationdate, $contractImages) {
     // Validate the input data
-    if (empty($uploadtenantid) || empty($uploaddatestart) || empty($uploadexpirationdate) || empty($fileData)) {
+    if (empty($uploadtenantid) || empty($uploaddatestart) || empty($uploadexpirationdate)) {
       return false; // Invalid input
     }
 
-    // Validate the file
-    if ($fileData['error'] !== 0) {
-      return false; // File upload error
-    }
-
-    // Optional: Validate file type and size (e.g., PDF, max 5MB)
-    $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+    // Validate and upload images
+    $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     $maxFileSize = 5 * 1024 * 1024; // 5MB
-
-    if (!in_array($fileData['type'], $allowedTypes) || $fileData['size'] > $maxFileSize) {
-      return false; // Invalid file type or size
-    }
 
     $sessionId = $this->session_id; // Assuming this->session_id holds the current session ID
     $query = "SELECT id FROM users WHERE id = ? LIMIT 1"; // Query to find the user by session_id
@@ -2251,36 +2305,51 @@ $sql = "SELECT
       return false; // Admin not found for the given session
     }
 
-    // Define the upload directory
-    $uploadDir = __DIR__ . '/asset/physical_contracts/';
-    if (!is_dir($uploadDir)) {
-      if (!mkdir($uploadDir, 0777, true)) {
-        return false; // Failed to create directory
-      }
-    }
-
-    // Generate a unique filename to avoid overwriting
-    $uniqueFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $fileData['name']);
-    $filePath = $uploadDir . $uniqueFileName;
-
-    // Move the uploaded file
-    if (!move_uploaded_file($fileData['tmp_name'], $filePath)) {
-      return false; // File move failed
-    }
-
-    // Save contract details in the database
-    $query = "INSERT INTO physical_contracts (tenantid, datestart, expirationdate, fileurl, adminid) VALUES (?, ?, ?, ?, ?)";
+    // Save the contract details
+    $query = "INSERT INTO physical_contracts (tenantid, datestart, expirationdate, adminid) VALUES (?, ?, ?, ?)";
     $stmt = $this->conn->prepare($query);
-    $stmt->bind_param("isssi", $uploadtenantid, $uploaddatestart, $uploadexpirationdate, $uniqueFileName, $adminId);
+    $stmt->bind_param("issi", $uploadtenantid, $uploaddatestart, $uploadexpirationdate, $adminId);
 
     if ($stmt->execute()) {
+      $contractId = $stmt->insert_id; // Get the inserted contract's ID
+      $stmt->close();
+
+      // Define the upload directory
+      $uploadDir = __DIR__ . '/asset/physical_contracts/';
+      if (!is_dir($uploadDir)) {
+        if (!mkdir($uploadDir, 0777, true)) {
+          return false; // Failed to create directory
+        }
+      }
+
+      // Loop through contract images and upload them
+      foreach ($contractImages as $image) {
+        if ($image['error'] !== 0) continue; // Skip invalid files
+
+        if (!in_array($image['type'], $allowedTypes) || $image['size'] > $maxFileSize) {
+          continue; // Skip invalid image type or size
+        }
+
+        // Generate a unique filename
+        $uniqueFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $image['name']);
+        $filePath = $uploadDir . $uniqueFileName;
+
+        if (move_uploaded_file($image['tmp_name'], $filePath)) {
+          // Save the image details into the database
+          $query = "INSERT INTO contract_images (physical_contract_id, image_path, uploaded_at) VALUES (?, ?, NOW())";
+          $stmt = $this->conn->prepare($query);
+          $stmt->bind_param("is", $contractId, $uniqueFileName);
+          $stmt->execute();
+          $stmt->close();
+        }
+      }
+
       return true; // Successfully uploaded and saved
     } else {
-      // Optionally: Remove the file if DB save fails
-      unlink($filePath);
-      return false;
+      return false; // Contract save failed
     }
   }
+
 
   public function deletePhysicalContract ($physicalcontractid) {
     $retrievesql = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname 

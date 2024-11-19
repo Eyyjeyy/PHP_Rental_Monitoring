@@ -208,7 +208,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <button id="clear1" class="btn receipt" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                            </div>
+                        </div>
+                        <!-- <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
                         <!-- <button id="save">Save Signature</button> -->
                     </div>
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
@@ -218,7 +223,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button id="clear2" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <button id="clear2" class="btn receipt" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                            </div>
+                        </div>
+                        <!-- <button id="clear2" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
                         <!-- <button id="save">Save Signature</button> -->
                     </div>
                     <!-- <div class="mb-3">
