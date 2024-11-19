@@ -126,7 +126,7 @@
                                                 echo "<td class='text-center'>" . htmlspecialchars($expirationdate) . "</td>";
                                                 echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                     echo "<div class='row justify-content-center m-0'>";
-                                                        echo "<div class='col-xxl-4 px-2'>";
+                                                        echo "<div class='col-xxl-4 px-2 pe-xxl-0'>";
                                                             // echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                             if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                                 echo "
@@ -134,7 +134,7 @@
                                                             }
                                                         echo "</div>";
                                                         if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
-                                                            echo "<div class='col-xxl-4 px-2'>";
+                                                            echo "<div class='col-xxl-3 px-2'>";
                                                                 echo "<form method='POST' action='contract_user.php' class='align-items-center'>";
                                                                     echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                                     if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
@@ -144,7 +144,7 @@
                                                                 echo "</form>";
                                                             echo "</div>";
                                                         }
-                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 " : "") . "px-2'>";
+                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 ps-xxl-0 " : "") . "px-2'>";
                                                             if (!empty($row['fileurl'])) { // Ensure fileurl is not empty
                                                                 echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download " . ($row["tenantapproval"] === "true" ? "" : "float-xxl-start ") . "justify-content-center' style='width: 120px;height:41px;'>Download</a>";
                                                             } else {

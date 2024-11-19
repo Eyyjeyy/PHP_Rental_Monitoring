@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2024 at 05:39 PM
+-- Generation Time: Nov 19, 2024 at 07:38 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -69,6 +69,31 @@ CREATE TABLE `contracts` (
 INSERT INTO `contracts` (`id`, `tenants_id`, `adminname`, `tenantname`, `filename`, `fileurl`, `tenantapproval`, `datestart`, `expirationdate`, `upload_date`) VALUES
 (38, 75, 'Jerson Wayas Lippad', 'Jan West Nuevo', 'Jan West Nuevo_contract.docx', '/asset/user_contracts/Jan West Nuevo_contract.docx', 'true', '2024-11-16', '2024-11-23', '2024-11-16 10:03:17'),
 (43, 74, 'Jerson Wayas Lippad', 'Jerson Wayas Lippad', 'Jerson Wayas Lippad_contract.docx', '/asset/user_contracts/Jerson Wayas Lippad_contract.docx', '', '2024-11-16', '2024-11-21', '2024-11-16 15:44:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contract_images`
+--
+
+CREATE TABLE `contract_images` (
+  `id` int(11) NOT NULL,
+  `physical_contract_id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `uploaded_at` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contract_images`
+--
+
+INSERT INTO `contract_images` (`id`, `physical_contract_id`, `image_path`, `uploaded_at`) VALUES
+(1, 3, '1731946460_Screenshot_2024-10-07_115835.png', '2024-11-19'),
+(2, 3, '1731946460_Screenshot_2024-10-07_110900.png', '2024-11-19'),
+(3, 3, '1731946460_Screenshot_2024-10-07_061027.png', '2024-11-19'),
+(4, 4, '1731948673_20240816_212931.jpg', '2024-11-19'),
+(5, 4, '1731948673_Poster_with_final_list_-_64th_CE_2_.jpg', '2024-11-19'),
+(6, 6, '1731954194_Signed_Student_Consent_Form.pdf', '2024-11-19');
 
 -- --------------------------------------------------------
 
@@ -391,7 +416,9 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (275, 84, 'Delete', 'Deleted Contract, ID: 39<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:17:45'),
 (276, 84, 'Delete', 'Deleted Contract, ID: 40<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:23:55'),
 (277, 84, 'Delete', 'Deleted Contract, ID: 41<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:32:47'),
-(278, 84, 'Delete', 'Deleted Contract, ID: 42<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:34:19');
+(278, 84, 'Delete', 'Deleted Contract, ID: 42<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:34:19'),
+(279, 84, 'Delete', 'Deleted Contract, ID: 1<br>Contract Tenant Name: Jan West Nuevo<br>', '2024-11-18 12:05:48'),
+(280, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-19 05:31:57');
 
 -- --------------------------------------------------------
 
@@ -552,7 +579,7 @@ CREATE TABLE `payments` (
 
 INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
 (21, 'Jerson Wayas Lippad', 16000, 74, 864, '../uploads/bdo receipt_6725c73b161d5.png', '2024-11-02', 'true'),
-(22, 'Jerson Wayas Lippad', 0, 74, 864, '../uploads/pay maya receipt_6725c74fbce78.jpg', '2024-10-02', 'false'),
+(22, 'Jerson Wayas Lippad', 0, 74, 864, '../uploads/pay maya receipt_6725c74fbce78.jpg', '2024-10-02', 'true'),
 (23, 'John North Garcia', 16000, 76, 865, '../uploads/gcash receipt_6725c79088e73.jpg', '2024-09-02', 'true');
 
 -- --------------------------------------------------------
@@ -575,7 +602,9 @@ CREATE TABLE `physical_contracts` (
 --
 
 INSERT INTO `physical_contracts` (`id`, `tenantid`, `adminid`, `fileurl`, `datestart`, `expirationdate`) VALUES
-(1, 75, 84, '1731839245_57cb1ae4-7ed7-4662-9658-f0ba4fc6b6cd.jfif', '2024-11-18', '2024-11-23');
+(3, 77, 84, '', '2024-11-21', '2024-11-30'),
+(4, 76, 84, '', '2024-11-18', '2024-11-23'),
+(6, 74, 84, '', '2024-11-18', '2024-11-23');
 
 -- --------------------------------------------------------
 
@@ -653,6 +682,12 @@ ALTER TABLE `categories`
 -- Indexes for table `contracts`
 --
 ALTER TABLE `contracts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `contract_images`
+--
+ALTER TABLE `contract_images`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -740,6 +775,12 @@ ALTER TABLE `contracts`
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
+-- AUTO_INCREMENT for table `contract_images`
+--
+ALTER TABLE `contract_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -749,7 +790,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=279;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -791,7 +832,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `physical_contracts`
 --
 ALTER TABLE `physical_contracts`
-  MODIFY `id` int(150) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(150) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tenants`
