@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2024 at 07:38 AM
+-- Generation Time: Nov 20, 2024 at 10:28 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -94,6 +94,33 @@ INSERT INTO `contract_images` (`id`, `physical_contract_id`, `image_path`, `uplo
 (4, 4, '1731948673_20240816_212931.jpg', '2024-11-19'),
 (5, 4, '1731948673_Poster_with_final_list_-_64th_CE_2_.jpg', '2024-11-19'),
 (6, 6, '1731954194_Signed_Student_Consent_Form.pdf', '2024-11-19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deposit`
+--
+
+CREATE TABLE `deposit` (
+  `id` int(11) NOT NULL,
+  `tenantid` int(11) NOT NULL,
+  `adminid` int(11) NOT NULL,
+  `deposit_filepath` varchar(500) NOT NULL,
+  `houses_id` int(11) NOT NULL,
+  `depositamount` int(11) NOT NULL,
+  `depositdate` date NOT NULL DEFAULT current_timestamp(),
+  `approval` varchar(255) NOT NULL,
+  `reason` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `deposit`
+--
+
+INSERT INTO `deposit` (`id`, `tenantid`, `adminid`, `deposit_filepath`, `houses_id`, `depositamount`, `depositdate`, `approval`, `reason`) VALUES
+(1, 75, 84, '', 858, 12000, '2024-11-19', '', ''),
+(2, 74, 85, '../deposits/kindpng_1132944_673c6dbd983b4.png', 864, 6900, '2024-11-29', '', ''),
+(3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', '', '');
 
 -- --------------------------------------------------------
 
@@ -418,7 +445,30 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (277, 84, 'Delete', 'Deleted Contract, ID: 41<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:32:47'),
 (278, 84, 'Delete', 'Deleted Contract, ID: 42<br>Contract Tenant Name: Jerson Wayas Lippad<br>', '2024-11-16 15:34:19'),
 (279, 84, 'Delete', 'Deleted Contract, ID: 1<br>Contract Tenant Name: Jan West Nuevo<br>', '2024-11-18 12:05:48'),
-(280, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-19 05:31:57');
+(280, 84, 'Approve', 'Payment Approved, ID: 22<br>Approval: Declined -> Accepted', '2024-11-19 05:31:57'),
+(281, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Approved', '2024-11-19 17:55:03'),
+(282, 84, 'Updated Deposit', 'Reaon: Bills<br>Status: Approved', '2024-11-19 17:59:50'),
+(283, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-19 18:22:01'),
+(284, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Approved', '2024-11-19 18:28:23'),
+(285, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-19 18:30:12'),
+(286, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-19 18:41:14'),
+(287, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-19 19:04:32'),
+(288, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-20 08:10:33'),
+(289, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-20 08:27:43'),
+(290, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Approved', '2024-11-20 08:40:35'),
+(291, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-20 08:40:51'),
+(292, 84, 'Approved', 'Deposit Approved, ID: 3<br>Approval: Pending -> Accepted', '2024-11-20 09:06:24'),
+(293, 84, 'Updated Deposit', 'Reaon: Bills<br>Status: 1 Month Consumed', '2024-11-20 09:08:00'),
+(294, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 2 Months Consumed', '2024-11-20 09:10:30'),
+(295, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Approved', '2024-11-20 09:11:12'),
+(296, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-20 09:11:21'),
+(297, 84, 'Declined', 'Deposit Declined, ID: 3<br>Approval: Pending -> Declined', '2024-11-20 09:22:27'),
+(298, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Unapproved', '2024-11-20 09:22:41'),
+(299, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: Approved', '2024-11-20 09:22:47'),
+(300, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 09:23:04'),
+(301, 84, 'Updated Deposit', 'Reaon: Withdrawn<br>Status: Approved', '2024-11-20 09:23:07'),
+(302, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 09:23:11'),
+(303, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 2 Months Consumed', '2024-11-20 09:23:15');
 
 -- --------------------------------------------------------
 
@@ -580,7 +630,8 @@ CREATE TABLE `payments` (
 INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`) VALUES
 (21, 'Jerson Wayas Lippad', 16000, 74, 864, '../uploads/bdo receipt_6725c73b161d5.png', '2024-11-02', 'true'),
 (22, 'Jerson Wayas Lippad', 0, 74, 864, '../uploads/pay maya receipt_6725c74fbce78.jpg', '2024-10-02', 'true'),
-(23, 'John North Garcia', 16000, 76, 865, '../uploads/gcash receipt_6725c79088e73.jpg', '2024-09-02', 'true');
+(23, 'John North Garcia', 16000, 76, 865, '../uploads/gcash receipt_6725c79088e73.jpg', '2024-09-02', 'true'),
+(24, 'Jerson Wayas Lippad', 5500, 74, 864, '../uploads/CANVAS MIGRATION_673c70f965446.png', '2024-12-20', '');
 
 -- --------------------------------------------------------
 
@@ -691,6 +742,12 @@ ALTER TABLE `contract_images`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `deposit`
+--
+ALTER TABLE `deposit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -781,6 +838,12 @@ ALTER TABLE `contract_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `deposit`
+--
+ALTER TABLE `deposit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -790,7 +853,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -826,7 +889,7 @@ ALTER TABLE `paper_files`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `physical_contracts`
