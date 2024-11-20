@@ -165,7 +165,7 @@ if ($result->num_rows > 0) {
             foreach ($imagePaths as $imagePath) {
                 $downloadUrl = '../asset/physical_contracts/' . htmlspecialchars($imagePath);
                 if (!empty($imagePath)) {
-                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
+                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
                 }
             }
         } else {

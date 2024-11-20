@@ -50,67 +50,143 @@
   }
 
 
-  // Check if the form is submitted for adding a new payment
-  if(isset($_POST['add_payment'])) {
+  // // Check if the form is submitted for adding a new payment
+  // if(isset($_POST['add_payment'])) {
+  //   // Get the payment data from the form
+  //   $name = trim(htmlspecialchars($_POST['name']));
+  //   $amount = trim(htmlspecialchars($_POST['amount']));
+  //   $paymentDate = htmlspecialchars($_POST['payment_date']);
+
+  //   // File upload handling
+  //   $file = $_FILES['payment_file']; // Get the uploaded file
+  //   $fileName = $file['name']; // Get the file name
+  //   $fileTmpName = $file['tmp_name']; // Get the temporary file path
+  //   $fileError = $file['error']; // Get any errors
+  //   $fileDestination = '../uploads/' . $fileName; // Set the destination folder
+      
+
+  //   // Check for upload errors
+  //   if ($fileError === UPLOAD_ERR_OK) {
+  //     $uploadDir = '../uploads/';
+  //     // Ensure the upload directory exists
+  //     if (!is_dir($uploadDir)) {
+  //         mkdir($uploadDir, 0777, true);
+  //     }
+
+  //     // $fileDestination = $uploadDir . basename($fileName); // Set the destination folder
+
+  //     // Generate a unique identifier (using uniqid) to append to the file name
+  //     $uniqueIdentifier = uniqid();
+
+  //     // Extract file extension
+  //     $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+      
+  //     // Generate a new unique file name with the original file name and extension
+  //     $newFileName = basename($fileName, '.' . $fileExtension) . '_' . $uniqueIdentifier . '.' . $fileExtension;
+
+
+  //     $fileDestination = $uploadDir . $newFileName; // Set the destination folder
+
+  //     // Move the uploaded file to the destination folder
+  //     if (move_uploaded_file($fileTmpName, $fileDestination)) {
+  //         // Call the addPayment method to add the new payment with file path
+  //         $added = $admin->addPayment($name, $amount, $houses_id, $paymentDate, $fileDestination);
+  //         if ($added) {
+  //           // Payment added successfully, you can display a success message here if needed
+  //           header("Location: payments.php?payment_added=1");
+  //           exit();
+  //         } else {
+  //           // Error occurred while adding payment, display an error message or handle as needed
+  //           $_SESSION['error_message'] = "User not on Tenant List";
+  //           header("Location: payments.php?payment_added=1");
+  //           echo "Error occurred while adding payment.";
+  //           exit();
+  //         }
+  //     } else {
+  //         // Handle file move errors
+  //         echo "File upload failed. Unable to move the file to the target directory.";
+  //     }
+  //   } else {
+  //     // Handle file upload errors
+  //     echo "File upload failed with error code: " . $fileError;
+  //   }
+  // }
+
+  if (isset($_POST['add_payment'])) {
     // Get the payment data from the form
     $name = trim(htmlspecialchars($_POST['name']));
     $amount = trim(htmlspecialchars($_POST['amount']));
     $paymentDate = htmlspecialchars($_POST['payment_date']);
+    $paymentType = $_POST['paymentType'];  // Get payment type (Deposit or Payment)
 
     // File upload handling
     $file = $_FILES['payment_file']; // Get the uploaded file
     $fileName = $file['name']; // Get the file name
     $fileTmpName = $file['tmp_name']; // Get the temporary file path
     $fileError = $file['error']; // Get any errors
-    $fileDestination = '../uploads/' . $fileName; // Set the destination folder
-      
+    $uploadDir = ''; // Initialize the upload directory variable
+    $fileDestination = ''; // Initialize file destination
 
-    // Check for upload errors
-    if ($fileError === UPLOAD_ERR_OK) {
+    // Define different file handling logic based on payment type
+    if ($paymentType === "Payment") {
+      // For Payment, use the uploads folder
       $uploadDir = '../uploads/';
+    } else {
+      // For Deposit, use the deposits folder
+      $uploadDir = '../deposits/';
+    }
+
+    // Set the destination folder and file name
+    $fileDestination = $uploadDir . basename($fileName);
+
+    // Check for file upload errors
+    if ($fileError === UPLOAD_ERR_OK) {
       // Ensure the upload directory exists
       if (!is_dir($uploadDir)) {
-          mkdir($uploadDir, 0777, true);
+          mkdir($uploadDir, 0777, true);  // Create the directory if it doesn't exist
       }
 
-      // $fileDestination = $uploadDir . basename($fileName); // Set the destination folder
-
-      // Generate a unique identifier (using uniqid) to append to the file name
+      // Generate a unique identifier to append to the file name
       $uniqueIdentifier = uniqid();
-
-      // Extract file extension
       $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-      
-      // Generate a new unique file name with the original file name and extension
       $newFileName = basename($fileName, '.' . $fileExtension) . '_' . $uniqueIdentifier . '.' . $fileExtension;
-
-
-      $fileDestination = $uploadDir . $newFileName; // Set the destination folder
+      $fileDestination = $uploadDir . $newFileName;  // Update destination with the new unique file name
 
       // Move the uploaded file to the destination folder
       if (move_uploaded_file($fileTmpName, $fileDestination)) {
-          // Call the addPayment method to add the new payment with file path
+        // Check paymentType and call the corresponding function
+        if ($paymentType === "Payment") {
+          // Call the method to add payment with file path
           $added = $admin->addPayment($name, $amount, $houses_id, $paymentDate, $fileDestination);
-          if ($added) {
-            // Payment added successfully, you can display a success message here if needed
-            header("Location: payments.php?payment_added=1");
-            exit();
-          } else {
-            // Error occurred while adding payment, display an error message or handle as needed
-            $_SESSION['error_message'] = "User not on Tenant List";
-            header("Location: payments.php?payment_added=1");
-            echo "Error occurred while adding payment.";
-            exit();
-          }
+        } else {
+          // Call a different function for Deposit
+          $added = $admin->addDeposit($name, $amount, $houses_id, $paymentDate, $fileDestination);
+        }
+
+        if ($added) {
+          // Payment added successfully, redirect to payment page
+          header("Location: payments.php?payment_added=1");
+          exit();
+        } else {
+          // Error occurred while adding payment or deposit
+          $_SESSION['error_message'] = "Error occurred while adding payment/deposit.";
+          header("Location: payments.php?payment_added=1");
+          exit();
+        }
       } else {
-          // Handle file move errors
-          echo "File upload failed. Unable to move the file to the target directory.";
+        // Handle file move errors
+        $_SESSION['error_message'] = "File upload failed. Unable to move the file to the target directory.";
+        header("Location: payments.php?payment_added=1");
+        exit();
       }
     } else {
       // Handle file upload errors
-      echo "File upload failed with error code: " . $fileError;
+      $_SESSION['error_message'] = "File upload failed with error code: " . $fileError;
+      header("Location: payments.php?payment_added=1");
+      exit();
     }
   }
+
 
   $sql = "
   SELECT payments.* 
@@ -483,6 +559,13 @@
           <div class="mb-3">
             <label for="paymentName" class="form-label">Name</label>
             <input type="text" class="form-control" id="paymentName" name="name" value="<?php echo $Firstname . " " . $Middlename . " " . $Lastname ?>" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="paymentType" class="form-label">Payment Type</label>
+            <select class="form-select" id="paymentType" name="paymentType" required>
+              <option value="Deposit" selected>Deposit</option>
+              <option value="Payment" selected>Payment</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="paymentAmount" class="form-label">Amount</label>

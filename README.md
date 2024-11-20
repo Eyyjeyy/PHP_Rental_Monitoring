@@ -169,3 +169,10 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 11/19/2024
 - Enabled multiple file upload for physical contracts, allowed to upload pdf, displays pdf file <br>
+
+11/20/2024
+- Created deposits folder to insert deposit images <br>
+- Created admin/fetchdeposit/deposit.php script to dynamically fill up modal info when update button of a deposit(payment type) is clicked <br>
+- Created deposit table in phpmyadmin <br>
+- Created admin functions for approving and declining deposit in adminpayments.php <br>
+- if approved or declined deposit, only update button shows. <br>

@@ -72,7 +72,7 @@ if ($result_tenant_table->num_rows > 0) {
         echo "</div>";
         echo "<div class='col-xl-6 px-2'>"; // Download button
         if (!empty($row['fileurl'])) {
-            echo "<a href='". '..' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+            echo "<a href='". '..' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px;'>Download</a>";
         } else {
             echo "<span>No file available</span>";
         }

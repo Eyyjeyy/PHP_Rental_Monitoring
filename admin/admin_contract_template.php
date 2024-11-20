@@ -366,7 +366,7 @@
                                             echo "</div>";
                                             echo "<div class='col-xl-6 px-2'>";
                                                 if (!empty($row_tenant_table['fileurl'])) { // Ensure fileurl is not empty
-                                                    echo "<a href='". '..' . htmlspecialchars($row_tenant_table['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;'>Download</a>";
+                                                    echo "<a href='". '..' . htmlspecialchars($row_tenant_table['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px;'>Download</a>";
                                                 } else {
                                                     echo "<span>No file available</span>";
                                                 }
@@ -553,7 +553,7 @@ foreach ($filePaths as $filePath) {
                                             foreach ($filePaths as $filePath) {
                                                 $downloadUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
                                                 if (!empty($filePath)) {
-                                                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
+                                                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
                                                 }
                                             }
                                         } else {

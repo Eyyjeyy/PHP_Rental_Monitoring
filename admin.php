@@ -765,6 +765,61 @@ Class Admin {
     }
   }
 
+  public function addDeposit($name, $amount, $houses_id, $paymentDate, $filePath) {
+    // Retrieve the username based on the session ID (same as in addPayment)
+    $retrieveusername = $this->conn->prepare("SELECT firstname, middlename, lastname FROM users WHERE id = ?");
+    $retrieveusername->bind_param("i", $this->session_id);
+    $retrieveusername->execute();
+    $retrieveresult = $retrieveusername->get_result();
+
+    if ($retrieverow = $retrieveresult->fetch_assoc()) {
+      // Concatenate the firstname, middlename, and lastname with a space separator
+      $name = trim($retrieverow['firstname']) . ' ' . trim($retrieverow['middlename']) . ' ' . trim($retrieverow['lastname']);
+    }
+
+    // Sanitize input data
+    $name = $this->conn->real_escape_string($name);
+    $amount = (float)$amount;
+    $paymentDate = $this->conn->real_escape_string($paymentDate);
+    $filePath = $this->conn->real_escape_string($filePath);
+
+    // Fetch the tenant's ID based on the session user_id
+    $tenantIdSql = "SELECT id FROM tenants WHERE users_id = {$this->session_id}";
+    $tenantIdResult = $this->conn->query($tenantIdSql);
+
+    if ($tenantIdResult && $tenantIdResult->num_rows > 0) {
+      $row = $tenantIdResult->fetch_assoc();
+      $tenantId = $row['id'];
+
+      // Fetch the admin's ID (from session or a specific admin)
+      $adminId = $this->session_id;  // Assuming the admin is the current session user
+
+      // Prepare the SQL query using a prepared statement
+      $sql = "INSERT INTO deposit (tenantid, adminid, deposit_filepath, houses_id, depositamount, depositdate, approval) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $this->conn->prepare($sql);
+      $approval = '';  // Default approval status
+      $stmt->bind_param("iisidss", $tenantId, $adminId, $filePath, $houses_id, $amount, $paymentDate, $approval);
+
+      // Execute the prepared statement
+      $result = $stmt->execute();
+
+      // Check if the query was successful
+      if ($result) {
+        // If the query is successful, return true
+        return true;
+      } else {
+        // If an error occurred, display the error message
+        echo "Error: " . $stmt->error;
+        return false;
+      }
+    } else {
+      // If the tenant ID couldn't be fetched, return false
+      return false;
+    }
+  }
+
+
   public function getAllUsers() {
     // $sql = "SELECT id, username FROM users";
     $sql = "SELECT u.id, u.username, (SELECT COUNT(*) FROM messages WHERE receiver_id = u.id AND seen = 0) AS unread_count FROM users u";
@@ -1060,6 +1115,114 @@ Class Admin {
       $logMessage = 'Payment Declined, ID: ' . $paymentsid . '<br>' . implode('<br>', $changes);
 
       $this->History($this->session_id, 'Declined', $logMessage);
+
+      return true; // Approval successful
+    } else {
+      return false; // Approval failed
+    }
+  }
+
+  public function approveDeposit($depositid) {
+    $retrievesql = "SELECT * FROM deposit WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $depositid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    $approveDepositRecord = $retrieveResult->fetch_assoc();
+
+    $changes = [];
+
+    // Log additional changes if needed
+    if ($approveDepositRecord['approval'] != 'true') {
+      $changes[] = 'Approval: ' . ($approveDepositRecord['approval'] == '' ? 'Pending' : 'Accepted') . ' -> ' . 'Accepted';
+    }
+
+    $sql = "UPDATE deposit SET approval = 'true' WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $depositid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+
+      // Combine all changes into a single log message
+      $logMessage = 'Deposit Approved, ID: ' . $depositid . '<br>' . implode('<br>', $changes);
+
+      $this->History($this->session_id, 'Approved', $logMessage);
+
+      return true; // Approval successful
+    } else {
+      return false; // Approval failed
+    }
+  }
+
+  public function declineDeposit($depositid) {
+    $retrievesql = "SELECT * FROM deposit WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $depositid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    $approveDepositRecord = $retrieveResult->fetch_assoc();
+
+    $changes = [];
+
+    // Log additional changes if needed
+    if ($approveDepositRecord['approval'] != 'Unapproved') {
+      $changes[] = 'Approval: ' . ($approveDepositRecord['approval'] == '' ? 'Pending' : 'Declined') . ' -> ' . 'Declined';
+    }
+
+    $sql = "UPDATE deposit SET approval = 'Unapproved' WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $depositid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+
+      // Combine all changes into a single log message
+      $logMessage = 'Deposit Declined, ID: ' . $depositid . '<br>' . implode('<br>', $changes);
+
+      $this->History($this->session_id, 'Declined', $logMessage);
+
+      return true; // Approval successful
+    } else {
+      return false; // Approval failed
+    }
+  }
+
+  public function updateDeposit($houseid, $payment_id, $updatestatus, $reason) {
+    $retrievesql = "SELECT * FROM deposit WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $payment_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    $depositRecord = $retrieveResult->fetch_assoc();
+
+    $depositRecordapproval = $depositRecord['approval'];
+    // $approve_paymentamount = $depositRecord['amount'];
+    if($depositRecord['approval'] == 'true' && $updatestatus == 'Approved') {
+      $_SESSION['error_message'] = "Deposit is already approved";
+      return false;
+    }
+    
+    $changes = [];
+
+    // Log additional changes if needed
+    $changes[] = 'Status: ' . $updatestatus;
+
+    if($updatestatus == 'Approved') {
+      $updatestatus = 'true';
+    } 
+    
+    $sql = "UPDATE deposit SET reason = ?, approval = ? WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ssi", $reason, $updatestatus, $payment_id);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+
+      // Combine all changes into a single log message
+      $logMessage = 'Reaon: ' . $reason . '<br>' . implode('<br>', $changes);
+
+      $this->History($this->session_id, 'Updated Deposit', $logMessage);
 
       return true; // Approval successful
     } else {

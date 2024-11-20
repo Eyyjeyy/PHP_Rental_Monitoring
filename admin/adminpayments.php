@@ -40,6 +40,64 @@
         }
     }
 
+    if(isset($_POST['approve_deposit'])) {
+        $depositid = $_POST['paymentsid'];
+        $approveDeposit = $admin->approveDeposit($depositid);
+
+        if($approveDeposit) {
+            header("Location: adminpayments.php?depsoit=approved");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Error occurred while approving a deposit.";
+            }
+            header("Location: adminpayments.php?error=approved");
+            exit();
+        }
+    }
+
+    if(isset($_POST['decline_deposit'])) {
+        $depositid = $_POST['paymentsid'];
+        $declineDeposit = $admin->declineDeposit($depositid);
+
+        if($declineDeposit) {
+            header("Location: adminpayments.php?depsoit=declined");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Error occurred while declining a deposit.";
+            }
+            header("Location: adminpayments.php?error=declined");
+            exit();
+        }
+    }
+
+    if(isset($_POST['update_deposits_table'])) {
+        $houseid = $_POST['houseid'];
+        $payment_id = $_POST['payment_id'];
+        $updatestatus = $_POST['updatestatus'];
+        $reason = $_POST['reason'];
+
+        $update = $admin->updateDeposit($houseid, $payment_id, $updatestatus, $reason);
+        if($update) {
+            header("Location: adminpayments.php?deposit=update");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Error occurred while updating a deposit.";
+            }
+            header("Location: adminpayments.php?error=update");
+            exit();
+        }
+    }
+
+    if (isset($_SESSION['error_message'])) {
+        // Display the error message as an alert
+        echo '<div class="alert alert-danger mb-0" role="alert">' . htmlspecialchars($_SESSION['error_message']) . '</div>';
+        // Unset the session variable to clear the error message
+        unset($_SESSION['error_message']);
+    }
+
     // Get sort column and direction from query parameters
     $sortColumn = isset($_GET['column']) ? $_GET['column'] : 'date_payment';
     $sortDirection = isset($_GET['direction']) && $_GET['direction'] === 'desc' ? 'DESC' : 'ASC';
@@ -114,6 +172,10 @@
                                     Tenant
                                     <span id="fnameSortArrow"></span>
                                 </th>
+                                <th scope="col" data-column="payment_type" class="sortable-column">
+                                    Payment Type
+                                    <span id="payment_typeSortArrow"></span>
+                                </th>
                                 <th scope="col" data-column="amount" class="sortable-column">
                                     Amount
                                     <span id="mnameSortArrow"></span>
@@ -123,10 +185,13 @@
                                     Date
                                     <span id="lnameSortArrow"></span>
                                 </th>
-                                <th scope="col" data-column="users_username" class="sortable-column">
+                                <th scope="col">Status</th>
+                                <th scope="col">Reason</th>
+                                <!-- <th scope="col" data-column="users_username" class="sortable-column">
                                     Username
                                     <span id="usernameSortArrow"></span>
-                                </th>
+                                </th> -->
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                             <tbody id="paymentTableBody">
@@ -137,6 +202,7 @@
                                         echo "<tr>";
                                         echo "<th scope='row'>" . $row['id'] . "</th>";
                                         echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                                        echo "<td>" . "as" . "</td>";
                                         echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
                                         // echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 100px; height: auto;'></td>";
 
@@ -206,6 +272,129 @@
                         </table>
                     </div>
                 </div>
+                <!-- Update Deposit Modal -->
+                <div class="modal fade" id="newCategoryModal" tabindex="-1" aria-labelledby="newCategoryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header" style="background-color: #527853;">
+                            <h5 class="modal-title text-white" id="newcategoryModalLabel">New Category</h5>
+                            <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="newCategoryForm" method="POST" action="adminpayments.php">
+                            <div class="mb-3">
+                                <label for="houseid" class="form-label">House ID</label>
+                                <input type="text" class="form-control" id="houseid" name="houseid" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="users_name" class="form-label">Name</label>
+                                <select class="form-control" id="users_name" name="payment_id" required readonly>
+                                    <!-- Options will be inserted here dynamically -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="updatestatus">Status</label>
+                                <select class="form-control" id="updatestatus" name="updatestatus" required>
+                                    <?php 
+                                        $option1 = "Approved";
+                                        $option2 = "Unapproved";
+                                        $option3 = "1 Month Consumed";
+                                        $option4 = "2 Months Consumed";
+                                    ?>
+                                    <option value="<?php echo $option1; ?>" id="updatestatusOption"><?php echo $option1; ?></option>
+                                    <option value="<?php echo $option2; ?>" id="updatestatusOption"><?php echo $option2; ?></option>
+                                    <option value="<?php echo $option3; ?>" id="updatestatusOption"><?php echo $option3; ?></option>
+                                    <option value="<?php echo $option4; ?>" id="updatestatusOption"><?php echo $option4; ?></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reason">Reason</label>
+                                <select class="form-control" id="reason" name="reason" required>
+                                    <option value="Emergency" id="reasonOption">Emergency</option>
+                                    <option value="Bills" id="reasonOption">Bills</option>
+                                    <option value="Rent" id="reasonOption">Rent</option>
+                                    <option value="Withdrawn" id="reasonOption">Withdrawn</option>
+                                </select>
+                                <!-- <input type="text" class="form-control" id="reason" name="reason" required> -->
+                            </div>
+                            <button type="submit" name="update_deposits_table" class="btn btn-primary table-buttons-update">Update</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    // document.getElementById('new_category').addEventListener('click', function () {
+                    //     var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
+                    //         keyboard: false
+                    //     });
+                    //     newCategoryModal.show();
+                    // });
+                </script>
+                <script>
+                    document.addEventListener('click', function(e) {
+                        if (e.target && e.target.id === 'update_deposit') {
+                            // Your modal opening logic here
+                            // Directly trigger the modal here
+
+                            // Retrieve the record's ID from the data-id attribute
+                            var recordId = e.target.getAttribute('data-id');
+                            var newCategoryModal = new bootstrap.Modal(document.getElementById('newCategoryModal'), {
+                                keyboard: false
+                            });
+                            newCategoryModal.show();
+
+                            console.log("Button clicked");
+                            // Log the record ID (you can use this to make further actions or populate the modal)
+                            console.log("Button clicked for record ID: " + recordId);
+                            
+                            // // Find the select element and set its value dynamically
+                            // var select = document.getElementById('categorySelect');
+                            // var option = document.createElement('option'); // Create a new option element
+                            // option.value = recordId; // Set the value to the payment ID
+                            // option.text = recordId; // Set the display text to the payment ID
+                            // select.innerHTML = ''; // Clear any existing options
+                            // select.appendChild(option); // Append the new option
+                            
+                            // Use fetch to send the recordId to the server
+                            fetch('fetchdeposit/deposit.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'recordId=' + encodeURIComponent(recordId)  // Send recordId to PHP
+                            })
+                            .then(response => response.json())  // Parse the JSON response from PHP
+                            .then(data => {
+                                // Handle the data received from the server
+                                console.log(data);  // This is the server's response
+
+                                // Example: Populate the select element with the record ID
+                                var houseidField = document.getElementById('houseid');
+                                var select = document.getElementById('users_name');
+                                var option = document.createElement('option');
+                                option.id = 'optiontest';
+                                // option.value = data.id; // Set the value to the payment ID
+                                option.text = data.id; // Set the display text to the payment ID
+                                select.innerHTML = '';  // Clear any existing options
+                                select.appendChild(option);  // Append the new option
+
+                                // Optionally, update other parts of the modal with fetched data
+                                // Populate modal field's values/text using the column name from sql query. Refer to deposit.php
+                                houseidField.value = data.houses_id;
+                                document.getElementById('optiontest').value = data.id;
+                                document.getElementById('optiontest').text = data.firstname + ' ' + data.middlename + ' ' + data.lastname;
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);  // Handle any errors that occur
+                            });
+                        }
+                    });
+                </script>
                 <!-- Include jQuery library -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
