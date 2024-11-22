@@ -1261,7 +1261,7 @@ Class Admin {
         $userRecord = $userResult->fetch_assoc();
         $email = $userRecord['email'];
         $username = $userRecord['firstname'] . " " . $userRecord['middlename'] . " " . $userRecord['lastname'];
-        $user_number = ['phonenumber'];
+        $user_number = $userRecord['phonenumber'];
 
         $subject = "Delinquency";
         if (!empty($reminder_missed_months_dates)) {
@@ -1275,7 +1275,7 @@ Class Admin {
 
         if ($user_number) {
           // Prepare the message
-          $smsMessage = "Your username: $username\nYour OTP code is: . Please enter this code to verify your identity.";
+          $smsMessage = "$username\nBe reminded of your $reminder_missing_months missed payments. \nFor the months of $reminder_missed_months_dates";
     
           // Set up the cURL request to send SMS
           $ch = curl_init();
@@ -1302,8 +1302,10 @@ Class Admin {
           curl_close($ch);
         }
 
-        if ($sendreminder) {
+        if ($sendreminder && $smsSent) {
           return true;
+        } else {
+          return false;
         }
       } else {
         return false;
