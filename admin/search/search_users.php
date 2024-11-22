@@ -6,7 +6,7 @@ $query = isset($_POST['query']) ? $_POST['query'] : '';
 $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
 $sort_column = isset($_POST['sort_column']) ? $_POST['sort_column'] : 'id';
 $sort_order = isset($_POST['sort_order']) ? $_POST['sort_order'] : 'ASC';
-$records_per_page = 5; // Adjust as needed
+$records_per_page = 10; // Adjust as needed
 
 // Calculate the offset for pagination
 $offset = ($page - 1) * $records_per_page;

@@ -116,8 +116,8 @@
     <div class="container-fluid">
         <div class="row">
             <?php include 'includes/header.php'; ?>
-            <div class="col main content">
-                <div class="card-body"  id="userbody">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
+                <div class="card-body"  id="userbody" style="margin-top: 0; height: 100%; max-height: 100%;overflow-y: auto;display: flex;flex-direction: column;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <div class="row">
@@ -130,8 +130,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive" id="tablelimiter">
-                        <table class="table table-striped table-bordered">
+                    <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
+                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
                             <thead>
                                 <tr>
                                     <th scope="col" class="sortable-column" data-column="id">ID</th>
@@ -324,10 +324,40 @@
                     });
                 </script>
                 <script>
+                    // document.addEventListener('DOMContentLoaded', function () {
+                    //     var updateButtons = document.querySelectorAll('.update-user-btn');
+                    //     updateButtons.forEach(function (button) {
+                    //         button.addEventListener('click', function () {
+                    //             var userId = button.getAttribute('data-id');
+                    //             var username = button.getAttribute('data-username');
+                    //             var firstname = button.getAttribute('data-firstname');
+                    //             var middlename = button.getAttribute('data-middlename');
+                    //             var lastname = button.getAttribute('data-lastname');
+                    //             var password = button.getAttribute('data-password');
+                    //             var role = button.getAttribute('data-role');
+                                
+                    //             // Fill the modal with the user's current data
+                    //             document.getElementById('updateUserId').value = userId;
+                    //             document.getElementById('updateUsername').value = username;
+                    //             document.getElementById('updateFirstname').value = firstname;
+                    //             document.getElementById('updateMiddlename').value = middlename;
+                    //             document.getElementById('updateLastname').value = lastname;
+                    //             document.getElementById('updatePassword').value = password;
+                    //             document.getElementById('updateRole').value = role;
+                                
+                    //             var updateUserModal = new bootstrap.Modal(document.getElementById('updateUserModal'), {
+                    //                 keyboard: false
+                    //             });
+                    //             updateUserModal.show();
+                    //         });
+                    //     });
+                    // });
+
                     document.addEventListener('DOMContentLoaded', function () {
-                        var updateButtons = document.querySelectorAll('.update-user-btn');
-                        updateButtons.forEach(function (button) {
-                            button.addEventListener('click', function () {
+                        document.body.addEventListener('click', function (event) {
+                            if (event.target.classList.contains('update-user-btn')) {
+                                var button = event.target;
+
                                 var userId = button.getAttribute('data-id');
                                 var username = button.getAttribute('data-username');
                                 var firstname = button.getAttribute('data-firstname');
@@ -335,7 +365,7 @@
                                 var lastname = button.getAttribute('data-lastname');
                                 var password = button.getAttribute('data-password');
                                 var role = button.getAttribute('data-role');
-                                
+
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateUserId').value = userId;
                                 document.getElementById('updateUsername').value = username;
@@ -344,12 +374,12 @@
                                 document.getElementById('updateLastname').value = lastname;
                                 document.getElementById('updatePassword').value = password;
                                 document.getElementById('updateRole').value = role;
-                                
+
                                 var updateUserModal = new bootstrap.Modal(document.getElementById('updateUserModal'), {
                                     keyboard: false
                                 });
                                 updateUserModal.show();
-                            });
+                            }
                         });
                     });
                 </script>

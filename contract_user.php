@@ -197,10 +197,10 @@
                         <label for="previousaddress-input" class="form-label">Previous Address</label>
                         <textarea name="previousaddress-input" id="previousaddress-input" class="d-block w-100" required></textarea>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="lesseewitness" class="form-label">Lessee Witness</label>
                         <input type="text" class="form-control" id="lesseewitness" name="lesseewitness" required>
-                    </div>
+                    </div> -->
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
                         <label for="signature-pad" class="form-label">Lessee Signature</label>
                         <div class="wrapper">
@@ -215,6 +215,10 @@
                         </div>
                         <!-- <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
                         <!-- <button id="save">Save Signature</button> -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="lesseewitness" class="form-label">Lessee Witness</label>
+                        <input type="text" class="form-control" id="lesseewitness" name="lesseewitness" required>
                     </div>
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
                         <label for="signature-pad-2" class="form-label">Lessee Witness's Signature</label>

@@ -288,7 +288,7 @@
                             <form id="newCategoryForm" method="POST" action="adminpayments.php">
                             <div class="mb-3">
                                 <label for="houseid" class="form-label">House ID</label>
-                                <input type="text" class="form-control" id="houseid" name="houseid" required>
+                                <input type="text" class="form-control" id="houseid" name="houseid" required readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="users_name" class="form-label">Name</label>

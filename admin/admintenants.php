@@ -162,8 +162,8 @@
     <div class="container-fluid">
         <div class="row">
         <?php include 'includes/header.php'; ?>
-            <div class="col main content">
-                <div class="card-body" style="margin-top: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
+                <div class="card-body" style="margin-top: 0px; height: 100%; max-height: 100%; display: flex;flex-direction: column;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader"> 
                             <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" />
@@ -178,7 +178,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive"  id="tablelimiter">
+                    <div class="table-responsive"  id="tablelimiter" style="max-height: unset;">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>

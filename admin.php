@@ -1261,6 +1261,7 @@ Class Admin {
         $userRecord = $userResult->fetch_assoc();
         $email = $userRecord['email'];
         $username = $userRecord['firstname'] . " " . $userRecord['middlename'] . " " . $userRecord['lastname'];
+        $user_number = ['phonenumber'];
 
         $subject = "Delinquency";
         if (!empty($reminder_missed_months_dates)) {
@@ -1271,6 +1272,35 @@ Class Admin {
         $imagePath = __DIR__ . '/asset/Renttrack pro.png';
 
         $sendreminder = $this->sendEmail($email, $subject, $body, $imagePath);
+
+        if ($user_number) {
+          // Prepare the message
+          $smsMessage = "Your username: $username\nYour OTP code is: . Please enter this code to verify your identity.";
+    
+          // Set up the cURL request to send SMS
+          $ch = curl_init();
+          $parameters = array(
+            'apikey' => '', // Replace with your actual API key
+            'number' => $user_number,  // Recipient's number
+            'message' => $smsMessage,
+            'sendername' => 'Thesis' // Replace with your registered sender name
+          );
+    
+          // Set cURL options for the request
+          curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+          // Execute the cURL request and get the response
+          $output = curl_exec($ch);
+          if ($output) {
+            $smsSent = true; // SMS sent successfully
+          }
+    
+          // Close the cURL session
+          curl_close($ch);
+        }
 
         if ($sendreminder) {
           return true;

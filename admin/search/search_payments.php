@@ -173,7 +173,7 @@ if ($result->num_rows > 0) {
         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
         echo "<div class='row justify-content-center m-0'>";
         // echo "<div class='col-xxl-4 px-2'>";
-        echo "<div class='col-xxl-4 px-2 " . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved') ? 'd-none' : '') ."'>";
+        echo "<div class='col-xxl-4 px-2 " . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? 'd-none' : '') ."'>";
         // Add a form with a delete button for each record
         echo "<form method='POST' action='adminpayments.php' class='float-xxl-end align-items-center mb-0'>";
         echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";

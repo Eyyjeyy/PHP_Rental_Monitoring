@@ -293,8 +293,8 @@
                 .wrapper {min-height:200px;border: 1px solid #000;}
                 .signature-pad {position: absolute;left: 0;top: 0;width: 100%;height: 100%}
             </style>
-            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px;">
-                <div class="card-body" style="margin-top: 0; height:100%; max-height: 100%; overflow-y: auto;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
+                <div class="card-body" style="margin-top: 0; height:100%; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <div class="row mb-3">
@@ -406,7 +406,8 @@
                             <h3 class="fw-bold">Physical Contracts</h3>
                         </div>
                     </div> -->
-                    <div class="table-responsive"  id="tablelimiter" style="max-height: 420px;">
+                    <!-- <div class="table-responsive"  id="tablelimiter" style="max-height: 420px;"> -->
+                    <div class="table-responsive"  id="tablelimiter">
                         <table class="table table-striped table-bordered" id="physicalcontractsTable">
                             <thead>
                                 <tr>
@@ -777,7 +778,7 @@
                             <div class="modal-body text-center" style="max-height: 100%;">
                                 <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid" style="height: 100%; object-fit: cover;">
                                 <!-- PDF Preview -->
-                                <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none;"></iframe>
+                                <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none; height: 100%;"></iframe>
                             </div>
                         </div>
                     </div>
