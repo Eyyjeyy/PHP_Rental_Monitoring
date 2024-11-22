@@ -172,7 +172,8 @@ if ($result->num_rows > 0) {
         echo "<td>" . htmlspecialchars($row['reason']) . "</td>";
         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
         echo "<div class='row justify-content-center m-0'>";
-        echo "<div class='col-xxl-4 px-2'>";
+        // echo "<div class='col-xxl-4 px-2'>";
+        echo "<div class='col-xxl-4 px-2 " . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved') ? 'd-none' : '') ."'>";
         // Add a form with a delete button for each record
         echo "<form method='POST' action='adminpayments.php' class='float-xxl-end align-items-center mb-0'>";
         echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";
@@ -198,7 +199,8 @@ if ($result->num_rows > 0) {
         // echo "<div class='col-xxl-4 d-flex justify-content-center justify-content-xxl-start px-2'>";
         // echo "<div class='col-xxl-4 d-flex justify-content-center px-2'>";
         // echo "<div class='col-xxl-auto d-flex justify-content-center px-2'>";
-        echo "<div class='col-xxl-auto d-flex justify-content-center px-2" . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? ' invisible' : ' visible') . "'>";
+        // echo "<div class='col-xxl-auto d-flex justify-content-center px-2" . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? ' invisible' : ' visible') . "'>";
+        echo "<div class='col-xxl-auto d-flex justify-content-center px-2" . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? ' d-none' : ' visible') . "'>";
             // Add a form with a update button for each record
             echo "<form method='POST' action='adminpayments.php' class='align-items-center mb-0'>";
                 echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";
@@ -212,7 +214,8 @@ if ($result->num_rows > 0) {
             echo "</form>";
         echo "</div>";
         // echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] === 'true' ? ' visible' : ' invisible') . " justify-content-center px-2'>";
-        echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' ? ' visible' : ' invisible') . " justify-content-center px-2'>";
+        // echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' ? ' visible' : ' invisible') . " justify-content-center px-2'>";
+        echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' ? ' visible' : ' d-none') . " justify-content-center px-2'>";
         echo "<button class='btn btn-primary float-end table-buttons-update' id='update_deposit' data-id='" . $row['id'] . "' style='width: 120px;'><i class='fa fa-plus'></i>Update</button>";
         echo "</div>";
         

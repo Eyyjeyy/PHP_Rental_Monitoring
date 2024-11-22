@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 10:28 AM
+-- Generation Time: Nov 20, 2024 at 04:22 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -118,9 +118,8 @@ CREATE TABLE `deposit` (
 --
 
 INSERT INTO `deposit` (`id`, `tenantid`, `adminid`, `deposit_filepath`, `houses_id`, `depositamount`, `depositdate`, `approval`, `reason`) VALUES
-(1, 75, 84, '', 858, 12000, '2024-11-19', '', ''),
 (2, 74, 85, '../deposits/kindpng_1132944_673c6dbd983b4.png', 864, 6900, '2024-11-29', '', ''),
-(3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', '', '');
+(3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', 'Unapproved', '');
 
 -- --------------------------------------------------------
 
@@ -468,7 +467,12 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (300, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 09:23:04'),
 (301, 84, 'Updated Deposit', 'Reaon: Withdrawn<br>Status: Approved', '2024-11-20 09:23:07'),
 (302, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 09:23:11'),
-(303, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 2 Months Consumed', '2024-11-20 09:23:15');
+(303, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 2 Months Consumed', '2024-11-20 09:23:15'),
+(304, 84, 'Declined', 'Deposit Declined, ID: 3<br>Approval: Pending -> Declined', '2024-11-20 11:38:14'),
+(305, 84, 'Add', 'Added House, ID: 869<br> Housename: asdada<br> Category: 66<br> Price: 4324<br> Electric Account: asdad (87878787)<br> Water Account: asdasdasd (87878787)', '2024-11-20 13:44:41'),
+(306, 84, 'Add', 'Added House, ID: 870<br> Housename: Tinesting Ako<br> Category: 66<br> Price: 65435<br> Electric Account: asdasdad (12312312312)<br> Water Account: asdad (12312312312)<br>Gcash: \r\n        12312312312<br>Bank: 12312312312', '2024-11-20 13:56:52'),
+(307, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 14:06:29'),
+(308, 84, 'Updated Deposit', 'Reaon: Emergency, Bills<br>Status: 2 Months Consumed', '2024-11-20 14:06:40');
 
 -- --------------------------------------------------------
 
@@ -504,7 +508,8 @@ INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `
 (20, 865, 'Mildred', 42346363, 'Mildred', 6366346, '', ''),
 (21, 866, 'Jerum', 325252, 'Jerum', 263453, '', ''),
 (22, 867, 'Jerum', 34537745, 'Jerum', 45747455, '', ''),
-(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '', '');
+(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '', ''),
+(25, 870, 'asdasdad', 2147483647, 'asdad', 2147483647, '12312312312', '12312312312');
 
 -- --------------------------------------------------------
 
@@ -535,7 +540,8 @@ INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`, `address`) VAL
 (865, 'Lagro B', 16000, 74, ''),
 (866, 'Bagatua Side A', 5000, 75, ''),
 (867, 'Bagatua Side B', 5000, 75, ''),
-(868, 'Regalado', 30000, 77, '');
+(868, 'Regalado', 30000, 77, ''),
+(870, 'Tinesting Ako', 65435, 66, '');
 
 -- --------------------------------------------------------
 
@@ -841,7 +847,7 @@ ALTER TABLE `contract_images`
 -- AUTO_INCREMENT for table `deposit`
 --
 ALTER TABLE `deposit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -853,19 +859,19 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=869;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=871;
 
 --
 -- AUTO_INCREMENT for table `messages`

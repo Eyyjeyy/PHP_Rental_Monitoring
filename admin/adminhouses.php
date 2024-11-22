@@ -60,6 +60,8 @@
         $e_accountname = trim(htmlspecialchars($_POST['e_accountname']));
         $w_accountnum = trim(htmlspecialchars($_POST['w_accountnum']));
         $w_accountname = trim(htmlspecialchars($_POST['w_accountname']));
+        $gcash = trim(htmlspecialchars($_POST['gcash']));
+        $bank = trim(htmlspecialchars($_POST['bank']));
     
         // Validate the house number to ensure it contains only numerical characters
         if (ctype_digit($housenumber)) {
@@ -79,11 +81,17 @@
             header("Location: adminhouses.php");
             exit();
         }
+
+        if (!ctype_digit($gcash) || !ctype_digit($bank)) {
+            $_SESSION['error_message'] = "Should only be numerical characters";
+            header("Location: adminhouses.php");
+            exit();
+        }
     
         // Create an instance of your Admin class
         // $admin1 = new Admin($conn);
         // Call the addHouse method to add the new house
-        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum);
+        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank);
         if ($added) {
             $_SESSION['success_message'] = "Success";
             header("Location: adminhouses.php");
@@ -462,6 +470,18 @@
                                         <div class="mb-3">
                                             <label for="w_accountname" class="form-label">Maynilad Account Name</label>
                                             <input type="text" class="form-control" id="w_accountname" name="w_accountname" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="gcash" class="form-label">Gcash</label>
+                                            <input type="text" class="form-control" id="gcash" name="gcash" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="bank" class="form-label">Bank</label>
+                                            <input type="text" class="form-control" id="bank" name="bank" required>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">

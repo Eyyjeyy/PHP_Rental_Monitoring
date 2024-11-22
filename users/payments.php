@@ -564,7 +564,7 @@
             <label for="paymentType" class="form-label">Payment Type</label>
             <select class="form-select" id="paymentType" name="paymentType" required>
               <option value="Deposit" selected>Deposit</option>
-              <option value="Payment" selected>Payment</option>
+              <option value="Payment" selected>Rent</option>
             </select>
           </div>
           <div class="mb-3">

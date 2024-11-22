@@ -406,7 +406,7 @@ Class Admin {
   }
 
   // Function to add a new house
-  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum) {
+  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank) {
     $sql = "INSERT INTO houses (house_name, price, category_id) VALUES (?, ?, ?)";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("sdi", $housenumber, $price, $category);
@@ -416,16 +416,17 @@ Class Admin {
       $houseId = $stmt->insert_id;
         
       // Prepare and execute the query to insert into the housesaccounts table
-      $sqlAccounts = "INSERT INTO houseaccounts (houses_id, elec_accname, elec_accnum, water_accname, water_accnum) VALUES (?, ?, ?, ?, ?)";
+      $sqlAccounts = "INSERT INTO houseaccounts (houses_id, elec_accname, elec_accnum, water_accname, water_accnum, gcash, bank) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $stmtAccounts = $this->conn->prepare($sqlAccounts);
-      $stmtAccounts->bind_param("isisi", $houseId, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum);
+      $stmtAccounts->bind_param("isisiss", $houseId, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank);
       $stmtAccounts->execute();
 
       // Check if insertion into housesaccounts table was successful
       if ($stmtAccounts->affected_rows > 0) {
         // Log the action
         $this->History($this->session_id, 'Add', 'Added House, ID: ' . $houseId . '<br> Housename: ' . $housenumber . '<br> Category: ' . $category
-        . '<br> Price: ' . $price . '<br> Electric Account: ' . $e_accountname . ' (' . $e_accountnum . ')<br> Water Account: ' . $w_accountname . ' (' . $w_accountnum . ')');
+        . '<br> Price: ' . $price . '<br> Electric Account: ' . $e_accountname . ' (' . $e_accountnum . ')<br> Water Account: ' . $w_accountname . ' (' . $w_accountnum . ')' . '<br>Gcash: 
+        ' . $gcash . '<br>Bank: ' . $bank);
 
         return true; // Insertion successful
       } else {
@@ -799,7 +800,7 @@ Class Admin {
       VALUES (?, ?, ?, ?, ?, ?, ?)";
       $stmt = $this->conn->prepare($sql);
       $approval = '';  // Default approval status
-      $stmt->bind_param("iisidss", $tenantId, $adminId, $filePath, $houses_id, $amount, $paymentDate, $approval);
+      $stmt->bind_param("iisiiss", $tenantId, $adminId, $filePath, $houses_id, $amount, $paymentDate, $approval);
 
       // Execute the prepared statement
       $result = $stmt->execute();
@@ -1198,6 +1199,7 @@ Class Admin {
     $depositRecord = $retrieveResult->fetch_assoc();
 
     $depositRecordapproval = $depositRecord['approval'];
+    $existingReason = $depositRecord['reason'];
     // $approve_paymentamount = $depositRecord['amount'];
     if($depositRecord['approval'] == 'true' && $updatestatus == 'Approved') {
       $_SESSION['error_message'] = "Deposit is already approved";
@@ -1212,21 +1214,72 @@ Class Admin {
     if($updatestatus == 'Approved') {
       $updatestatus = 'true';
     } 
+
+    // Modify the reason based on whether it is empty
+    if (empty($existingReason)) {
+      $finalReason = $reason; // Set the new reason
+    } else {
+      $finalReason = $existingReason . ", " . $reason; // Append to the existing reason
+    }
     
     $sql = "UPDATE deposit SET reason = ?, approval = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("ssi", $reason, $updatestatus, $payment_id);
+    $stmt->bind_param("ssi", $finalReason, $updatestatus, $payment_id);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
 
       // Combine all changes into a single log message
-      $logMessage = 'Reaon: ' . $reason . '<br>' . implode('<br>', $changes);
+      $logMessage = 'Reaon: ' . $finalReason . '<br>' . implode('<br>', $changes);
 
       $this->History($this->session_id, 'Updated Deposit', $logMessage);
 
       return true; // Approval successful
     } else {
       return false; // Approval failed
+    }
+  }
+
+  public function delinquencySendReminder($reminder_tenant_id, $reminder_missing_months, $reminder_missed_months_dates) {
+    $retrievesql = "SELECT * FROM tenants WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $reminder_tenant_id);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    if ($retrieveResult->num_rows > 0) {
+      $tenants_delinquencyRecord = $retrieveResult->fetch_assoc();
+      $users_id = $tenants_delinquencyRecord['users_id'];
+      $users_id = $tenants_delinquencyRecord['users_id'];
+
+      $usersql = "SELECT * FROM users WHERE id = ?";
+      $userstmt = $this->conn->prepare($usersql);
+      $userstmt->bind_param("i", $users_id);
+      $userstmt->execute();
+      $userResult = $userstmt->get_result();
+
+      if ($userResult->num_rows > 0) {
+        $userRecord = $userResult->fetch_assoc();
+        $email = $userRecord['email'];
+        $username = $userRecord['firstname'] . " " . $userRecord['middlename'] . " " . $userRecord['lastname'];
+
+        $subject = "Delinquency";
+        if (!empty($reminder_missed_months_dates)) {
+          $body = "$username<br>Be Reminded of your $reminder_missing_months missed payments.<br>For the months of $reminder_missed_months_dates<br>";
+        } else {
+          $body = "$username<br>Be Reminded of your $reminder_missing_months missed payments.<br><br>";
+        }
+        $imagePath = __DIR__ . '/asset/Renttrack pro.png';
+
+        $sendreminder = $this->sendEmail($email, $subject, $body, $imagePath);
+
+        if ($sendreminder) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 
@@ -2514,11 +2567,66 @@ $sql = "SELECT
   }
 
 
-  public function deletePhysicalContract ($physicalcontractid) {
-    $retrievesql = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname 
-        FROM physical_contracts 
-        JOIN tenants ON physical_contracts.tenantid = tenants.id 
-        WHERE physical_contracts.id = ?";
+  // public function deletePhysicalContract ($physicalcontractid) {
+  //   $retrievesql = "SELECT physical_contracts.*, CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname 
+  //       FROM physical_contracts 
+  //       JOIN tenants ON physical_contracts.tenantid = tenants.id 
+  //       WHERE physical_contracts.id = ?";
+  //   $retrievestmt = $this->conn->prepare($retrievesql);
+  //   $retrievestmt->bind_param("i", $physicalcontractid);
+  //   $retrievestmt->execute();
+  //   $retrieveResult = $retrievestmt->get_result();
+
+  //   if ($retrieveResult === false || $retrieveResult->num_rows === 0) {
+  //     // If the SELECT query fails or returns no results, return false
+  //     return false;
+  //   }
+
+  //   // Fetch the expenses record as an associative array
+  //   $contractRecord = $retrieveResult->fetch_assoc();
+  //   $deleted_contracts = $contractRecord['tenantname'];
+  //   $fileurl = $contractRecord['fileurl'];
+
+  //   // First, delete the actual file from the directory
+  //   if (!empty(__DIR__ . '/asset/physical_contracts/' . $fileurl) && file_exists(__DIR__ . '/asset/physical_contracts/' . $fileurl)) {
+  //     $filePath = __DIR__ . '/asset/physical_contracts/' . $fileurl;
+  //     if (!unlink($filePath)) {
+  //       // File deletion failed, return false and exit
+  //       return false; 
+  //     }
+  //   } else {
+  //     // If the file doesn't exist, fail
+  //     return false; 
+  //   }
+
+  //   $sql = "DELETE FROM physical_contracts WHERE id = ?";
+  //   $stmt = $this->conn->prepare($sql);
+  //   $stmt->bind_param("i", $physicalcontractid);
+  //   $stmt->execute();
+  //   if ($stmt->affected_rows > 0) {
+      
+  //     $logMessage = 'Deleted Contract, ID: ' . $physicalcontractid . '<br>';
+  //     $logMessage .= 'Contract Tenant Name: ' . $deleted_contracts . '<br>';
+
+  //     $this->History($this->session_id, 'Delete', $logMessage);
+
+  //     return true; // Deletion successful
+  //   } else {
+  //     return false; // Deletion failed
+  //   }
+  // }
+
+  public function deletePhysicalContract($physicalcontractid) {
+    // Updated query to retrieve all relevant data, including multiple images
+    $retrievesql = "SELECT physical_contracts.*, 
+                       CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname, 
+                       GROUP_CONCAT(contract_images.image_path) AS image_paths 
+                FROM physical_contracts 
+                JOIN tenants ON physical_contracts.tenantid = tenants.id 
+                LEFT JOIN contract_images ON physical_contracts.id = contract_images.physical_contract_id 
+                WHERE physical_contracts.id = ?
+                GROUP BY physical_contracts.id";
+
     $retrievestmt = $this->conn->prepare($retrievesql);
     $retrievestmt->bind_param("i", $physicalcontractid);
     $retrievestmt->execute();
@@ -2529,31 +2637,36 @@ $sql = "SELECT
       return false;
     }
 
-    // Fetch the expenses record as an associative array
+    // Fetch the contract record as an associative array
     $contractRecord = $retrieveResult->fetch_assoc();
     $deleted_contracts = $contractRecord['tenantname'];
-    $fileurl = $contractRecord['fileurl'];
+    $imagePaths = explode(',', $contractRecord['image_paths']); // Convert images to an array
 
-    // First, delete the actual file from the directory
-    if (!empty(__DIR__ . '/asset/physical_contracts/' . $fileurl) && file_exists(__DIR__ . '/asset/physical_contracts/' . $fileurl)) {
-      $filePath = __DIR__ . '/asset/physical_contracts/' . $fileurl;
-      if (!unlink($filePath)) {
-        // File deletion failed, return false and exit
-        return false; 
+    // Delete all associated images
+    foreach ($imagePaths as $imagePath) {
+      if (!empty($imagePath) && file_exists(__DIR__ . '/asset/physical_contracts/' . $imagePath)) {
+        $imageFilePath = __DIR__ . '/asset/physical_contracts/' . $imagePath;
+        unlink($imageFilePath); // Attempt to delete each image
       }
-    } else {
-      // If the file doesn't exist, fail
-      return false; 
     }
 
+    // Delete the physical contract record
     $sql = "DELETE FROM physical_contracts WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("i", $physicalcontractid);
     $stmt->execute();
+
+    // Also delete associated images from the contract_images table
+    $deleteImagesSql = "DELETE FROM contract_images WHERE physical_contract_id = ?";
+    $deleteImagesStmt = $this->conn->prepare($deleteImagesSql);
+    $deleteImagesStmt->bind_param("i", $physicalcontractid);
+    $deleteImagesStmt->execute();
+
     if ($stmt->affected_rows > 0) {
-      
+      // Log the deletion with details
       $logMessage = 'Deleted Contract, ID: ' . $physicalcontractid . '<br>';
       $logMessage .= 'Contract Tenant Name: ' . $deleted_contracts . '<br>';
+      $logMessage .= 'Deleted Images: ' . implode(', ', $imagePaths) . '<br>';
 
       $this->History($this->session_id, 'Delete', $logMessage);
 
@@ -2562,6 +2675,8 @@ $sql = "SELECT
       return false; // Deletion failed
     }
   }
+
+
   
   public function completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2) {
     // Database query to retrieve the contract

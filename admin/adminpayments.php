@@ -126,8 +126,8 @@
     <div class="container-fluid">
         <div class="row">
         <?php include 'includes/header.php'; ?>
-            <div class="col main content">
-                <div class="card-body" style="margin-top: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px;">
+                <div class="card-body" style="margin-top: 0; height: 100%;">
                     <div class="row">
                         <div class="col-lg-12">
                             <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" /> -->
@@ -277,7 +277,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header" style="background-color: #527853;">
-                            <h5 class="modal-title text-white" id="newcategoryModalLabel">New Category</h5>
+                            <h5 class="modal-title text-white" id="newcategoryModalLabel">Update Deposit</h5>
                             <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
                                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -305,8 +305,8 @@
                                         $option3 = "1 Month Consumed";
                                         $option4 = "2 Months Consumed";
                                     ?>
-                                    <option value="<?php echo $option1; ?>" id="updatestatusOption"><?php echo $option1; ?></option>
-                                    <option value="<?php echo $option2; ?>" id="updatestatusOption"><?php echo $option2; ?></option>
+                                    <!-- <option value="<?php echo $option1; ?>" id="updatestatusOption"><?php echo $option1; ?></option>
+                                    <option value="<?php echo $option2; ?>" id="updatestatusOption"><?php echo $option2; ?></option> -->
                                     <option value="<?php echo $option3; ?>" id="updatestatusOption"><?php echo $option3; ?></option>
                                     <option value="<?php echo $option4; ?>" id="updatestatusOption"><?php echo $option4; ?></option>
                                 </select>

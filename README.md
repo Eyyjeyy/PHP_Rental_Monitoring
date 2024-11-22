@@ -176,3 +176,10 @@ The project is built using PHP, MySQL for database management, and incorporates 
 - Created deposit table in phpmyadmin <br>
 - Created admin functions for approving and declining deposit in adminpayments.php <br>
 - if approved or declined deposit, only update button shows. <br>
+
+11/21/2024
+- Admindelinquency page created <br>
+- Admindelinquency page backend for display <br>
+
+11/22/2024
+- delinquencySendReminder function in admin.php created for backend of sending email reminders in Admindelinquency page <br>

@@ -293,8 +293,8 @@
                 .wrapper {min-height:200px;border: 1px solid #000;}
                 .signature-pad {position: absolute;left: 0;top: 0;width: 100%;height: 100%}
             </style>
-            <div class="col main content">
-                <div class="card-body" style="margin-top: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px;">
+                <div class="card-body" style="margin-top: 0; height:100%; max-height: 100%; overflow-y: auto;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <div class="row mb-3">
@@ -406,7 +406,7 @@
                             <h3 class="fw-bold">Physical Contracts</h3>
                         </div>
                     </div> -->
-                    <div class="table-responsive"  id="tablelimiter">
+                    <div class="table-responsive"  id="tablelimiter" style="max-height: 420px;">
                         <table class="table table-striped table-bordered" id="physicalcontractsTable">
                             <thead>
                                 <tr>
@@ -500,25 +500,25 @@
                                         //     echo "<img src='../asset/physical_contracts/default.png' alt='Default Picture' class='img-fluid' style='width: 80px; height: 80px; object-fit: cover;'>";
                                         // }
                                         $filePaths = explode(',', $row_physical['image_paths']);
-foreach ($filePaths as $filePath) {
-    $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
-    if (!empty($filePath)) {
-        // Check file extension to determine if it's a PDF
-        $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                                        foreach ($filePaths as $filePath) {
+                                            $fileUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
+                                            if (!empty($filePath)) {
+                                                // Check file extension to determine if it's a PDF
+                                                $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
-        if ($fileExtension === 'pdf') {
-            // Display PDF file icon
-            echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
-            echo "<img src='../asset/pdf-file.webp' alt='PDF File' class='img-fluid' style='width: 100px; height: 100px; object-fit: contain; margin-right: 5px;'>";
-            echo "</a>";
-        } else {
-            // Display image file
-            echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
-            echo "<img src='$fileUrl' alt='Contract Image' class='img-fluid' style='width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>";
-            echo "</a>";
-        }
-    }
-}
+                                                if ($fileExtension === 'pdf') {
+                                                    // Display PDF file icon
+                                                    echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
+                                                    echo "<img src='../asset/pdf-file.webp' alt='PDF File' class='img-fluid' style='width: 100px; height: 100px; object-fit: contain; margin-right: 5px;'>";
+                                                    echo "</a>";
+                                                } else {
+                                                    // Display image file
+                                                    echo "<a href='#' data-bs-toggle='modal' data-bs-target='#imagePreviewModal' onclick=\"showFileModal('$fileUrl')\">";
+                                                    echo "<img src='$fileUrl' alt='Contract Image' class='img-fluid' style='width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>";
+                                                    echo "</a>";
+                                                }
+                                            }
+                                        }
                                         echo "</td>";
                                         
                                         // Actions
@@ -768,14 +768,14 @@ foreach ($filePaths as $filePath) {
                 </div>
                 <!-- Image Preview Modal -->
                 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
+                    <div class="modal-dialog modal-dialog-centered" style="width: 1200px; max-width: 100%;">
+                        <div class="modal-content" style="height: 1500px; max-height: 90vh; overflow-y: hidden;">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="imagePreviewLabel">Image Preview</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body text-center">
-                                <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid">
+                            <div class="modal-body text-center" style="max-height: 100%;">
+                                <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid" style="height: 100%; object-fit: cover;">
                                 <!-- PDF Preview -->
                                 <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none;"></iframe>
                             </div>

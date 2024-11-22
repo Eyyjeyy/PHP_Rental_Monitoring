@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="col-12 col-md-6 mb-3 mt-3">
                                     <label for="exampleFormControlInput1" class="form-label">
-                                        <p class="fs-5 fw-bold mb-0">Gcash</p>
+                                        <p class="fs-5 fw-bold mb-0">Bank</p>
                                     </label>
                                     <input type="text" class="form-control" id="exampleFormControlInput1" name="bank" value="<?php echo htmlspecialchars($houseAccounts['bank'] ?? 'N/A'); ?>">
                                 </div>
