@@ -169,7 +169,7 @@
                                     }
 
                                     // Only display the tenant in delinquency if his/her missing months of payments are 2 or more months
-                                    if ($missing_months >= 0 ) {
+                                    if ($missing_months >= 2 ) {
                                         $hasData = true; // Mark that at least one row is displayed
                                         echo "<tr>";
                                             echo "<th scope='row'>" . $row['tenant_id'] . "</th>";
