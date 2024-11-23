@@ -338,14 +338,16 @@
                         <button class="navbar-toggler" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-height: 50px; max-height: 90vh; overflow-y: auto;">
                             <a class="dropdown-item" href="admindashboard.php">Dashboard</a>
                             <a class="dropdown-item" href="adminusers.php">Users</a>
                             <a class="dropdown-item" href="adminhouses.php">Apartments</a>
                             <!-- <a class="dropdown-item" href="admincategories.php">Categories</a> -->
                             <a class="dropdown-item" href="admintenants.php">Tenants</a>
                             <a class="dropdown-item" href="adminpayments.php">Payments</a>
+                            <a class="dropdown-item" href="admindelinquency.php">Delinquency</a>
                             <a class="dropdown-item" href="adminpapers.php">Papers</a>
+                            <a class="dropdown-item" href="admin_contract_template.php">Contracts</a>
                             <a class="dropdown-item" href="adminexpenses.php">Expenses</a>
                             <a class="dropdown-item" href="../chat.php">Chat</a>
                             <a class="dropdown-item" href="adminhistory.php">History</a>

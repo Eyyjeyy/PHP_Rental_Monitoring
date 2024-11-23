@@ -193,7 +193,7 @@ Class Admin {
   // }
 
   // Function to update a user's username, password, and role
-  public function updateUser($user_id, $username, $firstname, $middlename, $lastname, $password, $role) {
+  public function updateUser($user_id, $username, $firstname, $middlename, $lastname, $password, $role, $updateNumber, $updateEmail) {
     $this->conn->begin_transaction(); // Start transaction
 
     // Retrieve Old Values for History Logs
@@ -207,9 +207,9 @@ Class Admin {
     $oldval_username = $oldvalRow['username'];
 
     // Update the users table
-    $sql_users = "UPDATE users SET username = ?, firstname = ?, middlename = ?, lastname = ?, password = ?, role = ? WHERE id = ?";
+    $sql_users = "UPDATE users SET username = ?, firstname = ?, middlename = ?, lastname = ?, password = ?, role = ?, email = ?, phonenumber = ? WHERE id = ?";
     $stmt_users = $this->conn->prepare($sql_users);
-    $stmt_users->bind_param("ssssssi", $username, $firstname, $middlename, $lastname, $password, $role, $user_id);
+    $stmt_users->bind_param("ssssssssi", $username, $firstname, $middlename, $lastname, $password, $role, $updateNumber, $updateEmail, $user_id);
     $stmt_users->execute();
 
     // Check if the users table update was executed successfully

@@ -183,3 +183,46 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 11/22/2024
 - delinquencySendReminder function in admin.php created for backend of sending email reminders in Admindelinquency page <br>
+
+
+
+
+$sql = "
+    SELECT 
+        contracts.id AS document_id, 
+        'contracts' AS document_type, 
+        contracts.tenants_id, 
+        CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname, 
+        contracts.tenantapproval AS tenant_approval, 
+        contracts.datestart AS contract_start, 
+        contracts.expirationdate AS contract_expiry, 
+        NULL AS status
+    FROM contracts
+    INNER JOIN tenants ON contracts.tenants_id = tenants.id
+    INNER JOIN users ON tenants.users_id = users.id
+    WHERE users.id = ?
+    
+    UNION ALL
+    
+    SELECT 
+        deposit.id AS document_id, 
+        'deposits' AS document_type, 
+        deposit.tenantid AS tenants_id, 
+        CONCAT(tenants.fname, ' ', tenants.mname, ' ', tenants.lname) AS tenantname, 
+        NULL AS tenant_approval,
+        NULL AS contract_start, 
+        NULL AS contract_expiry, 
+        deposit.approval as status
+    FROM deposit
+    INNER JOIN tenants ON deposit.tenantid = tenants.id
+    INNER JOIN users ON tenants.users_id = users.id
+    WHERE users.id = ?
+    ";
+    // $stmt = $admin->conn->prepare($sql);
+    // $stmt->bind_param("i", $admin->session_id);
+    // $stmt->execute();
+    // $result = $stmt->get_result();
+    $stmt = $admin->conn->prepare($sql);
+    $stmt->bind_param("ii", $admin->session_id, $admin->session_id);
+    $stmt->execute();
+    $result = $stmt->get_result();

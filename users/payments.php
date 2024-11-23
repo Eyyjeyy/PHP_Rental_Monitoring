@@ -188,13 +188,49 @@
   }
 
 
+  // $sql = "
+  // SELECT payments.* 
+  // FROM payments
+  // INNER JOIN tenants ON payments.tenants_id = tenants.id
+  // WHERE tenants.users_id = '$admin->session_id'
+  // ";
+  // $result = $admin->conn->query($sql);
+
   $sql = "
-  SELECT payments.* 
+  SELECT 
+      payments.id AS document_id, 
+      'payments' AS document_type, 
+      payments.name, 
+      payments.amount,
+      payments.tenants_id, 
+      payments.houses_id, 
+      payments.filepath,
+      payments.date_payment AS transaction_date,
+      payments.approval 
   FROM payments
   INNER JOIN tenants ON payments.tenants_id = tenants.id
   WHERE tenants.users_id = '$admin->session_id'
+
+  UNION ALL
+
+  SELECT 
+      deposit.id AS document_id, 
+      'deposit' AS document_type, 
+      CONCAT(users.firstname, ' ', users.middlename, ' ', users.lastname) AS name, 
+      deposit.depositamount AS amount, 
+      deposit.tenantid AS tenants_id, 
+      deposit.houses_id, 
+      deposit.deposit_filepath AS filepath, 
+      deposit.depositdate AS transaction_date, 
+      deposit.approval 
+  FROM deposit
+  INNER JOIN tenants ON deposit.tenantid = tenants.id
+  INNER JOIN users ON tenants.users_id = users.id
+  WHERE tenants.users_id = '$admin->session_id'
   ";
   $result = $admin->conn->query($sql);
+
+
 
   $sql_name = "SELECT * FROM users WHERE id = '$admin->session_id'";
   $result_name = $admin->conn->query($sql_name);
@@ -482,7 +518,14 @@
                 <table class="table table-striped table-bordered border border-5" id="tabletabletable">
                     <thead class="">
                         <tr>
+                            <!-- <th scope="col">Name</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Approved</th>
+                            <th scope="col">Payment Date</th> -->
+
                             <th scope="col">Name</th>
+                            <th scope="col">Document Type</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Image</th>
                             <th scope="col">Approved</th>
@@ -492,18 +535,35 @@
                     <tbody>
                     <?php
                         // Check if there are any rows in the result set
+                        // if ($result->num_rows > 0) {
+                        //     // Output data of each row
+                        //     while ($row = $result->fetch_assoc()) {
+                        //         echo "<tr>";
+                        //         echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
+                        //         echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
+                        //         echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
+                        //         // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
+                        //         echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>";
+                        //         echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
+                        //         echo "</tr>";
+                        //     }
+                        // } else {
+                        //     echo "<tr><td colspan='3'>No payments found</td></tr>";
+                        // }
+
                         if ($result->num_rows > 0) {
-                            // Output data of each row
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row["name"] . "</td>"; // actual column name from your database
-                                echo "<td>" . $row["amount"] . "</td>"; // actual column name from your database
-                                echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
-                                // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
-                                echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>";
-                                echo "<td>" . $row["date_payment"] . "</td>"; // actual column name from your database
-                                echo "</tr>";
-                            }
+                          // Output data of each row
+                          while ($row = $result->fetch_assoc()) {
+                              echo "<tr>";
+                              echo "<td>" . $row["name"] . "</td>"; 
+                              echo "<td>" . ($row["document_type"] === 'payments' ? 'Payment' : 'Deposit' ) . "</td>";
+                              echo "<td>" . $row["amount"] . "</td>"; 
+                              echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
+                              // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
+                              echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>";
+                              echo "<td>" . $row["transaction_date"] . "</td>"; // actual column name from your database
+                              echo "</tr>";
+                          }
                         } else {
                             echo "<tr><td colspan='3'>No payments found</td></tr>";
                         }

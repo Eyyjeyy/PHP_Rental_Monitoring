@@ -44,13 +44,15 @@ $total_pages = ceil($total_rows / $records_per_page);
 //     LIMIT $offset, $records_per_page
 // ";
 $sql = "
-    SELECT id, name, amount, date_payment, approval, filepath, 'payment' AS payment_type, ' ' as reason FROM payments
+    SELECT payments.id as id, name, amount, date_payment, approval, filepath, 'payment' AS payment_type, ' ' as reason FROM payments
     WHERE 
         name LIKE '%$query%' OR
         amount LIKE '%$query%' OR
         date_payment LIKE '%$query%'
     UNION ALL
-    SELECT id, tenantid AS name, depositamount AS amount, depositdate AS date_payment, approval, deposit_filepath as filepath, 'deposit' AS payment_type, reason FROM deposit
+    SELECT deposit.id as id, CONCAT(users.firstname, ' ', users.middlename, ' ', users.lastname) AS name, depositamount AS amount, depositdate AS date_payment, approval, deposit_filepath as filepath, 'deposit' AS payment_type, reason FROM deposit
+    INNER JOIN tenants ON deposit.tenantid = tenants.id
+    INNER JOIN users ON tenants.users_id = users.id
     WHERE 
         tenantid LIKE '%$query%' OR
         depositamount LIKE '%$query%' OR

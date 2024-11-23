@@ -63,7 +63,17 @@
         $password = htmlspecialchars($_POST['password']);
         $role = htmlspecialchars($_POST['role']);
         $user_id = $_POST['user_id'];
-        $updated = $admin->updateUser($user_id, $username, $firstname, $middlename, $lastname, $password, $role);
+        $updateNumber = $_POST['updateNumber'];
+        $updateEmail = $_POST['updateEmail'];
+
+        // Validate updateNumber for 9-11 digits
+        if (!preg_match('/^\d{9,11}$/', $updateNumber)) {
+            $_SESSION['error_message'] = "9 and 11 digits only";
+            header("Location: adminusers.php?error=add");
+            exit();
+        }
+
+        $updated = $admin->updateUser($user_id, $username, $firstname, $middlename, $lastname, $password, $role, $updateNumber, $updateEmail);
         if($updated) {
             header("Location: adminusers.php");
             exit();
@@ -306,6 +316,24 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="updateEmail" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="updateEmail" name="updateEmail" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="updateNumber" class="form-label">Phone number</label>
+                                                <input type="text" class="form-control" id="updateNumber" name="updateNumber" required>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            document.getElementById('updateNumber').addEventListener('input', function (e) {
+                                                // Remove non-numeric characters
+                                                this.value = this.value.replace(/[^0-9]/g, '');
+                                            });
+                                        </script>
                                         <div class="col-12">
                                             <button type="submit" name="edit_user" class="btn btn-primary table-buttons-update">Update User</button>
                                         </div>
