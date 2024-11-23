@@ -476,7 +476,7 @@
                         newTenantModal.show();
                     });
                 </script>
-                <script>
+                <!-- <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         var updateButtons = document.querySelectorAll('.update-tenant-btn');
                         updateButtons.forEach(function (button) {
@@ -502,7 +502,41 @@
                             });
                         });
                     });
+                </script> -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // Use event delegation by attaching the event listener to a parent element
+                        document.body.addEventListener('click', function (event) {
+                            // Check if the clicked element matches the '.update-tenant-btn' class
+                            if (event.target.classList.contains('update-tenant-btn')) {
+                                var button = event.target; // The button that was clicked
+
+                                // Retrieve the necessary data attributes
+                                var tenantId = button.getAttribute('data-id');
+                                var firstname = button.getAttribute('data-tenantname');
+                                var middlename = button.getAttribute('data-middlename');
+                                var lastname = button.getAttribute('data-lastname');
+                                var contactno = button.getAttribute('data-contactno');
+                                var registerDate = button.getAttribute('data-registerdate');
+
+                                // Fill the modal with the user's current data
+                                document.getElementById('updateTenantId').value = tenantId;
+                                document.getElementById('updateTenantNumber').value = firstname;
+                                document.getElementById('updateMiddlename').value = middlename;
+                                document.getElementById('updateLastname').value = lastname;
+                                document.getElementById('updateContactno').value = contactno;
+                                document.getElementById('edit_registerdate').value = registerDate;
+
+                                // Show the modal
+                                var updateTenantModal = new bootstrap.Modal(document.getElementById('updateTenantModal'), {
+                                    keyboard: false
+                                });
+                                updateTenantModal.show();
+                            }
+                        });
+                    });
                 </script>
+
                 <!-- Include jQuery library -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>

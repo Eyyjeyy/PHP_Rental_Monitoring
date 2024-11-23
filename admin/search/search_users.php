@@ -66,7 +66,7 @@ if ($result->num_rows > 0) {
         echo "</div>";
         echo "<div class='col-xl-6 px-2'>";
         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
-        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' style='width: 80px;'>Update</button>";
+        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' data-email='" . htmlspecialchars($row['email']) . "' data-number='" . htmlspecialchars($row['phonenumber']) . "' style='width: 80px;'>Update</button>";
         echo "</div>";
         echo "</div>";
         echo "</td>";

@@ -183,7 +183,7 @@
                                         echo "<div class='col-xl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='user_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-user-btn float-xl-start table-buttons-update' data-id='" . $row['id'] . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname= '" . htmlspecialchars($row['firstname']) . "' data-middlename= '" . htmlspecialchars($row['middlename']) . "' data-lastname= '" . htmlspecialchars($row['lastname']) . "' data-password='" . htmlspecialchars($row['password']) . "' data-role='" . htmlspecialchars($row['role']) . "'data-email='" . htmlspecialchars($row['email']) . "'data-number='" . htmlspecialchars($row['phonenumber']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -393,6 +393,8 @@
                                 var lastname = button.getAttribute('data-lastname');
                                 var password = button.getAttribute('data-password');
                                 var role = button.getAttribute('data-role');
+                                var email = button.getAttribute('data-email');
+                                var number = button.getAttribute('data-number');
 
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateUserId').value = userId;
@@ -402,6 +404,8 @@
                                 document.getElementById('updateLastname').value = lastname;
                                 document.getElementById('updatePassword').value = password;
                                 document.getElementById('updateRole').value = role;
+                                document.getElementById('updateEmail').value = email;
+                                document.getElementById('updateNumber').value = number;
 
                                 var updateUserModal = new bootstrap.Modal(document.getElementById('updateUserModal'), {
                                     keyboard: false

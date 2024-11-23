@@ -1262,6 +1262,10 @@ Class Admin {
         $email = $userRecord['email'];
         $username = $userRecord['firstname'] . " " . $userRecord['middlename'] . " " . $userRecord['lastname'];
         $user_number = $userRecord['phonenumber'];
+        if(empty($email) || empty($user_number)) {
+          $_SESSION['error_message'] = "Tenant has no email or mobile number";
+          return false;
+        }
 
         $subject = "Delinquency";
         if (!empty($reminder_missed_months_dates)) {

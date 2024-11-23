@@ -670,9 +670,13 @@
                 </script>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        var updateButtons = document.querySelectorAll('.update-house-btn');
-                        updateButtons.forEach(function (button) {
-                            button.addEventListener('click', function () {
+                        // Use event delegation by attaching the event listener to a parent element
+                        document.body.addEventListener('click', function (event) {
+                            // Check if the clicked element matches the '.update-house-btn' class
+                            if (event.target.classList.contains('update-house-btn')) {
+                                var button = event.target; // The button that was clicked
+
+                                // Retrieve the necessary data attributes
                                 var userId = button.getAttribute('data-id');
                                 var username = button.getAttribute('data-housenumber');
                                 var password = button.getAttribute('data-price');
@@ -681,7 +685,7 @@
                                 var meralcoNam = button.getAttribute('data-meralconame');
                                 var mayniladNum = button.getAttribute('data-mayniladnum');
                                 var mayniladNam = button.getAttribute('data-mayniladname');
-                                
+
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateHouseId').value = userId;
                                 document.getElementById('updateHouseNumber').value = username;
@@ -691,12 +695,13 @@
                                 document.getElementById('update_meralco_accname').value = meralcoNam;
                                 document.getElementById('update_maynilad_accnum').value = mayniladNum;
                                 document.getElementById('update_maynilad_accname').value = mayniladNam;
-                                
+
+                                // Show the modal
                                 var updateHouseModal = new bootstrap.Modal(document.getElementById('updateHouseModal'), {
                                     keyboard: false
                                 });
                                 updateHouseModal.show();
-                            });
+                            }
                         });
                     });
                 </script>

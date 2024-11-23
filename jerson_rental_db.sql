@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 04:22 PM
+-- Generation Time: Nov 23, 2024 at 04:32 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -119,7 +119,8 @@ CREATE TABLE `deposit` (
 
 INSERT INTO `deposit` (`id`, `tenantid`, `adminid`, `deposit_filepath`, `houses_id`, `depositamount`, `depositdate`, `approval`, `reason`) VALUES
 (2, 74, 85, '../deposits/kindpng_1132944_673c6dbd983b4.png', 864, 6900, '2024-11-29', '', ''),
-(3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', 'Unapproved', '');
+(3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', 'Unapproved', ''),
+(6, 77, 88, '../deposits/Untitled_6740635776e3a.png', 862, 90000, '2024-11-22', '', '');
 
 -- --------------------------------------------------------
 
@@ -472,7 +473,13 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (305, 84, 'Add', 'Added House, ID: 869<br> Housename: asdada<br> Category: 66<br> Price: 4324<br> Electric Account: asdad (87878787)<br> Water Account: asdasdasd (87878787)', '2024-11-20 13:44:41'),
 (306, 84, 'Add', 'Added House, ID: 870<br> Housename: Tinesting Ako<br> Category: 66<br> Price: 65435<br> Electric Account: asdasdad (12312312312)<br> Water Account: asdad (12312312312)<br>Gcash: \r\n        12312312312<br>Bank: 12312312312', '2024-11-20 13:56:52'),
 (307, 84, 'Updated Deposit', 'Reaon: Emergency<br>Status: 1 Month Consumed', '2024-11-20 14:06:29'),
-(308, 84, 'Updated Deposit', 'Reaon: Emergency, Bills<br>Status: 2 Months Consumed', '2024-11-20 14:06:40');
+(308, 84, 'Updated Deposit', 'Reaon: Emergency, Bills<br>Status: 2 Months Consumed', '2024-11-20 14:06:40'),
+(309, 84, 'Updated Deposit', 'Reaon: Bills<br>Status: 2 Months Consumed', '2024-11-22 13:22:04'),
+(310, 84, 'Updated Deposit', 'Reaon: Bills, Emergency<br>Status: 1 Month Consumed', '2024-11-22 13:25:36'),
+(311, 84, 'Add', 'Added User, ID: 90<br> Username: titeee', '2024-11-23 07:20:48'),
+(312, 84, 'Update', 'Updated User, ID: 90<br> New Username: titeee<br> Old Username: titeee', '2024-11-23 07:21:26'),
+(313, 84, 'Add', 'Added User, ID: 91<br> Username: tewt', '2024-11-23 07:23:42'),
+(314, 84, 'Update', 'Updated User, ID: 91<br> New Username: tewt<br> Old Username: tewt', '2024-11-23 07:23:50');
 
 -- --------------------------------------------------------
 
@@ -496,19 +503,19 @@ CREATE TABLE `houseaccounts` (
 --
 
 INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `water_accname`, `water_accnum`, `gcash`, `bank`) VALUES
-(1, 846, 'aj', 765, '', 0, '', ''),
-(3, 848, 'asd', 4234, 'asd', 54235, '', ''),
-(13, 858, 'John', 132053845, 'John', 93473595, '', ''),
-(14, 859, 'Jan', 2147483647, 'Jan', 345334288, '', ''),
-(15, 860, 'John', 21342342, 'John', 42635636, '', ''),
-(16, 861, 'Jan', 2342634, 'Jan', 6354636, '', ''),
-(17, 862, 'Jan', 45345345, 'Jan', 34532347, '', ''),
-(18, 863, 'Jemille', 4647457, 'Jemille', 457452, '', ''),
-(19, 864, 'Mildred', 3213426, 'Mildred', 3437474, '', ''),
-(20, 865, 'Mildred', 42346363, 'Mildred', 6366346, '', ''),
-(21, 866, 'Jerum', 325252, 'Jerum', 263453, '', ''),
-(22, 867, 'Jerum', 34537745, 'Jerum', 45747455, '', ''),
-(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '', ''),
+(1, 846, 'aj', 765, '', 0, '09955835160', 'Banko de Oro'),
+(3, 848, 'asd', 4234, 'asd', 54235, '09955835160', 'Banko de Oro'),
+(13, 858, 'John', 132053845, 'John', 93473595, '09955835160', 'Banko de Oro'),
+(14, 859, 'Jan', 2147483647, 'Jan', 345334288, '09955835160', 'Banko de Oro'),
+(15, 860, 'John', 21342342, 'John', 42635636, '09955835160', 'Banko de Oro'),
+(16, 861, 'Jan', 2342634, 'Jan', 6354636, '09955835160', 'Banko de Oro'),
+(17, 862, 'Jan', 45345345, 'Jan', 34532347, '09955835160', 'Banko de Oro'),
+(18, 863, 'Jemille', 4647457, 'Jemille', 457452, '09955835160', 'Banko de Oro'),
+(19, 864, 'Mildred', 3213426, 'Mildred', 3437474, '09955835160', 'Banko de Oro'),
+(20, 865, 'Mildred', 42346363, 'Mildred', 6366346, '09955835160', 'Banko de Oro'),
+(21, 866, 'Jerum', 325252, 'Jerum', 263453, '09955835160', 'Banko de Oro'),
+(22, 867, 'Jerum', 34537745, 'Jerum', 45747455, '09955835160', 'Banko de Oro'),
+(23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '09955835160', 'Banko de Oro'),
 (25, 870, 'asdasdad', 2147483647, 'asdad', 2147483647, '12312312312', '12312312312');
 
 -- --------------------------------------------------------
@@ -719,11 +726,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`, `otp`) VALUES
-(84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'admin', '2024-10-29 19:18:15', '', NULL),
-(85, 'user', 'Jerson', 'Wayas', 'Lippad', '1234567', '', 'user', '2024-10-29 19:18:25', '', NULL),
-(86, 'john', 'John', 'North', 'Garcia', '1234567', '', 'user', '2024-10-29 19:29:19', '', NULL),
-(87, 'jan', 'Jan', 'West', 'Nuevo', '1234567', '', 'user', '2024-10-29 19:29:38', '', NULL),
-(88, 'ella', 'mae', 'deves', 'cruz', '1234567', '', 'user', '2024-11-07 09:46:08', '', NULL);
+(84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', 'jerslippad3@gmail.com', 'admin', '2024-10-29 19:18:15', '09955835160', NULL),
+(85, 'user', 'Jerson', 'Wayas', 'Lippad', '1234567', 'jerslippad3@gmail.com', 'user', '2024-10-29 19:18:25', '09955835160', NULL),
+(86, 'john', 'John', 'North', 'Garcia', '1234567', 'jerslippad3@gmail.com', 'user', '2024-10-29 19:29:19', '09955835160', NULL),
+(87, 'jan', 'Jan', 'West', 'Nuevo', '1234567', 'jerslippad3@gmail.com', 'user', '2024-10-29 19:29:38', '09955835160', NULL),
+(88, 'ella', 'mae', 'deves', 'cruz', '1234567', 'jerslippad3@gmail.com', 'user', '2024-11-07 09:46:08', '09955835160', NULL);
 
 --
 -- Indexes for dumped tables
@@ -847,7 +854,7 @@ ALTER TABLE `contract_images`
 -- AUTO_INCREMENT for table `deposit`
 --
 ALTER TABLE `deposit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -859,7 +866,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=315;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
@@ -913,7 +920,7 @@ ALTER TABLE `tenants`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- Constraints for dumped tables
