@@ -69,6 +69,7 @@
         <a class="dropdown-item" href="users/payments.php">Payment</a>
         <a class="dropdown-item" href="info.php">Info</a>
         <a class="dropdown-item" href="profile_user.php">Profile</a>
+        <a class="dropdown-item" href="contract_user.php">Contract</a>
         <a class="dropdown-item" href="chat_user.php">Chat</a>
         <a class="dropdown-item" href="logout.php">Log Out</a>
         </div>

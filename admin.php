@@ -1987,6 +1987,75 @@ $sql = "SELECT
     }
   }
 
+  public function countDelinquents() {
+    $sql = "
+        SELECT 
+            tenants.id AS tenant_id,
+            tenants.fname,
+            tenants.mname,
+            tenants.lname,
+            tenants.date_preferred,
+            houses.house_name,
+            GROUP_CONCAT(payments.amount ORDER BY payments.date_payment DESC) AS payment_amounts,
+            GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
+            MAX(payments.date_payment) AS last_payment_date
+        FROM tenants
+        LEFT JOIN payments ON tenants.id = payments.tenants_id
+        LEFT JOIN houses ON tenants.house_id = houses.id
+        GROUP BY tenants.id
+    ";
+    $result = $this->conn->query($sql);
+    $delinquentCount = 0;
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+        $date_preferred = $row['date_preferred'];
+        $last_payment_date = $row['last_payment_date'];
+
+        // If no payment has been made, set the last payment date to the current date
+        if (!$last_payment_date) {
+          $last_payment_date = date('Y-m-d');
+        }
+
+        // Convert dates to timestamps
+        $date_preferred_timestamp = strtotime($date_preferred);
+        $current_date_timestamp = strtotime(date('Y-m-d'));
+        $start_date_timestamp = strtotime("+1 month", $date_preferred_timestamp);
+
+        // Calculate the number of months between start_date and today
+        $months_difference = (date('Y', $current_date_timestamp) - date('Y', $start_date_timestamp)) * 12 
+                            + date('m', $current_date_timestamp) - date('m', $start_date_timestamp);
+
+        $missing_months = 0;
+
+        // Loop through all months from start_date to today
+        for ($i = 0; $i <= $months_difference; $i++) {
+          $current_month = date('Y-m', strtotime("+$i months", $start_date_timestamp));
+          $payment_found = false;
+
+          // Check if the current month has any payment
+          foreach (explode(',', $row['date_payment']) as $payment_date) {
+            if (substr($payment_date, 0, 7) == $current_month) { // Check year-month format
+              $payment_found = true;
+              break;
+            }
+          }
+
+          // If no payment is found for this month, increment missing_months
+          if (!$payment_found) {
+            $missing_months++;
+          }
+        }
+
+        // Count tenants with missing months >= 2
+        if ($missing_months >= 2) {
+          $delinquentCount++;
+        }
+      }
+    }
+    return $delinquentCount;
+  }
+
   public function getUserProfile($userId) {
     $userId = (int)$userId;
     $sql = "SELECT users.*, tenants.* 
