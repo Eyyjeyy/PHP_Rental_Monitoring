@@ -661,7 +661,7 @@
                                     <div class="mb-3">
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
-                                                <button id="clear1" type="button">Clear</button>
+                                                <button id="clear1" class="text-white" type="button">Clear</button>
                                             </div>
                                         </div>
                                         <!-- <button id="save">Save Signature</button> -->
@@ -680,7 +680,7 @@
                                     <div class="mb-3">
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
-                                                <button id="clear2" type="button">Clear</button>
+                                                <button id="clear2" class="text-white" type="button">Clear</button>
                                             </div>
                                         </div>
                                         <!-- <button id="clear2">Clear</button> -->
