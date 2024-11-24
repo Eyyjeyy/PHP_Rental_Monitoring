@@ -209,7 +209,7 @@ Class Admin {
     // Update the users table
     $sql_users = "UPDATE users SET username = ?, firstname = ?, middlename = ?, lastname = ?, password = ?, role = ?, email = ?, phonenumber = ? WHERE id = ?";
     $stmt_users = $this->conn->prepare($sql_users);
-    $stmt_users->bind_param("ssssssssi", $username, $firstname, $middlename, $lastname, $password, $role, $updateNumber, $updateEmail, $user_id);
+    $stmt_users->bind_param("ssssssssi", $username, $firstname, $middlename, $lastname, $password, $role, $updateEmail, $updateNumber, $user_id);
     $stmt_users->execute();
 
     // Check if the users table update was executed successfully

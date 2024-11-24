@@ -186,3 +186,4 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 11/24/2024
 - revised admindelinquency to be able to determine and display total amount of missing payments on table <br>
+- revised adminpayments due to image modal popup for payment_type of deposit not appearing when small image is clicked <br>
