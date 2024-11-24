@@ -113,6 +113,7 @@
                                     Amount
                                     <span id="expirationdateSortArrow"></span>
                                 </th>
+                                <th scope="col">Total Missing Payments</th>
                                 <th scope="col">
                                     Actions
                                 </th>
@@ -127,6 +128,7 @@
                                     $tenant_id = $row['id']; // Unknown ID, probably house id
                                     $date_preferred = $row['date_preferred'];
                                     $last_payment_date = $row['last_payment_date'];
+                                    $monthly_rent = $row['price'];  // Use the price from the houses table as the monthly rent
 
                                     // If no payment has been made, set the last payment date to the current date
                                     if (!$last_payment_date) {
@@ -147,6 +149,8 @@
                                     // Initialize variables
                                     $missing_months = 0;
                                     $missed_months_dates = []; // Array to store missed months
+                                    $missing_payment_total = 0; // To track the total amount of missing payments
+                                    $paid_total = 0; // To sum the amounts paid for missed months
 
                                     // Loop through all months from start_date to today
                                     for ($i = 0; $i <= $months_difference; $i++) {
@@ -154,19 +158,33 @@
                                         $payment_found = false;
 
                                         // Check if the current month has any payment
-                                        foreach (explode(',', $row['date_payment']) as $payment_date) {
+                                        foreach (explode(',', $row['date_payment']) as $key => $payment_date) {
                                             if (substr($payment_date, 0, 7) == $current_month) {  // Check year-month format
                                                 $payment_found = true;
+
+                                                // Add the corresponding amount paid to the monthly tracker
+                                                $amounts = explode(',', $row['payment_amounts']);
+                                                $monthly_paid = isset($amounts[$key]) ? (float)$amounts[$key] : 0;
+                                                $paid_total += $monthly_paid;
                                                 break;
                                             }
                                         }
 
-                                        // If no payment is found for this month, increment missing_months
+                                        // If no payment is found for this month, increment missing months
                                         if (!$payment_found) {
                                             $missing_months++;
                                             $missed_months_dates[] = $current_month; // Add to missed months list
+                                            
+                                            // Add the monthly rent to the total missing payment amount
+                                            $missing_payment_total += $monthly_rent; // Add the house price (monthly rent) to the total
                                         }
                                     }
+
+                                    // Deduct total paid from total missing payment amount
+                                    $missing_payment_total -= $paid_total;
+
+                                    // Ensure missing_payment_total does not go below 0
+                                    $missing_payment_total = max(0, $missing_payment_total);
 
                                     // Only display the tenant in delinquency if his/her missing months of payments are 2 or more months
                                     if ($missing_months >= 2 ) {
@@ -178,6 +196,7 @@
                                             echo "<td>" . htmlspecialchars(implode(', ', $missed_months_dates)) . "</td>";
                                             echo "<td>" . htmlspecialchars($missing_months) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['payment_amounts']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($missing_payment_total) . "</td>"; // Display the total missing payment
                                             echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                 echo "<div class='row justify-content-center m-0'>";
                                                     echo "<div class='col-xxl-4 px-2'>";

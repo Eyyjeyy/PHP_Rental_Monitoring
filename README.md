@@ -184,3 +184,5 @@ The project is built using PHP, MySQL for database management, and incorporates 
 11/22/2024
 - delinquencySendReminder function in admin.php created for backend of sending email reminders in Admindelinquency page <br>
 
+11/24/2024
+- revised admindelinquency to be able to determine and display total amount of missing payments on table <br>
