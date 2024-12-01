@@ -126,7 +126,7 @@
     <div class="container-fluid">
         <div class="row">
         <?php include 'includes/header.php'; ?>
-            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
                 <div class="card-body" style="margin-top: 0; height: 100%;">
                     <div class="row">
                         <div class="col-lg-12">
@@ -139,7 +139,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive"  id="tablelimiter">
+                    <div class="table-responsive"  id="tablelimiter" style="max-height: 100%;">
                         <table class="table table-striped table-bordered">
                         <thead>
                             <!-- <tr>

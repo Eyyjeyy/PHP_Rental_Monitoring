@@ -406,10 +406,10 @@ Class Admin {
   }
 
   // Function to add a new house
-  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank) {
-    $sql = "INSERT INTO houses (house_name, price, category_id) VALUES (?, ?, ?)";
+  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress, $gcash, $bank) {
+    $sql = "INSERT INTO houses (house_name, price, category_id, address) VALUES (?, ?, ?, ?)";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("sdi", $housenumber, $price, $category);
+    $stmt->bind_param("sdis", $housenumber, $price, $category, $houseaddress);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
       // Get the auto-generated ID of the inserted house
@@ -1594,7 +1594,49 @@ Class Admin {
 
 
 
-  public function sendEmail($to, $subject, $body, $attachmentPath = null) {
+  // public function sendEmail($to, $subject, $body, $attachmentPath = null) {
+  //   $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+  //   try {
+  //       // Server settings
+  //       $mail->SMTPDebug = 0; // Disable verbose debug output
+  //       $mail->isSMTP(); // Set mailer to use SMTP
+  //       $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
+  //       $mail->SMTPAuth = true; // Enable SMTP authentication
+  //       $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
+  //       $mail->Password = ''; // SMTP password
+  //       $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
+  //       $mail->Port = 587; // TCP port to connect to
+
+  //       // Recipients
+  //       $mail->setFrom('renttrackpro@gmail.com', 'Mailer');
+  //       $mail->addAddress($to); // Add a recipient
+
+  //       // Attachments
+  //       if ($attachmentPath) {
+  //           // $mail->addAttachment($attachmentPath); // Add attachments
+  //           $cid = 'renttrack_image'; // Content ID for referencing the image
+  //           $mail->addEmbeddedImage($attachmentPath, $cid);
+  //       }
+
+  //       // Reference the image in the email body
+  //       $body .= '<img src="cid:' . $cid . '" alt="Renttrack Logo" style="width: 200px; height: auto;"><br>';
+
+  //       // Content
+  //       $mail->isHTML(true); // Set email format to HTML
+  //       $mail->Subject = $subject;
+  //       $mail->Body    = $body;
+  //       $mail->AltBody = strip_tags($body); // Optional: plain text version for non-HTML email clients
+
+  //       $mail->send();
+  //       return true;
+  //   } catch (PHPMailer\PHPMailer\Exception $e) {
+  //       error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+  //       return false;
+  //   }
+  // }
+
+  public function sendEmail($to, $subject, $body, $imagePath = null, $attachmentPath = null) {
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
     try {
@@ -1613,14 +1655,17 @@ Class Admin {
         $mail->addAddress($to); // Add a recipient
 
         // Attachments
-        if ($attachmentPath) {
-            // $mail->addAttachment($attachmentPath); // Add attachments
-            $cid = 'renttrack_image'; // Content ID for referencing the image
-            $mail->addEmbeddedImage($attachmentPath, $cid);
+        if ($imagePath && file_exists($imagePath)) {
+          $cid = 'renttrack_image'; // Content ID for referencing the image
+          $mail->addEmbeddedImage($imagePath, $cid);
+          // Reference the image in the email body
+          $body .= '<img src="cid:' . $cid . '" alt="Renttrack Logo" style="width: 200px; height: auto;"><br>';
+        }
+        if ($attachmentPath && file_exists($attachmentPath)) {
+          $mail->addAttachment($attachmentPath); // Add eviction notice file
         }
 
-        // Reference the image in the email body
-        $body .= '<img src="cid:' . $cid . '" alt="Renttrack Logo" style="width: 200px; height: auto;"><br>';
+        
 
         // Content
         $mail->isHTML(true); // Set email format to HTML
@@ -2892,6 +2937,314 @@ $sql = "SELECT
       return true; // Decline successful
     } else {
       return false; // Decline failed
+    }
+  }
+
+  public function getMissedMonths($userId) {
+    // SQL query to fetch tenant, house, and payment details
+    $sql = "
+        SELECT 
+            tenants.id AS tenant_id,
+            tenants.date_preferred,
+            houses.price AS monthly_rent,
+            GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS payment_dates,
+            MAX(payments.date_payment) AS last_payment_date
+        FROM tenants
+        LEFT JOIN payments ON tenants.id = payments.tenants_id AND payments.approval = 'true'
+        LEFT JOIN houses ON tenants.house_id = houses.id
+        WHERE tenants.users_id = ?
+        GROUP BY tenants.id
+    ";
+
+    // Prepare and execute the query
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $missingMonths = 0;
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+        $date_preferred = $row['date_preferred'];
+        $last_payment_date = $row['last_payment_date'];
+        $monthly_rent = $row['monthly_rent'];
+        $payment_dates = $row['payment_dates'];
+
+        // If no payment has been made, set the last payment date to the current date
+        if (!$last_payment_date) {
+          $last_payment_date = date('Y-m-d');
+        }
+
+        // Convert dates to timestamps for easier date manipulation
+        $preferredTimestamp = strtotime($date_preferred);
+        $currentTimestamp = strtotime(date('Y-m-d')); // Today's date
+
+        // Offset date_preferred by 1 month
+        $startDateTimestamp = strtotime("+1 month", $preferredTimestamp);
+
+        // Calculate the number of months between start_date and today
+        $monthsDifference = (date('Y', $currentTimestamp) - date('Y', $startDateTimestamp)) * 12 
+                          + date('m', $currentTimestamp) - date('m', $startDateTimestamp);
+
+        // Loop through all months from start_date to today
+        for ($i = 0; $i <= $monthsDifference; $i++) {
+          $currentMonth = date('Y-m', strtotime("+$i months", $startDateTimestamp));
+          $paymentFound = false;
+
+          // Check if the current month has any payment
+          foreach (explode(',', $payment_dates) as $paymentDate) {
+            if (substr($paymentDate, 0, 7) == $currentMonth) { // Check year-month format
+              $paymentFound = true;
+              break;
+            }
+          }
+
+          // If no payment is found for this month, increment missing months
+          if (!$paymentFound) {
+            $missingMonths++;
+          }
+        }
+      }
+    }
+
+    return $missingMonths;
+  }
+
+  public function sendEviction($evictiontenantid, $missedpaymenttotal, $misseddates, $evictiondate, $evictionpaydays, $adminaddress, $signatureData) {
+    $retrievesql = "SELECT tenants.*, 
+                    houses.id AS house_id,
+                    houses.*,
+                    users.id AS admin_id, 
+                    users.firstname, users.middlename, users.lastname, users.phonenumber, users.email
+                    FROM tenants 
+                    INNER JOIN houses ON tenants.house_id = houses.id
+                    INNER JOIN users ON users.id = ? 
+                    WHERE tenants.id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("ii", $this->session_id, $evictiontenantid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+
+    $tenantemailsql = "SELECT tenants.*, 
+                    houses.id AS house_id,
+                    houses.*,
+                    users.id AS admin_id, 
+                    users.firstname, users.middlename, users.lastname, users.phonenumber, users.email
+                    FROM tenants 
+                    INNER JOIN houses ON tenants.house_id = houses.id
+                    INNER JOIN users ON users.id = tenants.users_id 
+                    WHERE tenants.id = ?";
+    $retrievetenantemailstmt = $this->conn->prepare($tenantemailsql);
+    $retrievetenantemailstmt->bind_param("i", $evictiontenantid);
+    $retrievetenantemailstmt->execute();
+    $retrievetenantemailResult = $retrievetenantemailstmt->get_result();
+
+    if ($retrievetenantemailResult->num_rows > 0) {
+      $tenantemail = $retrievetenantemailResult->fetch_assoc();
+    } else {
+      return false;
+    }
+
+    // Check if a record was found
+    if ($retrieveResult->num_rows > 0) {
+      $tenant = $retrieveResult->fetch_assoc();
+
+      // Load the Word template
+      $templatePath = __DIR__ . "/asset/eviction_template.docx";
+      if (!file_exists($templatePath)) {
+        return false; // Return false if the template file doesn't exist
+      }
+
+      // Create a copy of the template for this eviction notice
+      $newFileName = __DIR__ . "/asset/eviction_tenant/eviction_" . $evictiontenantid . "_" . uniqid() . ".docx";
+      copy($templatePath, $newFileName);
+
+      // Load the new Word document
+      $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($newFileName);
+
+      $tenantname = $tenant['fname'] . " " . $tenant['mname'] . " " . $tenant['lname'];
+
+      // Replace placeholders in the Word document
+      $templateProcessor->setValue('eviction_date', $evictiondate); 
+      $templateProcessor->setValue('eviction_paydays', $evictionpaydays); 
+      $templateProcessor->setValue('admin_address', $adminaddress);
+      
+      // System input for non-form placeholders in word doc
+      $templateProcessor->setValue('tenantname', $tenantname); 
+      $templateProcessor->setValue('tenantaddress', $tenant['address']); 
+      $templateProcessor->setValue('missedpaymenttotal', $missedpaymenttotal); 
+      $templateProcessor->setValue('misseddates', $misseddates); 
+      $templateProcessor->setValue('admin_name', $tenant['firstname'] . " " . $tenant['middlename'] . " " . $tenant['lastname']); 
+      $templateProcessor->setValue('phonenumber', $tenant['phonenumber']); 
+      $templateProcessor->setValue('price', $tenant['price']); 
+
+      // Save the signature image and insert it into the document
+      $signatureImagePath = __DIR__ . "/asset/eviction_tenant/admin_signature_" . $evictiontenantid . "_" . uniqid() . ".png";
+      file_put_contents($signatureImagePath, base64_decode(explode(',', $signatureData)[1]));
+      $templateProcessor->setImageValue('admin_signature', [
+          'path' => $signatureImagePath,
+          'width' => 150,
+          'height' => 75,
+          'ratio' => true,
+      ]);
+
+      // Save the updated Word document
+      $templateProcessor->saveAs($newFileName);
+
+      // Create email content
+      $to = $tenantemail['email'];
+      $subject = "Eviction Notice";
+      $body = '<p style="font-size: 18px; color: #004c00; font-family: Helvetica;">Dear <strong>' . $tenant['fname'] . ' ' . $tenant['lname'] . '</strong>,</p>';
+      $body .= '<p style="font-size: 16px; color: #414141;">';
+      $body .= 'Eviction Notice.<br>';
+      $body .= '<strong>Read the Attachment Below</strong><br>';
+      $body .= '<br><br>';
+      $body .= 'Best regards,<br>Renttrack Pro<br></p>';
+      $imagePath = 'asset/Renttrack pro.png';
+      $imagePath = __DIR__ . '/asset/Renttrack pro.png';
+
+      // Send email
+      if ($this->sendEmail($to, $subject, $body, $imagePath, $newFileName)) {
+        $tenant_number = $tenantemail['phonenumber'];
+        $tenant_name = $tenantemail['firstname'] . " " . $tenantemail['lastname'];
+
+        if ($tenant_number) {
+          // Prepare the message
+          $smsMessage = "Dear, $tenant_name\nThis is a eviction notice, please check your email and the website for full details.";
+    
+          // Set up the cURL request to send SMS
+          $ch = curl_init();
+          $parameters = array(
+            'apikey' => '', // Replace with your actual API key
+            'number' => $tenant_number,  // Recipient's number
+            'message' => $smsMessage,
+            'sendername' => 'Thesis' // Replace with your registered sender name
+          );
+    
+          // Set cURL options for the request
+          curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+          // Execute the cURL request and get the response
+          $output = curl_exec($ch);
+          if ($output) {
+            $smsSent = true; // SMS sent successfully
+          }
+    
+          // Close the cURL session
+          curl_close($ch);
+        }
+
+        if ($smsSent) {
+          $insertSql = "INSERT INTO eviction_popup (users_id) 
+                  VALUES (?)";
+          $insertStmt = $this->conn->prepare($insertSql);
+
+          // Bind the session_id to the placeholder
+          $insertStmt->bind_param("i", $tenantemail['users_id']); // 'i' indicates an integer value
+
+          // Execute the query
+          $insertStmt->execute();
+
+          $retrievetenantemailstmt->close();
+          $retrievestmt->close();
+          return true;
+        } else {
+          return false;
+        }
+
+
+        // $retrievestmt->close();
+        // return true;
+      } else {
+        return false;
+      }
+
+      // $retrievestmt->close();
+
+      // Return the path of the new document
+      // return true;
+    } else {
+      $retrievestmt->close();
+      $_SESSION['error_message'] = "No Tenant Found";
+      return false; // Return false if no record found
+    }
+  }
+
+  public function displayContractPDF($docxPath) {
+    // Paths for input and output files
+
+    $docxPath = __DIR__ . $docxPath;
+    $docxCopyDirectory = __DIR__ . '/asset/temppdf/'; // Directory for storing the copied DOCX file
+    $docxCopyFileName = 'contract_copy_' . uniqid() . '.docx'; // Unique file name for the copy
+    $docxCopyPath = $docxCopyDirectory . $docxCopyFileName; // Full path for the copied DOCX file
+
+    $pdfFileName = 'contract_temp_' . uniqid() . '.pdf'; // Unique file name for the PDF
+    $pdfDirectory = __DIR__ . '/asset/temppdf/'; // Directory for saving PDFs
+    $pdfPath = $pdfDirectory . $pdfFileName; // Full path for the output PDF
+
+    // Ensure the DOCX file exists
+    if (!file_exists($docxPath)) {
+        return "1";
+    }
+
+    // Ensure the copy directory exists
+    if (!is_dir($docxCopyDirectory)) {
+      return "2";
+    }
+
+    // Create a copy of the original DOCX file
+    if (!copy($docxPath, $docxCopyPath)) {
+      return "3";
+    }
+
+    // Debug: Check if the copy was successful
+    if (!file_exists($docxCopyPath)) {
+      return "4";
+    }
+
+
+    try {
+      // Load the copied DOCX file
+      $phpWord = \PhpOffice\PhpWord\IOFactory::load($docxCopyPath);
+
+      // Convert DOCX to HTML
+      $htmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
+      ob_start();
+      $htmlWriter->save('php://output');
+      $html = ob_get_clean();
+
+      // Ensure the images are properly embedded (you can manually handle this if needed)
+      // For example, use the getImage method to include images in the HTML output
+
+      // Initialize TCPDF
+      $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+      $pdf->SetCreator('My Custom Creator');
+      $pdf->SetAuthor('Your Name');
+      $pdf->SetTitle('Contract PDF');
+      $pdf->SetSubject('Contract Document');
+      $pdf->SetKeywords('contract, example, pdf');
+
+      // Add a page
+      $pdf->AddPage();
+
+      // Write HTML content to the PDF
+      // Using writeHTML is good, but we should ensure that any necessary styles or embedded resources are handled properly
+      $pdf->writeHTML($html, true, false, true, false, '');
+
+      // Save the PDF to the server
+      $pdf->Output($pdfPath, 'F'); // 'F' writes to a file
+
+      // Return the URL of the generated PDF
+      $pdfUrl = '/asset/temppdf/' . $pdfFileName; // URL path relative to your server root
+
+      return $pdfUrl;
+    } catch (\Exception $e) {
+      return $e->getMessage();
+      // die('Error processing the document: ' . $e->getMessage());
     }
   }
 

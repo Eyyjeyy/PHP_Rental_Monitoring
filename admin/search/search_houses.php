@@ -29,6 +29,25 @@ $total_rows = $total_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $records_per_page);
 
 // Fetch paginated, sorted records
+// $sql = "
+//     SELECT houses.*, categories.name AS category_name, houseaccounts.elec_accnum, houseaccounts.elec_accname, 
+//            houseaccounts.water_accname, houseaccounts.water_accnum
+//     FROM houses
+//     INNER JOIN categories ON categories.id = houses.category_id
+//     LEFT JOIN houseaccounts ON houses.id = houseaccounts.houses_id
+//     WHERE 
+//         houses.house_name LIKE '%$query%' OR
+//         categories.name LIKE '%$query%' OR
+//         houseaccounts.elec_accnum LIKE '%$query%' OR
+//         houseaccounts.elec_accname LIKE '%$query%' OR
+//         houseaccounts.water_accname LIKE '%$query%' OR
+//         houseaccounts.water_accnum LIKE '%$query%'
+//     ORDER BY $sort_column $sort_order
+//     LIMIT $offset, $records_per_page
+// ";
+// $result = $conn->query($sql);
+
+// Use the commented code above instead and uncomment lines 104-108 to bring back pagination feature
 $sql = "
     SELECT houses.*, categories.name AS category_name, houseaccounts.elec_accnum, houseaccounts.elec_accname, 
            houseaccounts.water_accname, houseaccounts.water_accnum
@@ -43,7 +62,6 @@ $sql = "
         houseaccounts.water_accname LIKE '%$query%' OR
         houseaccounts.water_accnum LIKE '%$query%'
     ORDER BY $sort_column $sort_order
-    LIMIT $offset, $records_per_page
 ";
 $result = $conn->query($sql);
 
@@ -83,11 +101,11 @@ if ($result->num_rows > 0) {
 }
 
 // Output pagination buttons
-echo "<tr><td colspan='10' class='text-center'>";
-for ($i = 1; $i <= $total_pages; $i++) {
-    echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
-}
-echo "</td></tr>";
+// echo "<tr><td colspan='10' class='text-center'>";
+// for ($i = 1; $i <= $total_pages; $i++) {
+//     echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
+// }
+// echo "</td></tr>";
 
 $conn->close();
 ?>

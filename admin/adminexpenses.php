@@ -97,8 +97,8 @@
     <div class="container-fluid">
         <div class="row">
             <?php include 'includes/header.php'; ?>
-            <div class="col main content">
-                <div class="card-body" style="margin-top: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
+                <div class="card-body" style="margin-top: 0; height: 100%; max-height: 100%;overflow-y: auto;display: flex;flex-direction: column;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <!-- <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3" />
@@ -117,13 +117,36 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col" onclick="handleSort('id')" style="cursor: pointer;"># <span id="sortIconId"></span></th>
+                                    <!-- <th scope="col" onclick="handleSort('id')" style="cursor: pointer;"># <span id="sortIconId"></span></th>
                                     <th scope="col" onclick="handleSort('name')" style="cursor: pointer;">Name <span id="sortIconName"></span></th>
                                     <th scope="col" onclick="handleSort('info')" style="cursor: pointer;">Info <span id="sortIconInfo"></span></th>
                                     <th scope="col" onclick="handleSort('amount')" style="cursor: pointer;">Amount <span id="sortIconAmount"></span></th>
                                     <th scope="col" onclick="handleSort('date')" style="cursor: pointer;">Date <span id="sortIconDate"></span></th>
                                     <th scope="col">House <span id="sortIconHouse"></span></th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col">Actions</th> -->
+
+                                    <th scope="col" data-column="id" class="sortable-column" style="cursor: pointer;">#</th>
+                                    <th scope="col" data-column="name" class="sortable-column" style="cursor: pointer;">
+                                        Name
+                                        <span id="nameSortArrow"></span>
+                                    </th>
+                                    <th scope="col" data-column="info" class="sortable-column" style="cursor: pointer;">
+                                        Info
+                                        <span id="infoSortArrow"></span>
+                                    </th>
+                                    <th scope="col">
+                                        Amount
+                                    </th>
+                                    <th scope="col">
+                                        Date
+                                    </th>
+                                    <th scope="col" data-column="house_name" class="sortable-column" style="cursor: pointer;">
+                                        House
+                                        <span id="house_nameSortArrow"></span>
+                                    </th>
+                                    <th scope="col">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="result">
@@ -281,30 +304,54 @@
                     });
                 </script>
                 <script>
+                    // document.addEventListener('DOMContentLoaded', function () {
+                    //     var updateButtons = document.querySelectorAll('.update-expenses-btn');
+                    //     updateButtons.forEach(function (button) {
+                    //         button.addEventListener('click', function () {
+                    //             var userId = button.getAttribute('data-id');
+                    //             var username = button.getAttribute('data-expensesname');
+                    //             var userinfo = button.getAttribute('data-expensesinfo');
+                    //             var amount = button.getAttribute('data-expensesamount');
+                                
+                    //             // Fill the modal with the user's current data
+                    //             document.getElementById('updateExpensesId').value = userId;
+                    //             document.getElementById('updateExpensesname').value = username;
+                    //             document.getElementById('updateExpensesinfo').value = userinfo;
+                    //             document.getElementById('updateExpensesamount').value = amount;
+                                
+                    //             var updateExpensesModal = new bootstrap.Modal(document.getElementById('updateExpensesModal'), {
+                    //                 keyboard: false
+                    //             });
+                    //             updateExpensesModal.show();
+                    //         });
+                    //     });
+                    // });
+
                     document.addEventListener('DOMContentLoaded', function () {
-                        var updateButtons = document.querySelectorAll('.update-expenses-btn');
-                        updateButtons.forEach(function (button) {
-                            button.addEventListener('click', function () {
+                        document.body.addEventListener('click', function (event) {
+                            if (event.target.classList.contains('update-expenses-btn')) {
+                                var button = event.target;
+
                                 var userId = button.getAttribute('data-id');
                                 var username = button.getAttribute('data-expensesname');
                                 var userinfo = button.getAttribute('data-expensesinfo');
                                 var amount = button.getAttribute('data-expensesamount');
                                 
-                                // Fill the modal with the user's current data
+                                // Fill the modal with the expenses's current data
                                 document.getElementById('updateExpensesId').value = userId;
                                 document.getElementById('updateExpensesname').value = username;
                                 document.getElementById('updateExpensesinfo').value = userinfo;
                                 document.getElementById('updateExpensesamount').value = amount;
-                                
-                                var updateExpensesModal = new bootstrap.Modal(document.getElementById('updateExpensesModal'), {
+
+                                var updateUserModal = new bootstrap.Modal(document.getElementById('updateExpensesModal'), {
                                     keyboard: false
                                 });
-                                updateExpensesModal.show();
-                            });
+                                updateUserModal.show();
+                            }
                         });
                     });
                 </script>
-                <script>
+                <!-- <script>
                     var sortColumnType = 'id';
                     var sortDirectionType = 'asc';
 
@@ -394,7 +441,7 @@
                     renderTableType();
 
 
-                </script>
+                </script> -->
                 <!-- Include jQuery library -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
@@ -421,18 +468,80 @@
                     setInterval(fetchUnreadMessages, 3000);
                 </script>
                 <script>
-                    $(document).ready(function() {
-                        $('#searchBar').on('input', function() {
-                            var searchQuery = $(this).val();
+                    // $(document).ready(function() {
+                    //     $('#searchBar').on('input', function() {
+                    //         var searchQuery = $(this).val();
 
+                    //         $.ajax({
+                    //             url: 'search/search_expenses.php', // PHP script to perform search
+                    //             type: 'POST',
+                    //             data: { query: searchQuery },
+                    //             success: function(response) {
+                    //                 $('tbody').html(response); // Replace table body with new data
+                    //             }
+                    //         });
+                    //     });
+                    // });
+
+
+
+                    $(document).ready(function() {
+                        let currentSortColumn = 'id';
+                        let currentSortOrder = 'ASC';
+
+                        function fetchExpenses(page = 1, query = '', sortColumn = currentSortColumn, sortOrder = currentSortOrder) {
                             $.ajax({
-                                url: 'search/search_expenses.php', // PHP script to perform search
+                                url: 'search/search_expenses.php',
                                 type: 'POST',
-                                data: { query: searchQuery },
+                                data: { 
+                                    page: page, 
+                                    query: query, 
+                                    sort_column: sortColumn, 
+                                    sort_order: sortOrder 
+                                },
                                 success: function(response) {
-                                    $('tbody').html(response); // Replace table body with new data
+                                    $('tbody').html(response); // Update table body with data
                                 }
                             });
+                        }
+
+                        // Initial fetch on page load
+                        fetchExpenses();
+
+                        // Search bar event
+                        $('#searchBar').on('input', function() {
+                            var searchQuery = $(this).val();
+                            fetchExpenses(1, searchQuery);
+                        });
+
+                        // Pagination button event
+                        $(document).on('click', '.pagination-btn', function() {
+                            var page = $(this).data('page');
+                            var searchQuery = $('#searchBar').val();
+                            fetchExpenses(page, searchQuery);
+                        });
+
+                        // Column header sorting event
+                        $('.sortable-column').on('click', function() {
+                            let column = $(this).data('column');
+                            currentSortOrder = (currentSortColumn === column && currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+                            currentSortColumn = column;
+
+                            // Toggle the arrow indicator directly in the column header
+                            $('.sortable-column').each(function() {
+                                // Check if the column header contains an arrow (↑ or ↓) and remove it
+                                let text = $(this).text().trim();
+                                if (text.endsWith('↑') || text.endsWith('↓')) {
+                                    $(this).text(text.slice(0, -2));  // Remove the last two characters (arrow)
+                                }
+                            });
+
+                            // Add the appropriate arrow to the clicked column header
+                            let arrow = currentSortOrder === 'ASC' ? ' ↑' : ' ↓';
+                            $(this).append(arrow);  // Append the arrow directly to the text
+
+                            let searchQuery = $('#searchBar').val();
+                            fetchExpenses(1, searchQuery, currentSortColumn, currentSortOrder);
                         });
                     });
                 </script>

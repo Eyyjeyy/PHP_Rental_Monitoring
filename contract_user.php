@@ -77,6 +77,20 @@
     $stmt->execute();
     $result = $stmt->get_result();
 
+
+
+    $sql_physical = "SELECT physical_contracts.*, tenants.fname as fname, tenants.mname as mname, tenants.lname as lname, 'true' as physical_status, contract_images.image_path as image_path
+    FROM physical_contracts
+    INNER JOIN tenants ON physical_contracts.tenantid = tenants.id
+    INNER JOIN users ON tenants.users_id = users.id
+    INNER JOIN contracts ON contracts.tenants_id = physical_contracts.tenantid
+    INNER JOIN contract_images ON contract_images.physical_contract_id = physical_contracts.id
+    WHERE users.id = ?";
+    $stmt_physical = $admin->conn->prepare($sql_physical);
+    $stmt_physical->bind_param("i", $admin->session_id);
+    $stmt_physical->execute();
+    $result_physical = $stmt_physical->get_result();
+
     $pageTitle = 'Contract Page';
 ?>
 
@@ -139,7 +153,7 @@
                                                                     echo "<input type='hidden' name='contractsid' value='" . $row['id'] . "'>";
                                                                     if ($row["tenantapproval"] !== "true" && $row["tenantapproval"] !== "false") {
                                                                         echo "
-                                                                        <button type='submit' class='btn btn-danger' name='decline_contract' style='background-color: #EE7214;border-color: #EE7214;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Decline</button>";
+                                                                        <button type='submit' class='btn btn-danger mt-1 mb-1 m-xxl-0' name='decline_contract' style='background-color: #EE7214;border-color: #EE7214;color: white;padding: 7.5px 10px;border-radius: 4px;'><i class='fa fa-plus'></i>Decline</button>";
                                                                     }
                                                                 echo "</form>";
                                                             echo "</div>";
@@ -153,6 +167,31 @@
                                                         echo "</div>";
                                                     echo "</div>";
                                                 echo "</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center'>No contracts</td></tr>";
+                                        }
+                                    ?>
+                                </tbody>
+                                
+                                <tbody>
+                                    <?php
+                                        // Check if there are any rows in the result set
+                                        if ($result_physical->num_rows > 0) {
+                                            // Output data of each row
+                                            while ($row_physical = $result_physical->fetch_assoc()) {
+                                                echo "<tr><td colspan='5' class='text-center pt-3 pb-3'><strong>Physical contracts</strong></td></tr>";
+                                                echo "<tr>";
+                                                echo "<td class='text-center'>" . ($row_physical["fname"]) . " " . ($row_physical["mname"]) . " " . ($row_physical["lname"]) . "</td>";
+                                                echo "<td class='text-center'>" . ($row_physical["physical_status"] === 'true' ? 'COMPLETE' : 'N/A') . "</td>";
+                                                echo "<td class='text-center'>" . ($row_physical["datestart"]) . "</td>";
+                                                echo "<td class='text-center'>" . ($row_physical["expirationdate"]) . "</td>";
+                                                echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
+                                                    echo "<div class='row justify-content-center m-0'>";
+                                                        echo "<a href='" . './asset/physical_contracts/' . htmlspecialchars($row_physical['image_path']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;height:41px;'>Download</a>";
+                                                    echo "</div'>";
+                                                echo "</td'>";
                                                 echo "</tr>";
                                             }
                                         } else {
@@ -210,7 +249,7 @@
                     <div class="mb-3">
                         <div class="row justify-content-center">
                             <div class="col-auto">
-                                <button id="clear1" class="btn receipt" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                                <button id="clear1" class="btn receipt text-white" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
                             </div>
                         </div>
                         <!-- <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
@@ -229,7 +268,7 @@
                     <div class="mb-3">
                         <div class="row justify-content-center">
                             <div class="col-auto">
-                                <button id="clear2" class="btn receipt" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
+                                <button id="clear2" class="btn receipt text-white" type="button" style="color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
                             </div>
                         </div>
                         <!-- <button id="clear2" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
@@ -369,6 +408,30 @@
 
   // Poll every 3 seconds
   setInterval(fetchUnreadMessages, 3000);
+</script>
+
+<script>
+  function fetchDelinquencyMonthMissed() {
+    $.ajax({
+      url: 'fetch_user_delinquency_month.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        if (data && data.missed_months !== undefined) {
+          $('#delinquencyCount').text(data.missed_months);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching unread messages:", textStatus, errorThrown);
+      }
+    });
+  }
+
+  // Run once on page load
+  fetchDelinquencyMonthMissed();
+
+  // Poll every 3 seconds
+  setInterval(fetchDelinquencyMonthMissed, 3000);
 </script>
 
 <?php include 'regular/includes/footer.php'; ?>

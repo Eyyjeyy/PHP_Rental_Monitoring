@@ -60,6 +60,7 @@
         $e_accountname = trim(htmlspecialchars($_POST['e_accountname']));
         $w_accountnum = trim(htmlspecialchars($_POST['w_accountnum']));
         $w_accountname = trim(htmlspecialchars($_POST['w_accountname']));
+        $houseaddress = trim(htmlspecialchars($_POST['houseaddress']));
         $gcash = trim(htmlspecialchars($_POST['gcash']));
         $bank = trim(htmlspecialchars($_POST['bank']));
     
@@ -91,7 +92,7 @@
         // Create an instance of your Admin class
         // $admin1 = new Admin($conn);
         // Call the addHouse method to add the new house
-        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank);
+        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress, $gcash, $bank);
         if ($added) {
             $_SESSION['success_message'] = "Success";
             header("Location: adminhouses.php");
@@ -241,8 +242,8 @@
 
 
 
-            <div class="col main content">
-                <div class="card-body" style="margin-top: 12px;">
+            <div class="col main content" style="padding-top: 12px; padding-bottom: 12px; max-height: 100vh;">
+                <div class="card-body" style="margin-top: 12px; height:100%; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column;">
                     <div class="row">
                         <div class="col-lg-12" id="tableheader">
                             <button class="btn btn-primary float-end table-buttons-update" id="new_category"><i class="fa fa-plus"></i> New Category</button>
@@ -308,7 +309,7 @@
                             <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button> -->
                             <div class="row">
                                 <div class="col-6">
-                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                                    <input type="text" id="searchBar" placeholder="Search..." class="form-control mt-3 mb-3 " style="max-width: 180px;" />
                                 </div>
                                 <div class="col-6">
                                     <button class="btn btn-primary float-end table-buttons-update" id="new_house"><i class="fa fa-plus"></i> New Apartment</button>
@@ -383,8 +384,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row" style="min-height: 54px;">
-                    </div>
+                    <!-- <div class="row" style="min-height: 54px;">
+                    </div> -->
                 </div>
                 <!-- New House Modal -->
                 <div class="modal fade" id="newHouseModal_house" tabindex="-1" aria-labelledby="newHouseModalLabel" aria-hidden="true">
@@ -482,6 +483,12 @@
                                         <div class="mb-3">
                                             <label for="bank" class="form-label">Bank</label>
                                             <input type="text" class="form-control" id="bank" name="bank" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="houseaddress" class="form-label">Apartment Address</label>
+                                            <input type="text" class="form-control" id="houseaddress" name="houseaddress" required>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">

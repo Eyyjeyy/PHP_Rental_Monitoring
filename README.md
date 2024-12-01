@@ -187,3 +187,29 @@ The project is built using PHP, MySQL for database management, and incorporates 
 11/24/2024
 - revised admindelinquency to be able to determine and display total amount of missing payments on table <br>
 - revised adminpayments due to image modal popup for payment_type of deposit not appearing when small image is clicked <br>
+
+11/27/24
+- revised some paginations, removed pagination for pages with 2 tables <br>
+- revised adminpapers.php's javascript for delete button of 1st table <br>
+
+11/28/24
+- revised payments.php to display total balance of tenant for all months instead of just the monthly balance that displays the balance needed to pay for the current date's month <br>
+- revised admindelinquency.php to only count the payments with approval column's value of "true" in the computation of missing months and missed months <br>
+
+11/29/24
+- Commented out this line in admindelinquency and user_delinquency pages: <br>
+- $missing_payment_total -= $paid_total; <br>
+- Created fetch_user_delinquency_month.php for notification indicator for header delinquency icon number indicator of number of missed months <br>
+- Revised regular/includes/header_user.php script to include new delinquency page icon in header/navbar <br>
+
+11/30/24
+- created sendEviction function in admin.php for admindelinquency page for send eviction button <br>
+- admindelinquency page, addition of send eviction word file to tenant by email, utilizing phpword library and phpmailer api as well as semaphore for sms <br>
+
+12/1/24
+- index.php revision for user to have a popup modal lasting 10 seconds before being closable, informing user of an eviction notice once the admin sent an evictoin email <br>
+- eviction_seen_status.php made to update eviction_popup seen column to true once the timer in index.php is finished. So the popup would still display if the user exited and reopened the index.php before the timer ends <br>
+
+12/2/24
+- Installed tcpdf library using composer to enable convertion of docx files to pdf to be rendered as iframes <br>
+- Created function "displayContractPDF" in admin.php for loading of docx and convertion to pdf to be rendered in web pages <br>

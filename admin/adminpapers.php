@@ -902,6 +902,43 @@
                 console.error('Error fetching data:', error);
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('tbody#papertable').addEventListener('click', function(event) {
+                console.log('click');
+                if (event.target.classList.contains('btn-delete')) {
+                    var paperId = event.target.getAttribute('data-id');
+                    deletePaper(paperId);
+                }
+            });
+        });
+
+        function deletePaper(paperId) {
+            var formData = new FormData();
+            formData.append('delete_file', true);
+            formData.append('fileid', paperId);
+
+            fetch('adminpapers.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response from server:', data);
+
+                var messageDiv = document.getElementById('result');
+                if (data.includes('success')) {
+                    messageDiv.innerHTML += '<p class="text-success">Category deleted successfully.</p>';
+                    // Optionally, remove the deleted category row from the table
+                    document.querySelector('button[data-id="' + paperId + '"]').closest('tr').remove();
+                } else {
+                    messageDiv.innerHTML += '<p class="text-danger">Failed to delete category.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
     </script>
     <script>
         function fetchUnreadMessages() {

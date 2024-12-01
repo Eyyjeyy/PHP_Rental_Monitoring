@@ -24,6 +24,18 @@ $total_rows = $total_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $records_per_page);
 
 // Fetch paginated, sorted records
+// $sql = "
+//     SELECT * FROM paper_files
+//     WHERE 
+//         paper_files.file_name LIKE '%$query%' OR
+//         paper_files.category_name LIKE '%$query%' OR
+//         paper_files.uploaded_at LIKE '%$query%'
+//     ORDER BY $sort_column $sort_order
+//     LIMIT $offset, $records_per_page
+// ";
+// $result = $conn->query($sql);
+
+// Use the commented code above instead and uncomment lines 81-85 to bring back pagination feature
 $sql = "
     SELECT * FROM paper_files
     WHERE 
@@ -31,7 +43,6 @@ $sql = "
         paper_files.category_name LIKE '%$query%' OR
         paper_files.uploaded_at LIKE '%$query%'
     ORDER BY $sort_column $sort_order
-    LIMIT $offset, $records_per_page
 ";
 $result = $conn->query($sql);
 
@@ -49,7 +60,7 @@ if ($result->num_rows > 0) {
         echo "<div class='d-flex justify-content-center'>
                 <div class='row m-0'>
                     <div class='col d-flex justify-content-center mb-3 px-2'>
-                        <button class='btn btn-danger btn-delete table-buttons-delete' name='delete_file' data-id='". htmlspecialchars($row['uploaded_at']). "' style='width: 100px;'>Delete</button>
+                        <button id='deletefile' class='btn btn-danger btn-delete table-buttons-delete' name='delete_file' data-id='". htmlspecialchars($row['id']). "' style='width: 100px;'>Delete</button>
                     </div>
                     <div class='col d-flex justify-content-center px-2'>
                         <a href='". htmlspecialchars($row['file_url']). "' class='btn btn-primary btn-download table-buttons-update' download='". htmlspecialchars($row['file_name']). "' style='width: 100px; text-align: center; max-height: 38px;'>Download</a>
@@ -67,11 +78,11 @@ if ($result->num_rows > 0) {
 }
 
 // Output pagination buttons
-echo "<tr><td colspan='10' class='text-center'>";
-for ($i = 1; $i <= $total_pages; $i++) {
-    echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
-}
-echo "</td></tr>";
+// echo "<tr><td colspan='10' class='text-center'>";
+// for ($i = 1; $i <= $total_pages; $i++) {
+//     echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
+// }
+// echo "</td></tr>";
 
 $conn->close();
 ?>

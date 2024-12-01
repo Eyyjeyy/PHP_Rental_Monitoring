@@ -226,6 +226,52 @@
         }
     }
 
+    if (isset($_POST['print_data'])) {
+        $query = "SELECT * FROM tenants"; // Replace with your SQL query
+        $result = $admin->conn->query($query);
+
+        // Start HTML for the printable page
+        echo "<html>";
+        echo "<head>";
+        echo "<title>Printable Data</title>";
+        echo "<style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+            </style>";
+        echo "</head>";
+        echo "<body>";
+
+        // Display the data in a table format
+        echo "<h1>Data for Printing</h1>";
+        echo "<table>";
+        echo "<tr><th>ID</th><th>Name</th><th>Price</th></tr>";
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr><td>{$row['id']}</td><td>{$row['name']}</td><td>{$row['price']}</td></tr>";
+            }
+        } else {
+            echo "<tr><td colspan='3'>No data found</td></tr>";
+        }
+
+        echo "</table>";
+
+        // Add a print button to automatically trigger printing
+        echo "<script>window.print();</script>";
+        echo "</body>";
+        echo "</html>";
+    }
+
     // Check if there's an error message stored in the session
     if (isset($_SESSION['error_message'])) {
         // Display the error message as an alert
@@ -784,6 +830,24 @@
                     </div>
                 </div>
 
+                <iframe id="printFrame" style="display: none;"></iframe>
+
+                <!-- Modal HTML -->
+                <div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="contractModalLabel">Contract PDF</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Embed the iframe with the PDF -->
+                                <iframe src="../<?php echo $pdfUrl; ?>" id="contractIframe" width="100%" height="500px"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
                     document.getElementById('new_contract').addEventListener('click', function () {
                         var newContractModal = new bootstrap.Modal(document.getElementById('newContractModal'), {
@@ -796,6 +860,26 @@
                             keyboard: false
                         });
                         uploadContractModal.show();
+                    });
+
+                </script>
+
+                <script>
+                    document.body.addEventListener('click', function (event) {
+                        if (event.target && event.target.id === 'testcontract') {
+                            const testcontract_id = event.target.getAttribute("data-contid");
+
+                            // Get the iframe element
+                            var iframe = document.getElementById('contractIframe');
+
+                            // Update the iframe's src with the testcontract_id
+                            iframe.src = `${testcontract_id}`; // Adjust the URL as needed
+
+                            var contractModal = new bootstrap.Modal(document.getElementById('contractModal'), {
+                                keyboard: false
+                            });
+                            contractModal.show();
+                        }
                     });
                 </script>
 
@@ -899,6 +983,9 @@
                                 },
                             });
                         }
+
+                        // Initial fetch on page load !COMMENTOUT IF SOME FUNCTIONS ARE NOT WORKING!
+                        fetchTableData('contractTable', 'search/search_contract.php', 1);  // Initial fetch for contract table
 
                         // Table 1: Contracts Table
                         let table1SortColumn = 'id';
@@ -1094,6 +1181,32 @@
                             document.getElementById('modalImage').src = fileUrl;
                         }
                     }
+                </script>
+
+                <script>
+                    document.body.addEventListener("click", function (event) {
+                        // Check if the clicked element has the ID 'printBtn'
+                        if (event.target && event.target.id === "printBtn") {
+                            console.log("click");
+                            // Get the data-id of the clicked button
+                            const dataId = event.target.getAttribute("data-print-id");
+                            // Get the hidden iframe
+                            const iframe = document.getElementById("printFrame");
+
+                            if (iframe) {
+                                // Set the source of the iframe to load the printable content
+                                iframe.src = "print_contract.php?id=" + encodeURIComponent(dataId);
+
+                                // Trigger printing when the iframe loads
+                                iframe.onload = function () {
+                                    iframe.contentWindow.print();
+                                };
+                            } else {
+                                console.error("Iframe with ID 'printFrame' not found.");
+                            }
+                        }
+                    });
+
                 </script>
             </div>
         </div>

@@ -31,6 +31,43 @@
         }
     }
 
+    if (isset($_POST['submit_eviction'])) {
+        $evictiontenantid = trim(htmlspecialchars($_POST['evictiontenantid']));
+        $missedpaymenttotal = trim(htmlspecialchars($_POST['missedpaymenttotal']));
+        $misseddates = trim(htmlspecialchars($_POST['misseddates']));
+        $evictiondate = trim(htmlspecialchars($_POST['evictiondate']));
+        $evictionpaydays = trim(htmlspecialchars($_POST['evictionpaydays']));
+        $adminaddress = trim(htmlspecialchars($_POST['adminaddress']));
+        $signatureData = $_POST['signature'];
+        
+        // Validate that evictionpaydays is a valid positive whole number (no letters, decimals, or negatives)
+        if (!preg_match("/^\d+$/", $evictionpaydays)) {
+            $_SESSION['error_message'] = "Number of days for tenant to pay must be a valid positive whole number.";
+            header("Location: admindelinquency.php?error=invalid_evictionpaydays");
+            exit();
+        }
+
+        // Allow up to 70 characters
+        if (!preg_match('/^.{1,70}$/', $adminaddress)) {
+            // Address is valid, process it
+            $_SESSION['error_message'] = "Address can only have up to 70 characters";
+            header("Location: admindelinquency.php?error=invalid_adminaddress");
+            exit();
+        }
+
+        $sendEviction = $admin->sendEviction($evictiontenantid, $missedpaymenttotal, $misseddates, $evictiondate, $evictionpaydays, $adminaddress, $signatureData);
+        if($sendEviction) {
+            header("Location: admindelinquency.php?eviction_sent=1");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Addition Failed due to an error";
+            }
+            header("Location: admindelinquency.php?error=eviction");
+            exit();
+        }
+    }
+
     // Check if there's an error message stored in the session
     if (isset($_SESSION['error_message'])) {
         // Display the error message as an alert
@@ -51,6 +88,21 @@
     // GROUP BY tenants.id
     // ";
     // $result = $admin->conn->query($sql);
+
+    // $sql = "
+    // SELECT 
+    //     tenants.id AS tenant_id,
+    //     tenants.*, 
+    //     houses.*,
+    //     GROUP_CONCAT(payments.amount ORDER BY payments.date_payment DESC) AS payment_amounts,
+    //     GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
+    //     MAX(payments.date_payment) AS last_payment_date  -- Get the last payment date
+    // FROM tenants 
+    // LEFT JOIN payments ON tenants.id = payments.tenants_id
+    // LEFT JOIN houses ON tenants.house_id = houses.id
+    // GROUP BY tenants.id
+    // ";
+
     $sql = "
     SELECT 
         tenants.id AS tenant_id,
@@ -60,7 +112,7 @@
         GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
         MAX(payments.date_payment) AS last_payment_date  -- Get the last payment date
     FROM tenants 
-    LEFT JOIN payments ON tenants.id = payments.tenants_id
+    LEFT JOIN payments ON tenants.id = payments.tenants_id AND payments.approval = 'true' -- Include only approved payments
     LEFT JOIN houses ON tenants.house_id = houses.id
     GROUP BY tenants.id
     ";
@@ -181,7 +233,7 @@
                                     }
 
                                     // Deduct total paid from total missing payment amount
-                                    $missing_payment_total -= $paid_total;
+                                    // $missing_payment_total -= $paid_total;
 
                                     // Ensure missing_payment_total does not go below 0
                                     $missing_payment_total = max(0, $missing_payment_total);
@@ -199,7 +251,7 @@
                                             echo "<td>" . htmlspecialchars($missing_payment_total) . "</td>"; // Display the total missing payment
                                             echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                 echo "<div class='row justify-content-center m-0'>";
-                                                    echo "<div class='col-xxl-4 px-2'>";
+                                                    echo "<div class='col-xxl-6 px-2'>";
                                                         // Add a form with a delete button for each record
                                                         // echo "<form method='POST' action='adminpayments.php' class='float-xxl-end align-items-center'>";
                                                         echo "<form method='POST' action='admindelinquency.php' class='align-items-center'>";
@@ -210,6 +262,9 @@
                                                                 Send Reminder
                                                             </button>";
                                                         echo "</form>";
+                                                    echo "</div>";
+                                                    echo "<div class='col-xxl-6 px-2'>";
+                                                        echo "<button class='btn btn-primary table-buttons-update' data-bs-toggle='modal' data-bs-target='#sendEvictionModal' id='send_eviction' data-id='" . $row['tenant_id'] . "' data-missedpaymenttotal='" . $missing_payment_total . "' data-misseddates='" . htmlspecialchars(implode(', ', $missed_months_dates)) . "' style='width: 160px;'><i class='fa fa-plus'></i>Send Eviction</button>";
                                                     echo "</div>";
                                                 echo "</div>";
                                             echo "</td>";
@@ -256,6 +311,156 @@
                     </table>
                 </div>
             </div>
+            <!-- Send Eviction Modal -->
+            <div class="modal fade" id="sendEvictionModal" tabindex="-1" aria-labelledby="sendEvictionModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header" style="background-color: #527853;">
+                        <h5 class="modal-title text-white" id="sendEvictionModalLabel">Update Deposit</h5>
+                        <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="sendEvictionForm" method="POST" action="admindelinquency.php">
+
+                            <input type="hidden" id="evictiontenantid" name="evictiontenantid">
+                            <input type="hidden" id="missedpaymenttotal" name="missedpaymenttotal">
+                            <input type="hidden" id="misseddates" name="misseddates">
+                            <input type="hidden" id="signature" name="signature">
+                            
+                            <div class="mb-3">
+                                <label for="evictiondate" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="evictiondate" name="evictiondate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="evictionpaydays" class="form-label">Number of Days for Tenant to Pay</label>
+                                <input type="text" class="form-control" id="evictionpaydays" name="evictionpaydays" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="adminaddress" class="form-label">Admin Address</label>
+                                <input type="text" class="form-control" id="adminaddress" name="adminaddress" required>
+                            </div>
+                            <div class="mb-3 position-relative">
+                                <label for="signature-pad" class="form-label position-absolute">Admin Signature</label>
+                            </div>
+                            <div class="mt-3 mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
+                                <div class="wrapper" style="min-height: 200px; border: 1px solid #000;">
+                                    <canvas id="signature-pad" class="signature-pad" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="row justify-content-center">
+                                    <div class="col-auto">
+                                        <button id="clear1" class="text-white" type="button">Clear</button>
+                                    </div>
+                                </div>
+                                <!-- <button id="save">Save Signature</button> -->
+                            </div>
+                            <div class="col-4 align-self-center mb-3">
+                                <button type="submit" name="submit_eviction" class="btn btn-primary table-buttons-update d-block mx-auto w-100">Send Eviction</button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.querySelectorAll('#send_eviction').forEach(button => {
+                    button.addEventListener('click', function () {
+                        // Get the tenant ID from the data-id attribute of the clicked button
+                        var tenantId = this.getAttribute('data-id');
+                        var missedpaymenttotal = this.getAttribute('data-missedpaymenttotal');
+                        var misseddates = this.getAttribute('data-misseddates');
+
+                        // Set the tenant ID into the hidden input field in the modal
+                        document.getElementById('evictiontenantid').value = tenantId;
+                        document.getElementById('missedpaymenttotal').value = missedpaymenttotal;
+                        document.getElementById('misseddates').value = misseddates;
+                    });
+                });
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+            <script>
+                // Initialize both signature pads
+                const canvas1 = document.getElementById("signature-pad");
+                const signaturePad1 = new SignaturePad(canvas1);
+
+                function resizeCanvas(canvas, signaturePad) {
+                    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                    canvas.width = canvas.offsetWidth * ratio;
+                    canvas.height = canvas.offsetHeight * ratio;
+                    canvas.getContext("2d").scale(ratio, ratio);
+                    signaturePad.clear(); // Clear the canvas after resizing to prevent scaling artifacts
+                }
+
+                // Resize both canvases when the modal is shown and on window resize
+                const sendEvictionModal = document.getElementById("sendEvictionModal");
+                sendEvictionModal.addEventListener("shown.bs.modal", () => {
+                    resizeCanvas(canvas1, signaturePad1);
+                });
+
+                window.addEventListener("resize", () => {
+                    resizeCanvas(canvas1, signaturePad1);
+                });
+
+                // Function to center the signature in the canvas
+                function centerSignature(canvas, signaturePad) {
+                    const context = canvas.getContext("2d");
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+
+                    // Loop over every pixel to find the bounding box
+                    for (let y = 0; y < canvas.height; y++) {
+                        for (let x = 0; x < canvas.width; x++) {
+                            const index = (y * canvas.width + x) * 4;
+                            const alpha = imageData.data[index + 3];
+                            if (alpha > 0) {
+                                if (x < minX) minX = x;
+                                if (y < minY) minY = y;
+                                if (x > maxX) maxX = x;
+                                if (y > maxY) maxY = y;
+                            }
+                        }
+                    }
+
+                    const width = maxX - minX;
+                    const height = maxY - minY;
+
+                    const centeredCanvas = document.createElement("canvas");
+                    centeredCanvas.width = canvas.width;
+                    centeredCanvas.height = canvas.height;
+                    const centeredContext = centeredCanvas.getContext("2d");
+
+                    centeredContext.drawImage(
+                        canvas,
+                        minX, minY, width, height,
+                        (canvas.width - width) / 2, (canvas.height - height) / 2, width, height
+                    );
+
+                    return centeredCanvas.toDataURL("image/png");
+                }
+
+                // Clear both signature pads
+                document.getElementById("clear1").addEventListener("click", () => {
+                    signaturePad1.clear();
+                });
+
+                // Handle form submission
+                document.getElementById("sendEvictionForm").addEventListener("submit", (event) => {
+                    if (!signaturePad1.isEmpty()) {
+                        document.getElementById("signature").value = centerSignature(canvas1, signaturePad1);
+                    } else {
+                        event.preventDefault();
+                        alert("Please provide both signatures.");
+                    }
+                });
+            </script>
+
             <!-- Include jQuery library -->
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>

@@ -508,6 +508,29 @@
     setInterval(fetchUnreadMessages, 3000);
 </script>
 <script>
+  function fetchDelinquencyMonthMissed() {
+    $.ajax({
+      url: 'fetch_user_delinquency_month.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        if (data && data.missed_months !== undefined) {
+          $('#delinquencyCount').text(data.missed_months);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching unread messages:", textStatus, errorThrown);
+      }
+    });
+  }
+
+  // Run once on page load
+  fetchDelinquencyMonthMissed();
+
+  // Poll every 3 seconds
+  setInterval(fetchDelinquencyMonthMissed, 3000);
+</script>
+<script>
     function fetchUnseenCounts() {
         $.ajax({
             url: 'fetch_unseen_count_specific.php',

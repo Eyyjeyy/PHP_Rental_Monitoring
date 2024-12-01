@@ -1,5 +1,8 @@
 <?php
+include '../../admin.php';
 include '../../db_connect.php'; // Include your database connection
+
+$admin1 = new Admin();
 
 // Get the search query and trim any leading/trailing whitespace
 $query = isset($_POST['query']) ? trim($_POST['query']) : '';
@@ -62,6 +65,27 @@ if ($result_tenant_table->num_rows > 0) {
         echo "<td class='text-center'>" . ($row["tenantapproval"] === "true" ? "APPROVED" : ($row["tenantapproval"] === "false" ? "REJECTED" : "PENDING")) . "</td>";
         echo "<td>" . htmlspecialchars($row['datestart']) . "</td>";
         echo "<td>" . htmlspecialchars($row['expirationdate']) . "</td>";
+
+        $pdfUrl = $admin1->displayContractPDF($row['fileurl']); // Assuming you have an instance of the class
+        
+        // Output the iframe with the generated PDF
+        // echo "<td>";
+        // echo "<div class='col-12 px-2'>";
+        // echo "<iframe src='../" . $pdfUrl . "' width='100%' height='500px'></iframe>";
+        // echo "</div>";
+        // echo "</td>";
+
+        echo 
+        "
+        <td>
+            <div class='col-12 px-2'>
+                <!-- Add an icon or image as the clickable element -->
+                <img src='../asset/doc.png' test='". $row['fileurl'] ."' id='testcontract' data-contid='.." . $pdfUrl . "' alt='View Contract' class='view-contract-icon img-fluid' data-toggle='modal' data-target='#contractModal' style='cursor:pointer; width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>
+            </div>
+        </td>
+        ";
+
+
         echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>"; // Actions (Delete, Download)
         echo "<div class='row justify-content-center m-0'>"; // Div container for buttons
         echo "<div class='col-xl-6 px-2'>"; // Delete button form
@@ -76,6 +100,10 @@ if ($result_tenant_table->num_rows > 0) {
         } else {
             echo "<span>No file available</span>";
         }
+        echo "</div>";        
+        echo "<div class='col-xl-6 px-2'>";
+                // echo "<button type='submit' name='print_data'>Print Data</button>";
+                echo "<button id='printBtn' name='print_data' data-print-id='" . $row['id'] . "'>Print Data</button>";
         echo "</div>";
         echo "</div>";
         echo "</td>";

@@ -349,6 +349,36 @@
     // echo "<br>Monthly Rent Due: $" . number_format($monthlyRentDue, 2);
     // echo "<br>Total Monthly Payments: $" . number_format($totalMonthlyPayments, 2);
 
+
+
+    // Calculate the number of months elapsed
+    $startDate = $date_preferred ? new DateTime($date_preferred) : new DateTime($date_start);
+    $currentDateCheck = new DateTime();
+    $dateDifference = $startDate->diff($currentDateCheck);
+    $elapsedMonths = $dateDifference->y * 12 + $dateDifference->m;
+
+    $monthlyRate = $price;
+
+    // Calculate the total rent amount due for all elapsed months
+    $totalAmountDue = $elapsedMonths * $monthlyRate;
+
+    // Fetch total approved payments made by the tenant
+    $queryTotalPayments = "SELECT SUM(amount) AS approved_payments
+        FROM payments
+        WHERE tenants_id = $tenant_id
+          AND houses_id = $house_id
+          AND approval = 'true'";
+    $resultTotalPayments = $admin->conn->query($queryTotalPayments);
+    $paymentData = $resultTotalPayments->fetch_assoc();
+    $totalApprovedPayments = $paymentData['approved_payments'] ?? 0.00; // Default to 0 if no payments exist
+
+    // Calculate the total outstanding balance
+    $outstandingBalance = $totalAmountDue - $totalApprovedPayments;
+
+    // Ensure the balance does not drop below zero
+    $outstandingBalance = max(0, $outstandingBalance);
+
+
   } else {
     echo "No tenant information found for the current user.";
   }
@@ -429,6 +459,8 @@
         <a class="dropdown-item" href="payments.php">Payment</a>
         <a class="dropdown-item" href="../info.php">Info</a>
         <a class="dropdown-item" href="../profile_user.php">Profile</a>
+        <a class="dropdown-item" href="../contract_user.php">Contract</a>
+        <a class="dropdown-item" href="../user_delinquency.php">Delinquency</a>
         <a class="dropdown-item" href="../chat_user.php">Chat</a>
         <a class="dropdown-item" href="../logout.php">Log Out</a>
     </div>
@@ -459,6 +491,14 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-suitcase-lg-fill" viewBox="0 0 16 16">
                                 <path d="M7 0a2 2 0 0 0-2 2H1.5A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14H2a.5.5 0 0 0 1 0h10a.5.5 0 0 0 1 0h.5a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2H11a2 2 0 0 0-2-2zM6 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1zM3 13V3h1v10zm9 0V3h1v10z"/>
                             </svg>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link h-100 d-flex align-items-center position-relative" id="icontext" href="../user_delinquency.php">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-fill-slash" viewBox="0 0 16 16">
+                                <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"></path>
+                            </svg>
+                            <p class="notifs fw-bold position-absolute" style="color: #F28543; left: 42px;" id="delinquencyCount"></p>
                         </a>
                     </li>
                     <li class="nav-item mx-1">
@@ -495,9 +535,24 @@
                 <div class="row" id="createrec">
                   <div class="col-sm-6" id="monthly">
                     <?php 
-                    echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
+                    // echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Total Balance: &#8369;" . number_format($outstandingBalance, 2) . "</p>";
                     echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
                     echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
+                    // if ($result_gcashbank->num_rows > 0) {
+                    //   while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {
+                    //     echo "<p class='fw-bolder'>Gcash: " . $row_gcashbank['gcash'] . "</p>";
+                    //     echo "<p class='fw-bolder'>Bank: " . $row_gcashbank['bank'] . "</p>";
+                    //   }
+                    // }
+                    ?>
+                  </div>
+                  <div class="col-sm-6 d-flex flex-column d-sm-none" id="createrecbtn">
+                    <p class="fw-bolder ms-xs-0">Bank Acc Name: John M. Garcia</p>
+                    <p class="fw-bolder">Bank Number: 2014923842854</p>
+                    <!-- <p class="fw-bolder align-self-sm-end">&nbsp;</p>
+                    <p class="fw-bolder align-self-sm-end">&nbsp;</p> -->
+                    <?php
                     if ($result_gcashbank->num_rows > 0) {
                       while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {
                         echo "<p class='fw-bolder'>Gcash: " . $row_gcashbank['gcash'] . "</p>";
@@ -505,9 +560,24 @@
                       }
                     }
                     ?>
+                    <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal" style="max-width: 150px;">
+                        <i class="fa fa-plus"></i> Create Receipt
+                    </button>
                   </div>
-                  <div class="col-sm-6 d-flex justify-content-sm-end align-items-sm-end" id="createrecbtn">
-                    <button type="button" class="btn receipt" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                  <div class="col-sm-6 d-flex flex-column d-none d-sm-flex" id="createrecbtn">
+                    <p class="fw-bolder ms-xs-0" style="margin-left: calc(10vw - 12vw);">Bank Acc Name: John M. Garcia</p>
+                    <p class="fw-bolder" style="margin-left: calc(10vw - 12vw);">Bank Number: 2014923842854</p>
+                    <!-- <p class="fw-bolder align-self-sm-end">&nbsp;</p>
+                    <p class="fw-bolder align-self-sm-end">&nbsp;</p> -->
+                    <?php
+                    if ($result_gcashbank->num_rows > 0) {
+                      while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {
+                        echo "<p class='fw-bolder' style='margin-left: calc(10vw - 12vw);'>Gcash: " . $row_gcashbank['gcash'] . "</p>";
+                        echo "<p class='fw-bolder' style='margin-left: calc(10vw - 12vw);'>Bank: " . $row_gcashbank['bank'] . "</p>";
+                      }
+                    }
+                    ?>
+                    <button type="button" class="btn receipt align-self-sm-end" id="new_payment" data-bs-toggle="modal" data-bs-target="#paymentModal" style="max-width: 150px; margin-left: calc(10vw - 12vw);">
                         <i class="fa fa-plus"></i> Create Receipt
                     </button>
                   </div>
@@ -707,6 +777,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Poll every 3 seconds
   setInterval(fetchUnreadMessages, 3000);
+</script>
+
+<script>
+  function fetchDelinquencyMonthMissed() {
+    $.ajax({
+      url: '../fetch_user_delinquency_month.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        if (data && data.missed_months !== undefined) {
+          $('#delinquencyCount').text(data.missed_months);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching unread messages:", textStatus, errorThrown);
+      }
+    });
+  }
+
+  // Run once on page load
+  fetchDelinquencyMonthMissed();
+
+  // Poll every 3 seconds
+  setInterval(fetchDelinquencyMonthMissed, 3000);
 </script>
 
 <!-- <script>

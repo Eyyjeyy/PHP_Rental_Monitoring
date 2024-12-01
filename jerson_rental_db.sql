@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2024 at 09:07 AM
+-- Generation Time: Dec 01, 2024 at 07:58 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -121,6 +121,26 @@ INSERT INTO `deposit` (`id`, `tenantid`, `adminid`, `deposit_filepath`, `houses_
 (2, 74, 85, '../deposits/kindpng_1132944_673c6dbd983b4.png', 864, 6900, '2024-11-29', '', ''),
 (3, 74, 85, '../deposits/454c574f-7b61-4698-9f80-9f479fdd638e_673c7296b0e7d.jfif', 864, 3200, '2024-11-06', 'Unapproved', ''),
 (6, 77, 88, '../deposits/Untitled_6740635776e3a.png', 862, 90000, '2024-11-22', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `eviction_popup`
+--
+
+CREATE TABLE `eviction_popup` (
+  `id` int(11) NOT NULL,
+  `users_id` int(11) NOT NULL,
+  `seen` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `eviction_popup`
+--
+
+INSERT INTO `eviction_popup` (`id`, `users_id`, `seen`) VALUES
+(1, 85, 'true'),
+(2, 85, 'true');
 
 -- --------------------------------------------------------
 
@@ -479,7 +499,16 @@ INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUE
 (311, 84, 'Add', 'Added User, ID: 90<br> Username: titeee', '2024-11-23 07:20:48'),
 (312, 84, 'Update', 'Updated User, ID: 90<br> New Username: titeee<br> Old Username: titeee', '2024-11-23 07:21:26'),
 (313, 84, 'Add', 'Added User, ID: 91<br> Username: tewt', '2024-11-23 07:23:42'),
-(314, 84, 'Update', 'Updated User, ID: 91<br> New Username: tewt<br> Old Username: tewt', '2024-11-23 07:23:50');
+(314, 84, 'Update', 'Updated User, ID: 91<br> New Username: tewt<br> Old Username: tewt', '2024-11-23 07:23:50'),
+(315, 84, 'Update', 'Updated Expense, ID: 19<br>Expense Name: Paint -> Paintas<br>Expenses Amount: 3000 -> 3000', '2024-11-27 08:36:23'),
+(316, 84, 'Add', 'Added Expenses, ID: 20<br>Expenses Name : exdsfsdf<br>Expenses Info : broken ground<br>Expenses Amount : 55523<br>House ID: 870<br>', '2024-11-27 08:44:00'),
+(317, 84, 'Delete', 'Deleted Expense, ID: 20<br>Expense Name : exdsfsdf<br>Expense Info : broken ground<br>', '2024-11-27 08:44:09'),
+(318, 84, 'Add', 'Added Paper Category, ID: 96<br>Category Name, : testtttt<br>', '2024-11-27 10:41:49'),
+(319, 84, 'Delete', 'Deleted Paper Category, ID: 96<br>Category Name, : testtttt<br>', '2024-11-27 10:42:23'),
+(320, 84, 'Delete', 'Deleted Paper, ID: 47<br>Paper Name, : Untitled_672f0bdc64a6f.png<br>', '2024-11-27 10:58:03'),
+(321, 84, 'Delete', 'Deleted Paper, ID: 46<br>Paper Name, : Untitled_672f0b419e774.png<br>', '2024-11-27 10:58:46'),
+(322, 84, 'Delete', 'Deleted Paper, ID: 44<br>Paper Name, : Untitled_672f09f9630fb.png<br>', '2024-11-27 10:59:01'),
+(323, 84, 'Add', 'Added House, ID: 871<br> Housename: address test<br> Category: 77<br> Price: 789<br> Electric Account: aj (1234567890)<br> Water Account: emmy (1234567890)<br>Gcash: \r\n        99999999999<br>Bank: 99999999999', '2024-11-30 13:28:42');
 
 -- --------------------------------------------------------
 
@@ -516,7 +545,8 @@ INSERT INTO `houseaccounts` (`id`, `houses_id`, `elec_accname`, `elec_accnum`, `
 (21, 866, 'Jerum', 325252, 'Jerum', 263453, '09955835160', 'Banko de Oro'),
 (22, 867, 'Jerum', 34537745, 'Jerum', 45747455, '09955835160', 'Banko de Oro'),
 (23, 868, 'Mikhail', 23426346, 'Mikhail', 46363466, '09955835160', 'Banko de Oro'),
-(25, 870, 'asdasdad', 2147483647, 'asdad', 2147483647, '12312312312', '12312312312');
+(25, 870, 'asdasdad', 2147483647, 'asdad', 2147483647, '12312312312', '12312312312'),
+(26, 871, 'aj', 1234567890, 'emmy', 1234567890, '99999999999', '99999999999');
 
 -- --------------------------------------------------------
 
@@ -614,10 +644,7 @@ CREATE TABLE `paper_files` (
 INSERT INTO `paper_files` (`id`, `category_id`, `category_name`, `file_name`, `file_url`, `uploaded_at`) VALUES
 (42, 89, 'Roxasville Paper', 'paper_6725c125f2292.jpeg', '../uploads/paper_6725c125f2292.jpeg', '2024-11-02 06:05:25'),
 (43, 92, 'Lagro Paper', 'GAMEPOSTER_672f05ed6d1b5.jpg', '../uploads/GAMEPOSTER_672f05ed6d1b5.jpg', '2024-11-09 06:49:17'),
-(44, 89, 'Roxasville Paper', 'Untitled_672f09f9630fb.png', '../uploads/Untitled_672f09f9630fb.png', '2024-11-09 07:06:33'),
-(45, 89, 'Roxasville Paper', 'received_993104588452786_672f0a585df10.jpeg', '../uploads/received_993104588452786_672f0a585df10.jpeg', '2024-11-09 07:08:08'),
-(46, 89, 'Roxasville Paper', 'Untitled_672f0b419e774.png', '../uploads/Untitled_672f0b419e774.png', '2024-11-09 07:12:01'),
-(47, 89, 'Roxasville Paper', 'Untitled_672f0bdc64a6f.png', '../uploads/Untitled_672f0bdc64a6f.png', '2024-11-09 07:14:36');
+(45, 89, 'Roxasville Paper', 'received_993104588452786_672f0a585df10.jpeg', '../uploads/received_993104588452786_672f0a585df10.jpeg', '2024-11-09 07:08:08');
 
 -- --------------------------------------------------------
 
@@ -696,7 +723,7 @@ CREATE TABLE `tenants` (
 --
 
 INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`) VALUES
-(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-10-06'),
+(74, 'Jerson', 'Wayas', 'Lippad', '09324404218', '85', 'user', 864, 'Duplex', '2024-10-29', NULL, '2024-06-06'),
 (75, 'Jan', 'West', 'Nuevo', '09235552786', '87', 'jan', 868, 'Land', '2024-11-02', NULL, '2024-11-03'),
 (76, 'John', 'North', 'Garcia', '09325557609', '86', 'john', 865, 'Duplex', '2024-11-02', NULL, '2024-11-04'),
 (77, 'mae', 'deves', 'cruz', '', '88', 'ella', 862, 'Studio', '2024-11-07', NULL, '2024-11-14');
@@ -758,6 +785,12 @@ ALTER TABLE `contract_images`
 -- Indexes for table `deposit`
 --
 ALTER TABLE `deposit`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `eviction_popup`
+--
+ALTER TABLE `eviction_popup`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -857,28 +890,34 @@ ALTER TABLE `deposit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `eviction_popup`
+--
+ALTER TABLE `eviction_popup`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=315;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=324;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=871;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=872;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -890,7 +929,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `paper_categories`
 --
 ALTER TABLE `paper_categories`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `paper_files`
@@ -902,7 +941,7 @@ ALTER TABLE `paper_files`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `physical_contracts`

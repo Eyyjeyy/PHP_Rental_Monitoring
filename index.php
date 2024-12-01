@@ -14,10 +14,56 @@
         exit();
     }
 
+    // $sql = "SELECT * FROM eviction_popup WHERE eviction_popup.users_id = $admin->session_id AND eviction_popup.seen = '' ";
+    // $result = $admin->conn->query($sql);
+
+    // if ($result->num_rows > 0) {
+    //     // Update the 'seen' column to 'true'
+    //     $seenPopupSql = "UPDATE eviction_popup SET seen = 'true' WHERE users_id = $admin->session_id AND seen = ''";
+    //     if ($admin->conn->query($seenPopupSql) === TRUE) {
+    //         // Display the modal popup
+    //         echo "
+    //         <div id='modal' style='
+    //             display: block; 
+    //             position: fixed; 
+    //             left: 0; 
+    //             width: 100%; 
+    //             height: 100%; 
+    //             background-color: rgba(0,0,0,0.5); 
+    //             z-index: 1000;'>
+    //             <div style='
+    //                 background: white; 
+    //                 padding: 20px; 
+    //                 margin: 100px auto; 
+    //                 width: 300px; 
+    //                 text-align: center; 
+    //                 border-radius: 5px;'>
+    //                 <p>Record found for user ID: $admin->session_id</p>
+    //                 <button id='closeBtn' style='display: none;'>Close</button>
+    //             </div>
+    //         </div>
+    //         <script>
+    //             // Show the close button after 10 seconds
+    //             setTimeout(function() {
+    //                 document.getElementById('closeBtn').style.display = 'block';
+    //             }, 10000);
+
+    //             // Close the modal when the close button is clicked
+    //             document.getElementById('closeBtn').onclick = function() {
+    //                 document.getElementById('modal').style.display = 'none';
+    //             };
+    //         </script>
+    //         ";
+    //     } else {
+    //         // error_log('Error updating seen status: ' . $admin->conn->error);
+    //     }
+    // }
+
     $pageTitle = 'Home Page';
 ?>
 
 <?php include 'regular/includes/header_user.php'; ?>
+
 
 
 
@@ -178,5 +224,69 @@
   // Poll every 3 seconds
   setInterval(fetchUnreadMessages, 3000);
 </script>
+
+<?php
+    $sql = "SELECT eviction_popup.*, users.firstname, users.middlename, users.lastname
+    FROM eviction_popup 
+    INNER JOIN users ON users.id = $admin->session_id
+    WHERE eviction_popup.users_id = $admin->session_id AND eviction_popup.seen = '' ";
+    $result = $admin->conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        
+        // Display the modal
+        echo "
+        <div class='modal fade' id='myModal' tabindex='-1' aria-labelledby='modalLabel' aria-hidden='true'>
+            <div class='modal-dialog' style='margin: 0; top: 50%; left: 50%; transform: translate(-50%, -50%);'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h5 class='modal-title' id='modalLabel'>Eviction Notice</h5>
+                    </div>
+                    <div class='modal-body'>
+                        Dear {$row['firstname']} {$row['lastname']}, please check your email for your eviction message
+                    </div>
+                    <div class='modal-footer'>
+                        <button id='closeBtn' type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='display: none;'>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            // Initialize the Bootstrap modal
+            var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                backdrop: 'static', // Prevent closing by clicking outside
+                keyboard: false    // Disable closing with the Esc key
+            });
+            myModal.show();
+    
+            // Show the close button after 10 seconds and update the database
+            setTimeout(function() {
+                document.getElementById('closeBtn').style.display = 'block';
+    
+                // Make an AJAX call to update the database
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'eviction_seen_status.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('user_id=$admin->session_id');
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        console.log('Seen status updated successfully.');
+                    } else {
+                        console.error('Error updating seen status.');
+                    }
+                };
+            }, 10000);
+    
+            // Close the modal when the button is clicked
+            document.getElementById('closeBtn').onclick = function() {
+                myModal.hide();
+            };
+        </script>
+        ";
+    }
+?>
 
 <?php include 'regular/includes/footer.php'; ?>
