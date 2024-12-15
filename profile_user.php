@@ -113,7 +113,7 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Contact Number</p>
                                     </label>
-                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="contact_number" value="<?php echo htmlspecialchars($userProfile['contact']); ?>">
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" name="contact_number" value="<?php echo htmlspecialchars($userProfile['phonenumber']); ?>">
                                 </div>
                                 <div class="col-12 col-md-6 mb-3 mt-3">
                                     <label for="exampleFormControlInput1" class="form-label">
@@ -125,7 +125,20 @@
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Password</p>
                                     </label>
-                                    <input type="password" class="form-control" id="exampleFormControlInput1" name="password" value="<?php echo htmlspecialchars($userProfile['password']); ?>">
+                                    <div style="position: relative;">
+                                        <input type="password" class="form-control" id="exampleFormControlInput1password" name="password" value="<?php echo htmlspecialchars($userProfile['password']); ?>">
+                                        <button type="button" id="togglePassword" class="p-0" 
+                                                style="position: absolute; right: 10px; top: 6.1px; border: none; background: white; cursor: pointer;"
+                                                onmousedown="togglePasswordVisibility(true)" 
+                                                onmouseup="togglePasswordVisibility(false)" 
+                                                onmouseleave="togglePasswordVisibility(false)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"></path>
+                                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <!-- <input type="password" class="form-control" id="exampleFormControlInput1" name="password" value="<?php echo htmlspecialchars($userProfile['password']); ?>"> -->
                                 </div>
                                 <div class="col-12 col-lg-6 mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">
@@ -195,6 +208,13 @@
 
   // Poll every 3 seconds
   setInterval(fetchDelinquencyMonthMissed, 3000);
+</script>
+
+<script>
+    function togglePasswordVisibility(isVisible) {
+        const passwordInput = document.getElementById('exampleFormControlInput1password');
+        passwordInput.type = isVisible ? 'text' : 'password';
+    }
 </script>
 
 <?php include 'regular/includes/footer.php'; ?>

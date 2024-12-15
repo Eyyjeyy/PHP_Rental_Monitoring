@@ -51,13 +51,13 @@
                     <div id="carouselExampleControls" class="carousel slide align-self-center" data-bs-ride="">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
+                                <img src="asset/house_1.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
+                                <img src="asset/house_2.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
+                                <img src="asset/house_3.jpg" style="object-fit: cover; height: 500px; width: 90%;" class="mx-auto d-block" alt="...">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -73,9 +73,9 @@
                     <!-- <img src="asset/blackbasin-warm-5987.jpg" style="object-fit: cover; width: 95%; height: 75%;" class="p-0 img-fluid align-self-center" alt="..."> -->
                 </div>
             </div>
-            <div class="div-col2">
+            <div class="div-col2" style="position: relative">
                 <div class="d-flex justify-content-center position-absolute" style="margin-bottom: 70vh;">
-                    <img src="asset/Renttrack pro no word.png" class="img-fluid register" alt="...">
+                    <img src="asset/Renttrack pro logo.png" class="img-fluid register" alt="...">
                 </div>
                 <div class="login-panel panel panel-primary flex-column justify-content-center align-self-center mx-auto" style="margin-top: 16vh;">
                     <div class="d-flex justify-content-center">
@@ -167,7 +167,7 @@
                 <?php
                     if(isset($_SESSION['message'])){
                         ?>
-                            <div class="alert alert-info text-center">
+                            <div class="alert alert-info text-center position-absolute" style="bottom: 20px;">
                                 <?php echo $_SESSION['message']; ?>
                             </div>
                         <?php

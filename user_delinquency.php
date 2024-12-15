@@ -213,3 +213,5 @@
   // Poll every 3 seconds
   setInterval(fetchDelinquencyMonthMissed, 3000);
 </script>
+
+<?php include 'regular/includes/footer.php'; ?>

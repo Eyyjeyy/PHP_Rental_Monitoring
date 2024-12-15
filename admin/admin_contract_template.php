@@ -95,7 +95,7 @@
         }
 
         // Allow up to 30 characters
-        if (!preg_match('/^.{1,70}$/', $apartmentaddressinput)) {
+        if (!preg_match('/^.{1,70}$/', trim($apartmentaddressinput))) {
             // Address is valid, process it
             $_SESSION['error_message'] = "Address can only have up to 70 characters";
             header("Location: admin_contract_template.php?error=invalid_address");
@@ -681,7 +681,10 @@
                                     </div> -->
                                     <div class="mb-3">
                                         <label for="apartmentaddress-input" class="form-label">Apartment Address</label>
-                                        <textarea name="apartmentaddress-input" id="apartmentaddress-input" class="d-block w-100" required></textarea>
+                                        <!-- <textarea name="apartmentaddress-input" id="apartmentaddress-input" class="d-block w-100" readonly required></textarea> -->
+                                        <select class="form-select" name="apartmentaddress-input" id="apartmentaddress-input" >
+                                            <option value="" id="apartmentaddress-input-optionvalue"></option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="datestart" class="form-label">Date Start</label>
@@ -697,7 +700,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="rentprice" class="form-label">Rent Amount</label>
-                                        <input type="text" class="form-control" id="rentprice" name="rentprice" required>
+                                        <input type="text" class="form-control" id="rentprice" name="rentprice" readonly required>
                                     </div>
                                     <!-- <div class="mb-3 position-relative d-inline-block" style="max-width: 200px; min-height: 150px; flex: 1;"> -->
                                     <div class="mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
@@ -854,10 +857,12 @@
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const tenantDropdown = document.getElementById('tenantid');
-                        const apartmentAddressInput = document.getElementById('apartmentaddress-input');
+                        const apartmentAddressInput = document.getElementById('apartmentaddress-input-optionvalue');
+                        const rentprice = document.getElementById('rentprice');
 
                         tenantDropdown.addEventListener('change', function () {
                             const tenantId = this.value;
+                            console.log("tenant id: ", tenantId);
 
                             if (tenantId) {
                                 fetch('../fetch_contracts_tenant_house_address.php', {
@@ -867,13 +872,18 @@
                                     },
                                     body: `tenant_id=${encodeURIComponent(tenantId)}`
                                 })
-                                .then(response => response.json())
+                                .then(response => response.text())
                                 .then(data => {
-                                    if (data.success) {
-                                        apartmentAddressInput.value = data.address;
+                                    const [address, price] = data.split(',');
+                                    if (address && price) {
+                                        apartmentAddressInput.innerHTML = `${address}`;
+                                        apartmentAddressInput.value = `${address}`;
+                                        rentprice.value = `${price}`;
                                     } else {
+                                        apartmentAddressInput.innerHTML = '';
                                         apartmentAddressInput.value = '';
-                                        alert(data.message || 'Could not fetch address.');
+                                        rentprice.value = '';
+                                        // alert('Address not found.');
                                     }
                                 })
                                 .catch(error => {
@@ -881,11 +891,10 @@
                                     alert('An error occurred while fetching the address.');
                                 });
                             } else {
-                                apartmentAddressInput.value = '';
+                                apartmentAddressInput.innerHTML = '';
                             }
                         });
                     });
-
                 </script>
 
                 <script>

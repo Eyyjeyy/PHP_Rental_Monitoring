@@ -416,11 +416,11 @@
         </button>
 
 
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-height: 50px; max-height: 90vh; overflow-y: auto;">
         <a class="dropdown-item" href="admin/admindashboard.php">Dashboard</a>
         <a class="dropdown-item" href="admin/adminusers.php">Users</a>
         <a class="dropdown-item" href="admin/adminhouses.php">Apartments</a>
-        <a class="dropdown-item" href="admin/admincategories.php">Categories</a>
+        <!-- <a class="dropdown-item" href="admin/admincategories.php">Categories</a> -->
         <a class="dropdown-item" href="admin/admintenants.php">Tenants</a>
         <a class="dropdown-item" href="admin/adminpayments.php">Payments</a>
         <a class="dropdown-item" href="admin/admindelinquency.php">Delinquency</a>
@@ -428,7 +428,7 @@
         <a class="dropdown-item" href="admin/admin_contract_template.php">Contracts</a>
         <a class="dropdown-item" href="admin/adminexpenses.php">Expenses</a>
         <a class="dropdown-item" href="chat.php">Chat</a>
-        <a class="dropdown-item" href="adminhistory.php">History</a>
+        <a class="dropdown-item" href="admin/adminhistory.php">History</a>
         <a class="dropdown-item" href="logout.php">Logout</a>
         </div>
     </div>

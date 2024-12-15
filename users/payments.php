@@ -444,7 +444,7 @@
         <!-- Left-aligned image -->
         <div class="col d-flex align-items-center">
             <a class="navbar-brand py-0" href="../index.php">
-                <img src="../asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                <img src="../asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 100px;">
             </a>
         </div>
         
@@ -598,7 +598,7 @@
                             <th scope="col">Payment Date</th> -->
 
                             <th scope="col">Name</th>
-                            <th scope="col">Document Type</th>
+                            <th scope="col">Payment Type</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Image</th>
                             <th scope="col">Approved</th>
@@ -629,11 +629,11 @@
                           while ($row = $result->fetch_assoc()) {
                               echo "<tr>";
                               echo "<td>" . $row["name"] . "</td>"; 
-                              echo "<td>" . ($row["document_type"] === 'payments' ? 'Payment' : 'Deposit' ) . "</td>";
+                              echo "<td>" . ($row["document_type"] === 'payments' ? 'Rent' : 'Deposit' ) . "</td>";
                               echo "<td>" . $row["amount"] . "</td>"; 
                               echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
                               // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
-                              echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>";
+                              echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : ($row["approval"] === "2 Months Consumed" || $row["approval"] === "1 Month Consumed" ? $row["approval"] : "PENDING"))) . "</td>";
                               echo "<td>" . $row["transaction_date"] . "</td>"; // actual column name from your database
                               echo "</tr>";
                           }

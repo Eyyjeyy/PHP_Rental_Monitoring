@@ -127,7 +127,7 @@
             </div>
             <div class="div-col2">
                 <div class="d-flex justify-content-center position-absolute" style="margin-bottom: 70vh;">
-                    <img src="asset/Renttrack pro no word.png" class="img-fluid" alt="...">
+                    <img src="asset/Renttrack pro logo.png" class="img-fluid" alt="...">
                 </div>
                 <div class="login-panel panel panel-primary flex-column justify-content-center align-self-center mx-auto">
                     <div class="d-flex justify-content-center">

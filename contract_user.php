@@ -207,7 +207,7 @@
                                             }
                                         } else {
                                             if (!$result_physical->num_rows > 0 && !$result->num_rows > 0) {
-                                                echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
+                                                echo "<tr><td colspan='6' class='text-center'>No Physical contracts</td></tr>";
                                             }
                                             // echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
                                         }

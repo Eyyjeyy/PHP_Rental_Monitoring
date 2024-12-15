@@ -60,28 +60,40 @@
         $firstname = htmlspecialchars($_POST['firstname']);
         $middlename = htmlspecialchars($_POST['middlename']);
         $lastname = htmlspecialchars($_POST['lastname']);
-        $contactno = htmlspecialchars($_POST['contactno']);
+        // $contactno = htmlspecialchars($_POST['contactno']);
+        $contactno = "";
         // $houseid = htmlspecialchars($_POST['category_id']);
         // $housecategory = htmlspecialchars($_POST['category_id']);
         $registerdate = htmlspecialchars($_POST['registerdate']);
 
         // Validate contact number length
-        if (preg_match('/^\d{10,11}$/', $contactno)) {
-            // Call the updateTenant method to update the tenant
-            $updated = $admin->updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate);
-            if ($updated) {
-                // Tenant updated successfully, redirect with success message
-                header("Location: admintenants.php?tenant_updated=1");
-                exit();
-            } else {
-                // Error occurred while updating tenant, display an error message or handle as needed
-                echo "Error occurred while updating tenant.";
-            }
-        } else {
-            // Invalid contact number length, display an error message or handle as needed
-            $_SESSION['error_message'] = "Contact number must be 10-11 digits long.";
-            header("Location: admintenants.php?error=update");
+        // if (preg_match('/^\d{10,11}$/', $contactno)) {
+        //     // Call the updateTenant method to update the tenant
+        //     $updated = $admin->updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate);
+        //     if ($updated) {
+        //         // Tenant updated successfully, redirect with success message
+        //         header("Location: admintenants.php?tenant_updated=1");
+        //         exit();
+        //     } else {
+        //         // Error occurred while updating tenant, display an error message or handle as needed
+        //         echo "Error occurred while updating tenant.";
+        //     }
+        // } else {
+        //     // Invalid contact number length, display an error message or handle as needed
+        //     $_SESSION['error_message'] = "Contact number must be 10-11 digits long.";
+        //     header("Location: admintenants.php?error=update");
+        //     exit();
+        // }
+        
+        // Call the updateTenant method to update the tenant
+        $updated = $admin->updateTenant($tenant_id, $firstname, $middlename, $lastname, $contactno, $houseid, $housecategory, $registerdate);
+        if ($updated) {
+            // Tenant updated successfully, redirect with success message
+            header("Location: admintenants.php?tenant_updated=1");
             exit();
+        } else {
+            // Error occurred while updating tenant, display an error message or handle as needed
+            echo "Error occurred while updating tenant.";
         }
     }
 
@@ -426,10 +438,10 @@
                                                 <input type="text" class="form-control" id="updateLastname" name="lastname" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 d-none">
                                             <div class="mb-3">
                                                 <label for="updateContactno" class="form-label">Contact</label>
-                                                <input type="text" class="form-control" id="updateContactno" name="contactno" required>
+                                                <input type="text" class="form-control" id="updateContactno" name="contactno">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
