@@ -91,20 +91,20 @@ if ($result_tenant_table->num_rows > 0) {
         echo "<div class='col-xl-6 px-2'>"; // Delete button form
         echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
         echo "<input type='hidden' name='contractid' value='" . $row['id'] . "'>";
-        echo "<button type='submit' name='delete_contract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+        echo "<button type='submit' name='delete_contract' class='btn btn-danger table-buttons-delete' style='width: 120px;'>Delete</button>";
         echo "</form>";
         echo "</div>";
         echo "<div class='col-xl-6 px-2'>"; // Download button
         if (!empty($row['fileurl'])) {
-            echo "<a href='". '..' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px;'>Download</a>";
+            echo "<a href='". '..' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update mx-auto mx-xl-0' style='width: 120px;'>Download</a>";
         } else {
             echo "<span>No file available</span>";
         }
         echo "</div>";        
-        echo "<div class='col-xl-6 px-2'>";
-                // echo "<button type='submit' name='print_data'>Print Data</button>";
-                echo "<button id='printBtn' name='print_data' data-print-id='" . $row['id'] . "'>Print Data</button>";
-        echo "</div>";
+        // echo "<div class='col-xl-6 px-2'>";
+        //         // echo "<button type='submit' name='print_data'>Print Data</button>";
+        //         echo "<button id='printBtn' name='print_data' data-print-id='" . $row['id'] . "'>Print Data</button>";
+        // echo "</div>";
         echo "</div>";
         echo "</td>";
         echo "</tr>";
@@ -116,11 +116,11 @@ if ($result_tenant_table->num_rows > 0) {
 }
 
 // Output pagination buttons
-echo "<tr><td colspan='6' class='text-center'>";
-for ($i = 1; $i <= $total_pages; $i++) {
-    echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
-}
-echo "</td></tr>";
+// echo "<tr><td colspan='6' class='text-center'>";
+// for ($i = 1; $i <= $total_pages; $i++) {
+//     echo "<button class='btn btn-secondary pagination-btn' data-page='$i'>$i</button> ";
+// }
+// echo "</td></tr>";
 
 $conn->close();
 ?>

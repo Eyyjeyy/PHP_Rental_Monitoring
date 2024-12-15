@@ -1043,7 +1043,7 @@
 
         // Example usage: set the favicon on page load
         document.addEventListener('DOMContentLoaded', () => {
-        setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+        setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
         });
     </script>
 

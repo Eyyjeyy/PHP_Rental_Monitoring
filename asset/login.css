@@ -77,6 +77,12 @@ button[name="login"]:hover {
     color: white; 
 }
 
+button[name="login"]:focus, button[name="register"]:focus {
+    /* background-color: #3A583C; */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 button[name="register"] {
     background-color: #EE7214;
     border-radius: 0;

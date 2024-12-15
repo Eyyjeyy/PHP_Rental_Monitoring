@@ -4,6 +4,7 @@
         "infobip/infobip-api-php-client": "^5.1",
         "pear/http_request2": "^2.6",
         "phpoffice/phpword": "^1.3",
-        "tecnickcom/tcpdf": "^6.7"
+        "tecnickcom/tcpdf": "^6.7",
+        "dompdf/dompdf": "^3.0"
     }
 }

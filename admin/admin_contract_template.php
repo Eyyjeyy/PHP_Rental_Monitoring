@@ -353,7 +353,7 @@
                                     <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
                                 </div>
                                 <div class="col-6">
-                                    <button class="btn btn-primary float-end table-buttons-update" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
+                                    <button class="btn btn-primary float-end table-buttons-update new-contract-btn" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
                                 </div>
                             </div>                            
                         </div>
@@ -384,6 +384,9 @@
                                     <th scope="col" data-column="expirationdate" class="sortable-column">
                                         Contract Expiry
                                         <span id="expirationdateSortArrow"></span>
+                                    </th>
+                                    <th scope="col">
+                                        Preview
                                     </th>
                                     <th scope="col">
                                         Actions
@@ -471,7 +474,7 @@
                                         <span id="expirationdateSortArrow"></span>
                                     </th>
                                     <th scope="col" data-column="fileurl" class="sortable-column">
-                                        Contract Picture
+                                        Contract Preview
                                         <!-- <span id="expirationdateSortArrow"></span> -->
                                     </th>
                                     <th scope="col">
@@ -575,7 +578,7 @@
                                         // Add a form with a delete button for each record
                                         echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
                                         echo "<input type='hidden' name='physicalcontractid' value='" . $row_physical['id'] . "'>";
-                                        echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+                                        echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 120px;'>Delete</button>";
                                         echo "</form>";
                                         echo "</div>";
                                         echo "<div class='col-xl-6 px-2'>";
@@ -600,7 +603,7 @@
                                             foreach ($filePaths as $filePath) {
                                                 $downloadUrl = '../asset/physical_contracts/' . htmlspecialchars($filePath);
                                                 if (!empty($filePath)) {
-                                                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
+                                                    echo "<a href='$downloadUrl' download class='btn btn-success table-buttons-download justify-content-center table-buttons-update mx-auto mx-xl-0' style='width: 120px; margin-bottom: 5px;'>Download</a><br>";
                                                 }
                                             }
                                         } else {
@@ -847,6 +850,43 @@
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const tenantDropdown = document.getElementById('tenantid');
+                        const apartmentAddressInput = document.getElementById('apartmentaddress-input');
+
+                        tenantDropdown.addEventListener('change', function () {
+                            const tenantId = this.value;
+
+                            if (tenantId) {
+                                fetch('../fetch_contracts_tenant_house_address.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: `tenant_id=${encodeURIComponent(tenantId)}`
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        apartmentAddressInput.value = data.address;
+                                    } else {
+                                        apartmentAddressInput.value = '';
+                                        alert(data.message || 'Could not fetch address.');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching address:', error);
+                                    alert('An error occurred while fetching the address.');
+                                });
+                            } else {
+                                apartmentAddressInput.value = '';
+                            }
+                        });
+                    });
+
+                </script>
 
                 <script>
                     document.getElementById('new_contract').addEventListener('click', function () {
@@ -1159,7 +1199,7 @@
 
                     // Example usage: set the favicon on page load
                     document.addEventListener('DOMContentLoaded', () => {
-                    setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+                    setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
                     });
                 </script>
                 <script>

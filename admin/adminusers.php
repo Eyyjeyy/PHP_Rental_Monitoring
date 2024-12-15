@@ -304,7 +304,17 @@
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="updatePassword" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="updatePassword" name="password" required>
+                                                <!-- <input type="password" class="form-control" id="updatePassword" name="password" required> -->
+                                                <!-- <button type="button" id="togglePassword">Reveal</button> -->
+                                                <div style="position: relative;">
+                                                    <input type="password" class="form-control" id="updatePassword" name="password" required>
+                                                    <button type="button" id="togglePassword" class="p-0" style="position: absolute; right: 10; top: 11.1; border: none; background: white; cursor: pointer;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"></path>
+                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -502,6 +512,29 @@
                     });
                 </script>
                 <script>
+                    function togglePassword(inputId, show) {
+                        const input = document.getElementById(inputId);
+                        input.type = show ? 'text' : 'password';
+                        console.log(inputId);
+                    }
+                </script>
+                <script>
+                    const passwordInput = document.getElementById('updatePassword');
+                    const toggleButton = document.getElementById('togglePassword');
+
+                    toggleButton.addEventListener('mousedown', () => {
+                        passwordInput.type = 'text'; // Reveal the password
+                    });
+
+                    toggleButton.addEventListener('mouseup', () => {
+                        passwordInput.type = 'password'; // Hide the password
+                    });
+
+                    toggleButton.addEventListener('mouseleave', () => {
+                        passwordInput.type = 'password'; // Hide the password if the button is left
+                    });
+                </script>
+                <script>
                     // Function to create and set the favicon
                     function setFavicon(iconURL) {
                     // Create a new link element
@@ -520,7 +553,7 @@
 
                     // Example usage: set the favicon on page load
                     document.addEventListener('DOMContentLoaded', () => {
-                    setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+                    setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
                     });
                 </script>
                 <!-- <p>Home</p> -->

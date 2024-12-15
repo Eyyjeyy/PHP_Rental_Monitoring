@@ -146,7 +146,10 @@
     INNER JOIN categories ON categories.id = houses.category_id";
     $result_option = $admin->conn->query($sql_option);
 
-    $user_option = "SELECT * FROM users WHERE role = 'user'";
+    // $user_option = "SELECT * FROM users WHERE role = 'user'";
+    $user_option = "SELECT *, users.id AS id FROM users 
+    LEFT JOIN tenants ON tenants.users_id = users.id
+    WHERE role = 'user' AND tenants.users_id IS NULL";
     $user_result = $admin->conn->query($user_option);
 
 
@@ -347,7 +350,7 @@
                                                             // echo "<option value='" . htmlspecialchars($row_option['house_name']) . "' data-house-id='" . $row_option['id'] . "'>" . htmlspecialchars($row_option['house_number']) . " " . htmlspecialchars($row_option['category_name']) . "</option>";
                                                         }
                                                     } else {
-                                                        echo "<option value=''>No houses found</option>";
+                                                        echo "<option value=''>No Users found</option>";
                                                     }
                                                 ?>
                                             </select>
@@ -643,7 +646,7 @@
 
                     // Example usage: set the favicon on page load
                     document.addEventListener('DOMContentLoaded', () => {
-                    setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+                    setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
                     });
                 </script>
                 <!-- <p>Home</p> -->

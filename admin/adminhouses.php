@@ -61,8 +61,8 @@
         $w_accountnum = trim(htmlspecialchars($_POST['w_accountnum']));
         $w_accountname = trim(htmlspecialchars($_POST['w_accountname']));
         $houseaddress = trim(htmlspecialchars($_POST['houseaddress']));
-        $gcash = trim(htmlspecialchars($_POST['gcash']));
-        $bank = trim(htmlspecialchars($_POST['bank']));
+        // $gcash = trim(htmlspecialchars($_POST['gcash']));
+        // $bank = trim(htmlspecialchars($_POST['bank']));
     
         // Validate the house number to ensure it contains only numerical characters
         if (ctype_digit($housenumber)) {
@@ -92,7 +92,7 @@
         // Create an instance of your Admin class
         // $admin1 = new Admin($conn);
         // Call the addHouse method to add the new house
-        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress, $gcash, $bank);
+        $added = $admin->addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress);
         if ($added) {
             $_SESSION['success_message'] = "Success";
             header("Location: adminhouses.php");
@@ -117,11 +117,12 @@
         $price = htmlspecialchars($_POST['price']);
         $category_id = htmlspecialchars($_POST['category_id']);
         $house_id = $_POST['house_id'];
+        $apartmentaddress = $_POST['apartmentaddress'];
         $meralco_accnum = $_POST['meralco_accnum'];
         $meralco_accname = $_POST['meralco_accname'];
         $maynilad_accnum = $_POST['maynilad_accnum'];
         $maynilad_accname = $_POST['maynilad_accname'];
-        $updated = $admin->updateHouse($house_id, $housenumber, $price, $category_id, $meralco_accnum, $meralco_accname, $maynilad_accnum, $maynilad_accname);
+        $updated = $admin->updateHouse($house_id, $housenumber, $price, $category_id, $meralco_accnum, $meralco_accname, $maynilad_accnum, $maynilad_accname, $apartmentaddress);
         if($updated) {
             header("Location: adminhouses.php");
             exit();
@@ -370,7 +371,7 @@
                                         echo "<div class='col-xxl-6 px-2'>";
                                         // Add a form with a update button for each record
                                         echo "<input type='hidden' name='house_id' value='" . $row['id'] . "'>";
-                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xxl-start table-buttons-update' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' style='width: 80px;'>Update</button>";
+                                        echo "<button type='button' class='btn btn-primary update-house-btn float-xxl-start table-buttons-update' data-id='" . $row['id'] . "' data-housenumber='" . htmlspecialchars($row['house_name']) . "' data-price='" . htmlspecialchars($row['price']) . "' data-categoryid='" . htmlspecialchars($row['category_id']) . "' data-meralconum='" . htmlspecialchars($row['elec_accnum']) . "' data-meralconame='" . htmlspecialchars($row['elec_accname']) . "' data-mayniladnum='" . htmlspecialchars($row['water_accnum']) . "' data-mayniladname='" . htmlspecialchars($row['water_accname']) . "' data-address='" . htmlspecialchars($row['address']) . "' style='width: 80px;'>Update</button>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "</td>";
@@ -473,7 +474,7 @@
                                             <input type="text" class="form-control" id="w_accountname" name="w_accountname" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <!-- <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="gcash" class="form-label">Gcash</label>
                                             <input type="text" class="form-control" id="gcash" name="gcash" required>
@@ -484,7 +485,7 @@
                                             <label for="bank" class="form-label">Bank</label>
                                             <input type="text" class="form-control" id="bank" name="bank" required>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="houseaddress" class="form-label">Apartment Address</label>
@@ -500,12 +501,12 @@
                         </div>
                     </div>
                 </div>
-                <!-- Update House Modal -->
+                <!-- Update Apartment Modal -->
                 <div class="modal fade" id="updateHouseModal" tabindex="-1" aria-labelledby="updateHouseModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #527853;">
-                                <h5 class="modal-title text-white" id="updateHouseModalLabel">Update House</h5>
+                                <h5 class="modal-title text-white" id="updateHouseModalLabel">Update Apartment</h5>
                                 <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
                                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -549,6 +550,12 @@
                                                     ?>
                                                 </select>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label for="updateApartmentAddress" class="form-label">Apartment Address</label>
+                                                <input type="text" class="form-control" id="updateApartmentAddress" name="apartmentaddress" required>
+                                            </div>
                                         </div>                                        
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -575,7 +582,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <button type="submit" name="edit_house" class="btn btn-primary table-buttons-update">Update User</button>
+                                            <button type="submit" name="edit_house" class="btn btn-primary table-buttons-update">Update Apartment</button>
                                         </div>
                                     </div>
                                 </form>
@@ -692,6 +699,7 @@
                                 var meralcoNam = button.getAttribute('data-meralconame');
                                 var mayniladNum = button.getAttribute('data-mayniladnum');
                                 var mayniladNam = button.getAttribute('data-mayniladname');
+                                var houseaddress = button.getAttribute('data-address');
 
                                 // Fill the modal with the user's current data
                                 document.getElementById('updateHouseId').value = userId;
@@ -702,7 +710,8 @@
                                 document.getElementById('update_meralco_accname').value = meralcoNam;
                                 document.getElementById('update_maynilad_accnum').value = mayniladNum;
                                 document.getElementById('update_maynilad_accname').value = mayniladNam;
-
+                                document.getElementById('updateApartmentAddress').value = houseaddress;
+                                
                                 // Show the modal
                                 var updateHouseModal = new bootstrap.Modal(document.getElementById('updateHouseModal'), {
                                     keyboard: false
@@ -948,7 +957,7 @@
 
                     // Example usage: set the favicon on page load
                     document.addEventListener('DOMContentLoaded', () => {
-                    setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+                    setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
                     });
                 </script>
                 <!-- <p>Home</p> -->

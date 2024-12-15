@@ -48,6 +48,8 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
             'Symfony\\Component\\PropertyInfo\\' => 31,
             'Symfony\\Component\\PropertyAccess\\' => 33,
             'Symfony\\Component\\Cache\\' => 24,
+            'Svg\\' => 4,
+            'Sabberworm\\CSS\\' => 15,
         ),
         'P' => 
         array (
@@ -60,6 +62,10 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
             'PhpOffice\\Math\\' => 15,
             'PHPStan\\PhpDocParser\\' => 21,
         ),
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
         'I' => 
         array (
             'Infobip\\' => 8,
@@ -70,8 +76,13 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
+        'F' => 
+        array (
+            'FontLib\\' => 8,
+        ),
         'D' => 
         array (
+            'Dompdf\\' => 7,
             'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
@@ -153,6 +164,14 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
         ),
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+        ),
+        'Sabberworm\\CSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
@@ -186,6 +205,10 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
         'Infobip\\' => 
         array (
             0 => __DIR__ . '/..' . '/infobip/infobip-api-php-client/Infobip',
@@ -201,6 +224,14 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
         'Doctrine\\Deprecations\\' => 
         array (
@@ -238,6 +269,7 @@ class ComposerStaticInit5f483eb408263ddbb96bf79065c548b9
         'DateMalformedStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedStringException.php',
         'DateObjectError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateObjectError.php',
         'DateRangeError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'Net_URL2' => __DIR__ . '/..' . '/pear/net_url2/Net/URL2.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',

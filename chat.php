@@ -241,7 +241,7 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav d-flex flex-column">
                         <a class="navbar-brand mt-4 mb-3 py-0 justify-content-center" href="admin/admindashboard.php">
-                <img src="asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                <img src="asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 100px;">
             </a>          
                         <div class="hover-container">
                             <a class="nav-link" href="admin/admindashboard.php">
@@ -361,6 +361,15 @@
                                 ?>
                             </a>
     </div>
+                            <div class="hover-container">
+                                <a class="nav-link <?= $page == 'adminarchive' ? 'active' : '' ?>" href="admin/adminarchive.php">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-file-zip-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
+                                        <path d="M8.5 9.438V8.5h-1v.938a1 1 0 0 1-.03.243l-.4 1.598.93.62.93-.62-.4-1.598a1 1 0 0 1-.03-.243"></path>
+                                        <path d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m2.5 8.5v.938l-.4 1.599a1 1 0 0 0 .416 1.074l.93.62a1 1 0 0 0 1.109 0l.93-.62a1 1 0 0 0 .415-1.074l-.4-1.599V8.5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1m1-5.5h-1v1h1v1h-1v1h1v1H9V6H8V5h1V4H8V3h1V2H8V1H6.5v1h1z"></path>
+                                    </svg>
+                                    <p>Archive</p>
+                                </a>
+                            </div>
     <div class="hover-container">
                             <a class="nav-link" href="admin/adminhistory.php">
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chat-left-text-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
@@ -397,7 +406,7 @@
 
                 <div class="col d-flex align-items-center">
             <a class="navbar-brand py-0" href="admindashboard.php">
-                <img src="asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                <img src="asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 100px;">
             </a>
         </div>
 
@@ -840,7 +849,7 @@
 
         // Example usage: set the favicon on page load
         document.addEventListener('DOMContentLoaded', () => {
-        setFavicon('asset/Renttrack pro no word.png'); // Change to your favicon path
+        setFavicon('asset/Renttrack pro logo.png'); // Change to your favicon path
         });
     </script>
 

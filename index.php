@@ -109,13 +109,13 @@
                     <div id="carouselExampleControls" class="carousel slide" data-bs-pause="true" style="max-width: 500px;">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_1.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/blackbasin-warm-5987.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_2.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_3.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -162,13 +162,13 @@
                     <div id="carouselExampleControlsII" class="carousel slide" data-bs-pause="true" style="max-width: 500px;">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="asset/Chalet-04633e05326048b3a8765fc6a646ca74.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_1.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/blackbasin-warm-5987.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_2.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="asset/photo-1484931627545-f6d9b3aaa6eb.jfif" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
+                                <img src="asset/house_3.jpg" class="d-block w-100" style="object-fit: cover;" height="300" alt="...">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsII" data-bs-slide="prev">

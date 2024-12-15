@@ -401,10 +401,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php if ($pageTitle == 'Home Page' || $pageTitle == 'Chat Page'): ?>
         <link rel="stylesheet" href="asset/user.css">
-        <link rel="icon" type="image/x-icon" href="asset/Renttrack pro no word.png">
+        <link rel="icon" type="image/x-icon" href="asset/Renttrack pro logo.png">
     <?php else: ?>
         <link rel="stylesheet" href="../asset/user.css">
-        <link rel="icon" type="image/x-icon" href="../asset/Renttrack pro no word.png">
+        <link rel="icon" type="image/x-icon" href="../asset/Renttrack pro logo.png">
     <?php endif; ?>
     <!-- <link rel="stylesheet" href= "../asset/user.css"> -->
 
@@ -455,7 +455,7 @@
         </button>
 
 
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="max-height: 600px;">
         <a class="dropdown-item" href="payments.php">Payment</a>
         <a class="dropdown-item" href="../info.php">Info</a>
         <a class="dropdown-item" href="../profile_user.php">Profile</a>
@@ -536,7 +536,7 @@
                   <div class="col-sm-6" id="monthly">
                     <?php 
                     // echo "<p class='fw-bolder'>Monthly Balance: &#8369;" . number_format($monthlyBalance, 2) . "</p>";
-                    echo "<p class='fw-bolder'>Total Balance: &#8369;" . number_format($outstandingBalance, 2) . "</p>";
+                    echo "<p class='fw-bolder'>Total Balance: &#8369;" . number_format($outstandingBalance ?? 0, 2) . "</p>";
                     echo "<p class='fw-bolder'>Monthly Rent Due: &#8369;" . number_format($monthlyRentDue, 2) . "</p>";
                     echo "<p class='fw-bolder'>Total Payments: &#8369;" . number_format($totalPayments, 2) . "</p>";
                     // if ($result_gcashbank->num_rows > 0) {
@@ -548,7 +548,8 @@
                     ?>
                   </div>
                   <div class="col-sm-6 d-flex flex-column d-sm-none" id="createrecbtn">
-                    <p class="fw-bolder ms-xs-0">Bank Acc Name: John M. Garcia</p>
+                    <p class="fw-bolder">Bank: Banko de Oro</p>
+                    <p class="fw-bolder ms-xs-0">Bank Acc Name: Jemille Maxine W. Lippad</p>
                     <p class="fw-bolder">Bank Number: 2014923842854</p>
                     <!-- <p class="fw-bolder align-self-sm-end">&nbsp;</p>
                     <p class="fw-bolder align-self-sm-end">&nbsp;</p> -->
@@ -556,7 +557,7 @@
                     if ($result_gcashbank->num_rows > 0) {
                       while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {
                         echo "<p class='fw-bolder'>Gcash: " . $row_gcashbank['gcash'] . "</p>";
-                        echo "<p class='fw-bolder'>Bank: " . $row_gcashbank['bank'] . "</p>";
+                        // echo "<p class='fw-bolder'>Bank: " . $row_gcashbank['bank'] . "</p>";
                       }
                     }
                     ?>
@@ -565,10 +566,12 @@
                     </button>
                   </div>
                   <div class="col-sm-6 d-flex flex-column d-none d-sm-flex" id="createrecbtn">
-                    <p class="fw-bolder ms-xs-0" style="margin-left: calc(10vw - 12vw);">Bank Acc Name: John M. Garcia</p>
+                    <p class='fw-bolder' style='margin-left: calc(10vw - 12vw);'>Bank: Banko de Oro</p>
+                    <p class="fw-bolder ms-xs-0" style="margin-left: calc(10vw - 12vw);">Bank Acc Name: Jemille Maxine W. Lippad</p>
                     <p class="fw-bolder" style="margin-left: calc(10vw - 12vw);">Bank Number: 2014923842854</p>
                     <!-- <p class="fw-bolder align-self-sm-end">&nbsp;</p>
                     <p class="fw-bolder align-self-sm-end">&nbsp;</p> -->
+                    <p class='fw-bolder' style='margin-left: calc(10vw - 12vw);'>Gcash: 09955835160</p>
                     <?php
                     if ($result_gcashbank->num_rows > 0) {
                       while ($row_gcashbank = $result_gcashbank->fetch_assoc()) {

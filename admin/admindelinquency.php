@@ -162,7 +162,7 @@
                                     <span id="expirationdateSortArrow"></span>
                                 </th>
                                 <th scope="col" data-column="expirationdate" class="sortable-column">
-                                    Amount
+                                    Amount Paid
                                     <span id="expirationdateSortArrow"></span>
                                 </th>
                                 <th scope="col">Total Missing Payments</th>
@@ -505,7 +505,7 @@
 
                 // Example usage: set the favicon on page load
                 document.addEventListener('DOMContentLoaded', () => {
-                setFavicon('../asset/Renttrack pro no word.png'); // Change to your favicon path
+                setFavicon('../asset/Renttrack pro logo.png'); // Change to your favicon path
                 });
             </script>
         </div>

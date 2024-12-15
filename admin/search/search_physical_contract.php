@@ -151,7 +151,7 @@ if ($result->num_rows > 0) {
         echo "<div class='col-xl-6 px-2'>";
         echo "<form method='POST' action='admin_contract_template.php' class='float-xl-end align-items-center' style='height:100%;'>";
         echo "<input type='hidden' name='physicalcontractid' value='" . $row['id'] . "'>";
-        echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 80px;'>Delete</button>";
+        echo "<button type='submit' name='delete_physicalcontract' class='btn btn-danger table-buttons-delete' style='width: 120px;'>Delete</button>";
         echo "</form>";
         echo "</div>";
         echo "<div class='col-xl-6 px-2'>";

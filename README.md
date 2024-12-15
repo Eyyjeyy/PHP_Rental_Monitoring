@@ -4,7 +4,7 @@ This repository contains the source code for a Rental Monitoring System, designe
 The project is built using PHP, MySQL for database management, and incorporates essential security measures for data integrity and user privacy.
 
 🖥 <strong>Languages:</strong> PHP, Javascript, HTML, CSS <br>
-📚 <strong>Libraries:</strong> Chart.js, JQuery, PHPMailer <br>
+📚 <strong>Libraries:</strong> Chart.js, JQuery, PHPMailer, JsPDF <br>
 ☁  <strong>API:</strong> Semaphore SMS <br>
 🖼 <strong>Frameworks:</strong> Bootstrap 5 <br>
 🔨 <strong>Tools:</strong> phpMyAdmin, Cron Job <br>
@@ -213,3 +213,19 @@ The project is built using PHP, MySQL for database management, and incorporates 
 12/2/24
 - Installed tcpdf library using composer to enable convertion of docx files to pdf to be rendered as iframes <br>
 - Created function "displayContractPDF" in admin.php for loading of docx and convertion to pdf to be rendered in web pages <br>
+
+12/6/24
+- admin's addArchive function now also sets archive of payments table to true for the archived tenant's payment records <br>
+
+12/8/24
+- contract_user.php revision, created additional contract preview display column for contract docx's pdf preview modal <br>
+
+12/9/24
+- Removed btn primary class from login and register buttons in login.php <br>
+- Added reveal password text in adminuser.php <br>
+
+12/11/24
+- Added jspdf via cdn and html2canvas in adminarchive.php to download archived data as captured html in pdf <br>
+
+12/15/24
+- Changed carousel images in login.php and index.php <br>

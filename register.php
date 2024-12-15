@@ -127,22 +127,28 @@
                                 </svg>
                                 <input class="form-control password" placeholder="Password" type="password" name="password">
                             </div>
-                            <div class="row w-100">
-                                <div class="col-sm-12 col-md-6 p-0 text-center">
-                                    <!-- <button type="submit" name="login" class="btn btn-mb btn-primary btn-block" style="min-width: 83px;">
+                            <div class="row w-100 justify-content-center">
+                                <!-- <div class="col-sm-12 col-md-6 p-0 text-center">
+                                    <button type="submit" name="login" class="btn btn-mb btn-primary btn-block" style="min-width: 83px;">
                                         <span class="glyphicon glyphicon-log-in">
                                         </span>Login
-                                    </button> -->
+                                    </button>
                                     <a href="login.php" name="login" class="btn btn-mb btn-primary btn-block" style="min-width: 83px;">
                                         <span class="glyphicon glyphicon-log-in">
                                         </span>Login
                                     </a>
-                                </div>
+                                    
+                                </div> -->
                                 <div class="col-sm-12 col-md-6 text-center p-0" style="min-width: 83px;">
                                     <button type="submit" name="register" class="btn btn-mb btn-primary btn-block" style="min-width: 83px;">
                                         <span class="glyphicon glyphicon-log-in">
                                         </span>Register
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row w-100">
+                                <div class="col-12 p-0 text-center">
+                                    <a href="login.php" class="text-decoration-none" id="recovery">Already Have an Account?</a>
                                 </div>
                             </div>
                         </form>

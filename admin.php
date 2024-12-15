@@ -313,7 +313,7 @@ Class Admin {
     }
   }
 
-  public function updateHouse($house_id, $housenumber, $price, $category, $meralco_accnum = null, $meralco_accname = null, $maynilad_accnum = null, $maynilad_accname = null) {
+  public function updateHouse($house_id, $housenumber, $price, $category, $meralco_accnum = null, $meralco_accname = null, $maynilad_accnum = null, $maynilad_accname = null, $apartmentaddress = null) {
     $oldvalsql  = "SELECT houses.*, 
                       categories.name AS category_name,
                       houseaccounts.*
@@ -330,6 +330,7 @@ Class Admin {
     $oldval_housename = $oldvalRow['house_name'];
     $oldval_categoryname = $oldvalRow['category_name'];
     $oldval_price = $oldvalRow['price'];
+    $oldval_address = $oldvalRow['address'];
 
     $newCatSql = "SELECT name FROM categories WHERE id = ?";
     $newCatStmt = $this->conn->prepare($newCatSql);
@@ -353,9 +354,13 @@ Class Admin {
       $changes[] = 'Price: ' . $oldval_price . ' -> ' . $price;
     }
 
-    $sql = "UPDATE houses SET house_name = ?, price = ?, category_id = ? WHERE id = ?";
+    if ($oldval_address !== $apartmentaddress) {
+      $changes[] = 'Address: ' . $oldval_address . ' -> ' . $apartmentaddress;
+    }
+
+    $sql = "UPDATE houses SET house_name = ?, price = ?, category_id = ?, address = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("sdii", $housenumber, $price, $category, $house_id);
+    $stmt->bind_param("sdisi", $housenumber, $price, $category, $apartmentaddress, $house_id);
     $stmt->execute();
     
     // Check if the house update was successful
@@ -406,7 +411,7 @@ Class Admin {
   }
 
   // Function to add a new house
-  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress, $gcash, $bank) {
+  public function addHouse($housenumber, $price, $category, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $houseaddress) {
     $sql = "INSERT INTO houses (house_name, price, category_id, address) VALUES (?, ?, ?, ?)";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("sdis", $housenumber, $price, $category, $houseaddress);
@@ -416,17 +421,16 @@ Class Admin {
       $houseId = $stmt->insert_id;
         
       // Prepare and execute the query to insert into the housesaccounts table
-      $sqlAccounts = "INSERT INTO houseaccounts (houses_id, elec_accname, elec_accnum, water_accname, water_accnum, gcash, bank) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $sqlAccounts = "INSERT INTO houseaccounts (houses_id, elec_accname, elec_accnum, water_accname, water_accnum) VALUES (?, ?, ?, ?, ?)";
       $stmtAccounts = $this->conn->prepare($sqlAccounts);
-      $stmtAccounts->bind_param("isisiss", $houseId, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum, $gcash, $bank);
+      $stmtAccounts->bind_param("isisi", $houseId, $e_accountname, $e_accountnum, $w_accountname, $w_accountnum);
       $stmtAccounts->execute();
 
       // Check if insertion into housesaccounts table was successful
       if ($stmtAccounts->affected_rows > 0) {
         // Log the action
         $this->History($this->session_id, 'Add', 'Added House, ID: ' . $houseId . '<br> Housename: ' . $housenumber . '<br> Category: ' . $category
-        . '<br> Price: ' . $price . '<br> Electric Account: ' . $e_accountname . ' (' . $e_accountnum . ')<br> Water Account: ' . $w_accountname . ' (' . $w_accountnum . ')' . '<br>Gcash: 
-        ' . $gcash . '<br>Bank: ' . $bank);
+        . '<br> Price: ' . $price . '<br> Electric Account: ' . $e_accountname . ' (' . $e_accountnum . ')<br> Water Account: ' . $w_accountname . ' (' . $w_accountnum . ')' . '');
 
         return true; // Insertion successful
       } else {
@@ -2332,12 +2336,150 @@ $sql = "SELECT
     return $result;
   }
 
+  // public function addContract($username, $lessorwitness, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId, $apartmentaddressinput, $rentprice) {
+  //   // Sanitize and validate input
+  //   $username = trim(htmlspecialchars($username));
+  //   $lessorwitness = trim(htmlspecialchars($lessorwitness));
+  //   $tenantusername = trim(htmlspecialchars($tenantusername));
+  //   // $tenantaddressinput = trim(htmlspecialchars($tenantaddressinput));
+  //   $apartmentaddressinput = trim(htmlspecialchars($apartmentaddressinput));
+  //   $datestart = trim(htmlspecialchars($datestart));
+  //   $deposit = trim(htmlspecialchars($deposit));
+        
+  //   if (empty($username) || empty($lessorwitness) || empty($tenantusername) || empty($datestart) || empty($expirationdate) || empty($deposit)) {
+  //     return false; // Invalid username, abort operation
+  //   }
+
+  //   // Check if the tenantId already exists in the contracts table
+  //   $query = "SELECT COUNT(*) FROM contracts WHERE tenants_id = ?";
+  //   $stmt = $this->conn->prepare($query);
+  //   $stmt->bind_param("i", $tenantId); // Assuming tenantId is an integer
+  //   $stmt->execute();
+  //   $stmt->bind_result($count);
+  //   $stmt->fetch();
+  //   $stmt->close();
+
+  //   // If tenantId already exists in the contracts table, return false immediately
+  //   if ($count > 0) {
+  //     $_SESSION['error_message'] = "Only one contract per tenant is allowed";
+  //     return false; // Tenant already has a contract, abort operation
+  //   }
+
+  //   // Save the server's default timezone
+  //   $default_timezone = date_default_timezone_get();
+
+  //   // Set timezone to Philippines
+  //   date_default_timezone_set('Asia/Manila');
+  //   $current_time_philippines = date('Y-m-d');
+
+  //   // Revert to the original timezone
+  //   date_default_timezone_set($default_timezone);
+
+  //   // Path to the contract template file
+  //   $templatePath = __DIR__ . '/asset/contract.docx';
+  //   $savePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.docx"; // Save path for the new document
+  //   $signatureImagePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature.png"; // Path to save signature image
+  //   $signatureImagePath2 = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature2.png";
+  //   $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
+
+  //   // Check if template exists
+  //   if (!file_exists($templatePath)) {
+  //     return false; // Template not found, abort operation
+  //   }
+
+  //   // Convert the Base64 signature data to an image file
+  //   $signatureData = str_replace('data:image/png;base64,', '', $signatureData);
+  //   $signatureData = str_replace(' ', '+', $signatureData);
+  //   $signatureData = base64_decode($signatureData);
+
+  //   if (file_put_contents($signatureImagePath, $signatureData) === false) {
+  //     return false; // Failed to save the signature image
+  //   }
+
+  //   // Decode and save the second signature image
+  //   $signatureData2 = str_replace('data:image/png;base64,', '', $signatureData2);
+  //   $signatureData2 = str_replace(' ', '+', $signatureData2);
+  //   $signatureData2 = base64_decode($signatureData2);
+
+  //   if (file_put_contents($signatureImagePath2, $signatureData2) === false) {
+  //     return false;
+  //   }
+
+  //   try {
+  //     // Initialize PHPWord and load the template
+  //     $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
+
+  //     // Replace placeholder in the template with the variables
+  //     $phpWord->setValue('username', $username);
+  //     $phpWord->setValue('tenant', $tenantusername);
+  //     $phpWord->setValue('datestart', $datestart);
+  //     $phpWord->setValue('formattedDay', $formattedDay);
+  //     $phpWord->setValue('deposit', $deposit);
+  //     $phpWord->setValue('date', $current_time_philippines);
+  //     // $phpWord->setValue('tenantaddress', $tenantaddressinput);
+  //     $phpWord->setValue('apartmentaddress', $apartmentaddressinput);
+  //     $phpWord->setValue('rentprice', $rentprice);
+  //     $phpWord->setValue('dateexpiry', $expirationdate);
+  //     $phpWord->setValue('lessorwitness', $lessorwitness);
+
+  //     // Insert the signature image at a placeholder location in the document
+  //     $phpWord->setImageValue('signature', 
+  //       [
+  //         'path' => $signatureImagePath,
+  //         'width' => 150, // Set appropriate width for the signature image
+  //         'height' => 75, // Set appropriate height for the signature image
+  //         'ratio' => true, // Maintain aspect ratio
+  //       ]
+  //     );
+  //     $phpWord->setImageValue('signature2', [
+  //       'path' => $signatureImagePath2,
+  //       'width' => 150,
+  //       'height' => 75,
+  //       'ratio' => true,
+  //     ]);
+
+  //     // Save the updated document
+  //     $phpWord->saveAs($savePath);
+
+  //     // Insert contract details into the contracts table
+  //     $query = "INSERT INTO contracts (adminname, tenantname, tenants_id, filename, fileurl, datestart, expirationdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  //     $stmt = $this->conn->prepare($query);
+  //     $filename = "{$tenantusername}_contract.docx"; // File name for database insertion
+  //     $stmt->bind_param("sssssss", $username, $tenantusername, $tenantId, $filename, $fileUrl, $datestart, $expirationdate);
+
+  //     if ($stmt->execute()) {
+  //       // Delete the signature files
+  //       if (file_exists($signatureImagePath)) {
+  //         unlink($signatureImagePath);
+  //       }
+  //       if (file_exists($signatureImagePath2)) {
+  //         unlink($signatureImagePath2);
+  //       }
+  //       return true; // Document created and record inserted successfully
+  //     } else {
+  //       return false; // Failed to insert record into contracts table
+  //     }
+
+  //     // if(true) {
+  //     //   $logMessage = 
+  //     //   'Admin, ID: ' . $expensesid . '<br>' .
+  //     //   'User : ' . $deleted_expenses . '<br>' .
+  //     //   'Document filename : ' . $deleted_expensesinfo . '<br>';
+
+  //     //   $this->History($this->session_id, 'Delete', $logMessage);
+  //     // }
+
+  //   } catch (Exception $e) {
+  //     error_log("Error creating contract document: " . $e->getMessage());
+  //     return false; // Error handling
+  //   }
+  // }
+
   public function addContract($username, $lessorwitness, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId, $apartmentaddressinput, $rentprice) {
     // Sanitize and validate input
     $username = trim(htmlspecialchars($username));
     $lessorwitness = trim(htmlspecialchars($lessorwitness));
     $tenantusername = trim(htmlspecialchars($tenantusername));
-    // $tenantaddressinput = trim(htmlspecialchars($tenantaddressinput));
     $apartmentaddressinput = trim(htmlspecialchars($apartmentaddressinput));
     $datestart = trim(htmlspecialchars($datestart));
     $deposit = trim(htmlspecialchars($deposit));
@@ -2402,7 +2544,7 @@ $sql = "SELECT
     }
 
     try {
-      // Initialize PHPWord and load the template
+      // Initialize TemplateProcessor to fill in the contract template
       $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
 
       // Replace placeholder in the template with the variables
@@ -2437,10 +2579,27 @@ $sql = "SELECT
       // Save the updated document
       $phpWord->saveAs($savePath);
 
+      // Define the output PDF file path
+      $pdfFilePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.pdf";
+
+      // Set the PDF renderer path to TCPDF (ensure TCPDF is installed via Composer)
+      \PhpOffice\PhpWord\Settings::setPdfRendererPath(__DIR__ . '/vendor/tecnickcom/tcpdf');
+      \PhpOffice\PhpWord\Settings::setPdfRendererName('TCPDF');
+
+      // Load the saved DOCX file using PhpWord
+      $phpWord = \PhpOffice\PhpWord\IOFactory::load($savePath);
+
+      // Use the PdfRenderer to create a PDF writer
+      $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
+
+      // Save the document as a PDF
+      $pdfWriter->save($pdfFilePath);
+
       // Insert contract details into the contracts table
       $query = "INSERT INTO contracts (adminname, tenantname, tenants_id, filename, fileurl, datestart, expirationdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $stmt = $this->conn->prepare($query);
       $filename = "{$tenantusername}_contract.docx"; // File name for database insertion
+      $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
       $stmt->bind_param("sssssss", $username, $tenantusername, $tenantId, $filename, $fileUrl, $datestart, $expirationdate);
 
       if ($stmt->execute()) {
@@ -2456,20 +2615,13 @@ $sql = "SELECT
         return false; // Failed to insert record into contracts table
       }
 
-      // if(true) {
-      //   $logMessage = 
-      //   'Admin, ID: ' . $expensesid . '<br>' .
-      //   'User : ' . $deleted_expenses . '<br>' .
-      //   'Document filename : ' . $deleted_expensesinfo . '<br>';
-
-      //   $this->History($this->session_id, 'Delete', $logMessage);
-      // }
-
     } catch (Exception $e) {
       error_log("Error creating contract document: " . $e->getMessage());
       return false; // Error handling
     }
   }
+
+
 
   public function updateContract($username, $tenantusername, $signatureData, $witnessData, $previousAddress) {
     // Path to the existing contract file
@@ -3245,6 +3397,148 @@ $sql = "SELECT
     } catch (\Exception $e) {
       return $e->getMessage();
       // die('Error processing the document: ' . $e->getMessage());
+    }
+  }
+
+  public function addArchive($add_userid, $add_archivevacancydate) {
+    $checkquery = "SELECT users.*, tenants.*, tenants.id as tenantsid, houses.*, houses.id as housesid, contracts.*, contracts.id as contractsid
+    FROM users 
+    LEFT JOIN tenants ON tenants.users_id = users.id
+    LEFT JOIN houses ON tenants.house_id = houses.id
+    LEFT JOIN contracts ON tenants.id = contracts.tenants_id
+    WHERE users.id = ?";
+    $select_stmt = $this->conn->prepare($checkquery);
+    $select_stmt->bind_param("i", $add_userid);
+    $select_stmt->execute();
+    $select_result = $select_stmt->get_result();
+
+    // If no matching user is found, return false
+    if ($select_result->num_rows === 0) {
+      return false;
+    }
+
+    if ($select_result->num_rows > 0) {
+      $select_row = $select_result->fetch_assoc();
+
+      // Necessary error handling due to the tenantsid in the bind_param
+      if ($select_row['tenantsid'] === null) {
+        $_SESSION['error_message'] = "User needs to become a tenant before archiving";
+        return false;
+      }
+
+      $username = $select_row['username'];
+      $tenant_id = $select_row['id'];
+
+      $password = $select_row['password'];
+
+      empty($select_row['filename']) ? $contractfilename = '' : $contractfilename = $select_row['filename'];
+      empty($select_row['fileurl']) ? $contractfileurl = '' : $contractfileurl = $select_row['fileurl'];
+      empty($select_row['datestart']) ? $contractdatestart = '' : $contractdatestart = $select_row['datestart'];
+      empty($select_row['expirationdate']) ? $contractexpirationdate = '' : $contractexpirationdate = $select_row['expirationdate'];
+    } else {
+      return false;
+    }
+
+    // $insertquery = "INSERT INTO archives (users_id, tenants_id, vacancydate, archive_users_username, archive_users_firstname,	
+    // archive_users_middlename, archive_users_lastname, archive_users_password,archive_users_email, archive_users_phonenumber) VALUES (?, ?, ?, ?)";
+    $insertquery = "INSERT INTO archives (users_id, tenants_id, vacancydate, archive_users_username, archive_users_firstname, 
+    archive_users_middlename, archive_users_lastname, archive_users_password, 
+    archive_users_email, archive_users_phonenumber, archive_houses_house_name, 
+    archive_tenants_date_start, archive_tenants_date_preferred, 
+    archive_contracts_filename, archive_contracts_fileurl, archive_contracts_datestart, 
+    archive_contracts_expirationdate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_stmt = $this->conn->prepare($insertquery);
+    $insert_stmt->bind_param("iisssssssssssssss", $add_userid, $select_row['tenantsid'], $add_archivevacancydate, $select_row['username'], 
+    $select_row['firstname'], $select_row['middlename'], $select_row['lastname'], $password, $select_row['email'], 
+    $select_row['phonenumber'], $select_row['house_name'], $select_row['date_start'], $select_row['date_preferred'], $contractfilename, 
+    $contractfileurl, $contractdatestart, $contractexpirationdate);
+
+    if ($insert_stmt->execute()) {
+
+      $archive_payment_query = "SELECT archives.*, tenants.* 
+      FROM archives 
+      INNER JOIN tenants ON tenants.id = archives.tenants_id
+      WHERE archives.users_id = ?";
+      $archive_payment_stmt = $this->conn->prepare($archive_payment_query);
+      $archive_payment_stmt->bind_param("i", $add_userid);
+      $archive_payment_stmt->execute();
+      $archive_payment_result = $archive_payment_stmt->get_result();
+
+      if ($archive_payment_result > 0) {
+        $archive_payment_row = $archive_payment_result->fetch_assoc();
+        $tenant_id = $archive_payment_row['tenants_id'];
+
+        // Update all matching rows in the payments table
+        $archive_payment_updatequery = "
+        UPDATE payments 
+        SET archive = 'true' 
+        WHERE tenants_id = ?";
+        $archive_payment_update_stmt = $this->conn->prepare($archive_payment_updatequery);
+        $archive_payment_update_stmt->bind_param("i", $tenant_id);
+
+        if (!$archive_payment_update_stmt->execute()) {
+          // Handle the failure of the update query
+          return false;
+        }
+
+        $archive_delete_tenants_query = "DELETE FROM tenants
+        WHERE tenants.users_id = ?";
+        $archive_delete_tenants_stmt = $this->conn->prepare($archive_delete_tenants_query);
+        $archive_delete_tenants_stmt->bind_param("i", $add_userid);
+
+        if (!$archive_delete_tenants_stmt->execute()) {
+          $_SESSION['error_message'] = "failed delete from tenant";
+          return false;
+        }
+
+        $archive_delete_users_query = "DELETE FROM users
+        WHERE users.id = ?";
+        $archive_delete_users_stmt = $this->conn->prepare($archive_delete_users_query);
+        $archive_delete_users_stmt->bind_param("i", $add_userid);
+
+        if (!$archive_delete_users_stmt->execute()) {
+          return false;
+        }
+
+        $archive_delete_contracts_query = "DELETE FROM contracts
+        WHERE contracts.tenants_id = ?";
+        $archive_delete_contracts_stmt = $this->conn->prepare($archive_delete_contracts_query);
+        $archive_delete_contracts_stmt->bind_param("i", $tenant_id);
+
+        if (!$archive_delete_contracts_stmt->execute()) {
+          return false;
+        }
+        
+        return true;
+
+      } else {
+        return false;
+      }
+
+      return true;
+    }
+  }
+
+  public function deleteArchive($delete_archiveid) {
+    $retrievesql = "SELECT * FROM archives WHERE id = ?";
+    $retrievestmt = $this->conn->prepare($retrievesql);
+    $retrievestmt->bind_param("i", $delete_archiveid);
+    $retrievestmt->execute();
+    $retrieveResult = $retrievestmt->get_result();
+    
+    $retrieveRow = $retrieveResult->fetch_assoc();
+    $delete_archiveusername = $retrieveRow['archive_users_username'];
+
+    $sql = "DELETE FROM archives WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $delete_archiveid);
+    $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+      // Log the action
+      $this->History($this->session_id, 'Delete', 'Deleted Archive, ID: ' . $delete_archiveid . '<br> Archived Username: ' . $delete_archiveusername);
+      return true; // Deletion successful
+    } else {
+      return false; // Deletion failed
     }
   }
 

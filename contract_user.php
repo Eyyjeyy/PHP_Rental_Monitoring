@@ -120,6 +120,7 @@
                                         <th scope="col" class="text-center">Status <br>&nbsp;</th>
                                         <th scope="col" class="text-center">Contract <br>Start</th>
                                         <th scope="col" class="text-center">Contract <br>Expiry</th>
+                                        <th scope="col" class="text-center">Contract <br>Preview</th>
                                         <th scope="col" class="text-center">Action <br>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -133,11 +134,20 @@
                                                 $tenantapproval = $row['tenantapproval'] ?? 'PENDING';
                                                 $datestart = $row['datestart'] ?? 'N/A';
                                                 $expirationdate = $row['expirationdate'] ?? 'N/A';
+                                                // Extract the file extension and replace it with '.pdf'
+                                                $fileUrl = $row["fileurl"];
+                                                $pathInfo = pathinfo($fileUrl); // Get path information
+                                                $pdfUrl = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.pdf';
                                                 echo "<tr>";
                                                 echo "<td class='text-center'>" . htmlspecialchars($tenantname) . "</td>";
                                                 echo "<td class='text-center'>" . ($row["tenantapproval"] === "true" ? "APPROVED" : ($row["tenantapproval"] === "false" ? "UNAPPROVED" : "PENDING")) . "</td>"; // actual column name from your database
                                                 echo "<td class='text-center'>" . htmlspecialchars($datestart) . "</td>";
                                                 echo "<td class='text-center'>" . htmlspecialchars($expirationdate) . "</td>";
+                                                echo "<td class='text-center'>";
+                                                    echo "<a href='#' data-bs-toggle='modal' data-bs-target='#contractPreviewModal' onclick=\"showContractFileModal('" . "." . "$pdfUrl')\">";
+                                                        echo "<img src='./asset/pdf-file.webp' alt='Contract Image' class='img-fluid' style='width: 100px; object-fit: cover;'>";
+                                                    echo "</a>";
+                                                echo "</td>";
                                                 echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                     echo "<div class='row justify-content-center m-0'>";
                                                         echo "<div class='col-xxl-4 px-2 pe-xxl-0'>";
@@ -170,7 +180,7 @@
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='5' class='text-center'>No contracts</td></tr>";
+                                            echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
                                         }
                                     ?>
                                 </tbody>
@@ -187,6 +197,7 @@
                                                 echo "<td class='text-center'>" . ($row_physical["physical_status"] === 'true' ? 'COMPLETE' : 'N/A') . "</td>";
                                                 echo "<td class='text-center'>" . ($row_physical["datestart"]) . "</td>";
                                                 echo "<td class='text-center'>" . ($row_physical["expirationdate"]) . "</td>";
+                                                echo "<td class='text-center'>" . "N/A" . "</td>";
                                                 echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                     echo "<div class='row justify-content-center m-0'>";
                                                         echo "<a href='" . './asset/physical_contracts/' . htmlspecialchars($row_physical['image_path']) . "' download class='btn btn-success table-buttons-download justify-content-center' style='width: 120px;height:41px;'>Download</a>";
@@ -195,7 +206,10 @@
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='5' class='text-center'>No contracts</td></tr>";
+                                            if (!$result_physical->num_rows > 0 && !$result->num_rows > 0) {
+                                                echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
+                                            }
+                                            // echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
                                         }
                                     ?>
                                 </tbody>
@@ -285,6 +299,23 @@
                     </div>
                     <!-- <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button> -->
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="contractPreviewModal" tabindex="-1" aria-labelledby="contractPreviewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="width: 1200px; max-width: 100%;">
+        <div class="modal-content" style="height: 1500px; max-height: 90vh; overflow-y: hidden;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contractPreviewLabel">Image Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center" style="max-height: 100%;">
+                <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid" style="height: 100%; object-fit: cover;">
+                <!-- PDF Preview -->
+                <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none; height: 100%;"></iframe>
             </div>
         </div>
     </div>
@@ -432,6 +463,27 @@
 
   // Poll every 3 seconds
   setInterval(fetchDelinquencyMonthMissed, 3000);
+</script>
+
+<script>
+    // function showImageModal(imageUrl) {
+    //     document.getElementById('modalImage').src = imageUrl;
+    // }
+    function showContractFileModal(contractUrl) {
+        var fileExtension = contractUrl.split('.').pop().toLowerCase();
+        
+        if (fileExtension === 'pdf') {
+            // If it's a PDF, show the PDF preview
+            document.getElementById('modalImage').style.display = 'none';
+            document.getElementById('modalPDF').style.display = 'block';
+            document.getElementById('modalPDF').src = contractUrl;
+        } else {
+            // If it's an image, show the image preview
+            document.getElementById('modalImage').style.display = 'block';
+            document.getElementById('modalPDF').style.display = 'none';
+            document.getElementById('modalImage').src = contractUrl;
+        }
+    }
 </script>
 
 <?php include 'regular/includes/footer.php'; ?>

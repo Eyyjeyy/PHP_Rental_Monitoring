@@ -240,7 +240,7 @@ if ($result->num_rows > 0) {
         //     </svg>
         //     Approve
         // </button>";
-        echo "<button type='submit' name='" . ($row['payment_type'] === 'deposit' ? 'approve_deposit' : 'approve_payment') . "' class='btn btn-primary d-flex table-buttons-update" . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? ' invisible' : ' visible') . "' style='width: 120px;' $approval>
+        echo "<button type='submit' name='" . ($row['payment_type'] === 'deposit' ? 'approve_deposit' : 'approve_payment') . "' class='btn btn-primary d-flex table-buttons-update mt-1" . ($row['payment_type'] === 'deposit' && ($row['approval'] === 'true' || $row['approval'] === 'Unapproved' || $row['approval'] === '1 Month Consumed' || $row['approval'] === '2 Months Consumed') ? ' invisible' : ' visible') . "' style='width: 120px;' $approval>
             <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-check align-self-center' viewBox='0 0 16 16'>
                 <path d='M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z'/>
             </svg>
@@ -261,7 +261,7 @@ if ($result->num_rows > 0) {
             echo "<form method='POST' action='adminpayments.php' class='align-items-center mb-0'>";
                 echo "<input type='hidden' name='paymentsid' value='" . $row['id'] . "'>";
                 $decline = $row['approval'] === 'false' ? 'disabled' : '';
-                echo "<button type='submit' name='" . ($row['payment_type'] === 'deposit' ? 'decline_deposit' : 'decline_payment') . "' class='btn btn-danger update-category-btn float-xxl-start d-flex table-buttons-delete' data-id='" . $row['id'] . "' data-paymentname='" . htmlspecialchars($row['name']) . "' style='width: 120px;' $decline>
+                echo "<button type='submit' name='" . ($row['payment_type'] === 'deposit' ? 'decline_deposit' : 'decline_payment') . "' class='btn btn-danger update-category-btn float-xxl-start d-flex table-buttons-delete mt-1 mb-1' data-id='" . $row['id'] . "' data-paymentname='" . htmlspecialchars($row['name']) . "' style='width: 120px;' $decline>
                         <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-ban-fill align-self-center me-2' viewBox='0 0 16 16'>
                             <path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M2.71 12.584q.328.378.706.707l9.875-9.875a7 7 0 0 0-.707-.707l-9.875 9.875Z'/>
                         </svg>

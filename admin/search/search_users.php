@@ -46,6 +46,8 @@ $result = $conn->query($sql);
 // Generate table rows based on search results
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        $password = $row['password'] ?? '';
+        $maskedPassword = $password ? str_repeat('*', strlen($password)) : 'N/A';
         echo "<tr>";
         echo "<th scope='row'>" . $row['id'] . "</th>";
         echo "<td>" . htmlspecialchars($row['username']) . "</td>";
@@ -54,7 +56,22 @@ if ($result->num_rows > 0) {
         echo "<td>" . htmlspecialchars($row['lastname']) . "</td>";
         echo "<td>" . htmlspecialchars($row['phonenumber'] ? $row['phonenumber'] : 'N/A') . "</td>";
         echo "<td>" . htmlspecialchars($row['email'] ? $row['email'] : 'N/A') . "</td>";
-        echo "<td>" . htmlspecialchars($row['password'] ? str_repeat('*', strlen($row['password'])) : 'N/A') . "</td>";
+        echo "
+        <td> 
+            <div style='position: relative; display: inline-block;'>
+                <input type='password' value='" . htmlspecialchars($password) . "' style='margin-right: 1em; border: none; background: transparent; width: " . strlen($maskedPassword) * 10 . "px;' readonly id='password-{$row['id']}'>
+                <button type='button' class='p-0' style='position: absolute; right: 0; top: 4.1; border: none; background: none; cursor: pointer;' 
+                        onmousedown=\"togglePassword('password-{$row['id']}', true)\"
+                        onmouseup=\"togglePassword('password-{$row['id']}', false)\"
+                        onmouseleave=\"togglePassword('password-{$row['id']}', false)\">
+                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-eye-fill' viewBox='0 0 16 16'>
+                        <path d='M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0'/>
+                        <path d='M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7'/>
+                    </svg>
+                </button>
+            </div>
+        </td>
+        ";
         echo "<td>" . htmlspecialchars($row['role']) . "</td>";
         echo "<td class='justify-content-center text-center align-middle'>";
         echo "<div class='row justify-content-center m-0'>";

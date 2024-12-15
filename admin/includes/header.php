@@ -198,7 +198,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav d-flex flex-column">
                     <a class="navbar-brand mt-4 mb-3 py-0 justify-content-center" href="admindashboard.php">
-                        <img src="../asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                        <img src="../asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 100px;">
                     </a>
                     <div class="hover-container">
                         <a class="nav-link <?= $page == 'admindashboard' ? 'active' : '' ?>" href="admindashboard.php">
@@ -305,6 +305,15 @@
                         </a>
                     </div>
                     <div class="hover-container">
+                        <a class="nav-link <?= $page == 'adminarchive' ? 'active' : '' ?>" href="adminarchive.php">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-file-zip-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M8.5 9.438V8.5h-1v.938a1 1 0 0 1-.03.243l-.4 1.598.93.62.93-.62-.4-1.598a1 1 0 0 1-.03-.243"/>
+                                <path d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m2.5 8.5v.938l-.4 1.599a1 1 0 0 0 .416 1.074l.93.62a1 1 0 0 0 1.109 0l.93-.62a1 1 0 0 0 .415-1.074l-.4-1.599V8.5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1m1-5.5h-1v1h1v1h-1v1h1v1H9V6H8V5h1V4H8V3h1V2H8V1H6.5v1h1z"/>
+                            </svg>
+                            <p>Archive</p>
+                        </a>
+                    </div>
+                    <div class="hover-container">
                         <a class="nav-link <?= $page == 'adminhistory' ? 'active' : '' ?>" href="adminhistory.php">
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chat-left-text-fill my-svg-icon" fill="currentColor" width="24" height="24" viewBox="0 0 16 16">
                                 <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"></path>
@@ -335,7 +344,7 @@
                 <div class="row mx-auto w-65 d-flex align-items-center">
                     <div class="col d-flex align-items-center">
                         <a class="navbar-brand py-0" href="admindashboard.php">
-                            <img src="../asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                            <img src="../asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 100px;">
                         </a>
                     </div>
                     <div class="col d-flex justify-content-end" id="navnav">

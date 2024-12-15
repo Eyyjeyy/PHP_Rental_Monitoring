@@ -10,10 +10,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <?php if ($pageTitle == 'Home Page' || $pageTitle == 'Chat Page' || $pageTitle == 'Info Page' || $pageTitle == 'Profile Page' || $pageTitle == 'Contract Page' || $pageTitle == 'User Delinquency Page'): ?>
         <link rel="stylesheet" href="asset/user.css">
-        <link rel="icon" type="image/x-icon" href="asset/Renttrack pro no word.png">
+        <link rel="icon" type="image/x-icon" href="asset/Renttrack pro logo.png">
     <?php else: ?>
         <link rel="stylesheet" href="../asset/user.css">
-        <link rel="icon" type="image/x-icon" href="../asset/Renttrack pro no word.png">
+        <link rel="icon" type="image/x-icon" href="../asset/Renttrack pro logo.png">
     <?php endif; ?>
     <!-- <link rel="stylesheet" href= "../asset/user.css"> -->
 
@@ -54,7 +54,7 @@
         <!-- Left-aligned image -->
         <div class="col d-flex align-items-center">
             <a class="navbar-brand py-0" href="index.php">
-                <img src="asset/Renttrack pro no word_2.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
+                <img src="asset/Renttrack pro logo.png" id="userpiclogo" class="img-fluid" alt="..." style="height: 50px;">
             </a>
         </div>
         
@@ -65,7 +65,7 @@
         </button>
 
 
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="max-height: 600px;">
         <a class="dropdown-item" href="users/payments.php">Payment</a>
         <a class="dropdown-item" href="info.php">Info</a>
         <a class="dropdown-item" href="profile_user.php">Profile</a>

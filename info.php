@@ -136,18 +136,18 @@
                                     </label>
                                     <input type="email" class="form-control" id="exampleFormControlInput1" name="email" value="<?php echo htmlspecialchars($houseAccounts['water_accnum'] ?? 'N/A'); ?>">
                                 </div>
-                                <div class="col-12 col-md-6 mb-3 mt-3">
+                                <!-- <div class="col-12 col-md-6 mb-3 mt-3">
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Gcash</p>
                                     </label>
                                     <input type="text" class="form-control" id="exampleFormControlInput1" name="gcash" value="<?php echo htmlspecialchars($houseAccounts['gcash'] ?? 'N/A'); ?>">
-                                </div>
-                                <div class="col-12 col-md-6 mb-3 mt-3">
+                                </div> -->
+                                <!-- <div class="col-12 col-md-6 mb-3 mt-3">
                                     <label for="exampleFormControlInput1" class="form-label">
                                         <p class="fs-5 fw-bold mb-0">Bank</p>
                                     </label>
                                     <input type="text" class="form-control" id="exampleFormControlInput1" name="bank" value="<?php echo htmlspecialchars($houseAccounts['bank'] ?? 'N/A'); ?>">
-                                </div>
+                                </div> -->
                             </div>
                             <!-- <div class="row justify-content-center justify-content-md-end">
                                 <div class="col-auto">
