@@ -229,3 +229,6 @@ The project is built using PHP, MySQL for database management, and incorporates 
 
 12/15/24
 - Changed carousel images in login.php and index.php <br>
+
+12/16/24
+- phpmyadmin, added file_path column for eviction_popup table <br>

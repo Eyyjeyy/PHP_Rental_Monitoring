@@ -3291,12 +3291,15 @@ $sql = "SELECT
         }
 
         if ($smsSent) {
-          $insertSql = "INSERT INTO eviction_popup (users_id) 
-                  VALUES (?)";
+          // Extract only the file name from the full path
+          $fileName = basename($newFileName);
+
+          $insertSql = "INSERT INTO eviction_popup (users_id, file_path) 
+                  VALUES (?, ?)";
           $insertStmt = $this->conn->prepare($insertSql);
 
           // Bind the session_id to the placeholder
-          $insertStmt->bind_param("i", $tenantemail['users_id']); // 'i' indicates an integer value
+          $insertStmt->bind_param("is", $tenantemail['users_id'], $fileName); // 'i' indicates an integer value
 
           // Execute the query
           $insertStmt->execute();

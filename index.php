@@ -244,7 +244,10 @@
                         <h5 class='modal-title' id='modalLabel'>Eviction Notice</h5>
                     </div>
                     <div class='modal-body'>
-                        Dear {$row['firstname']} {$row['lastname']}, please check your email for your eviction message
+                        Dear {$row['firstname']} {$row['lastname']}, check your email for eviction notice or download it with the button below.
+                    </div>
+                    <div class='d-flex mb-3 justify-content-center' style='padding: .75rem;'>
+                        <a href='" . "./asset/eviction_tenant/" . ($row['file_path']) . "' class='btn btn-secondary btn-download table-buttons-update' download='" . ($row['file_path']). "' style='text-align: center; max-height: 38px;'>Download</a>
                     </div>
                     <div class='modal-footer'>
                         <button id='closeBtn' type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='display: none;'>Close</button>
