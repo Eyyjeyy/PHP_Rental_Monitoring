@@ -108,12 +108,15 @@
         tenants.id AS tenant_id,
         tenants.*, 
         houses.*,
+        eviction_popup.users_id AS eviction_users_id,
+        eviction_popup.file_path,
         GROUP_CONCAT(payments.amount ORDER BY payments.date_payment DESC) AS payment_amounts,
         GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
         MAX(payments.date_payment) AS last_payment_date  -- Get the last payment date
     FROM tenants 
     LEFT JOIN payments ON tenants.id = payments.tenants_id AND payments.approval = 'true' -- Include only approved payments
     LEFT JOIN houses ON tenants.house_id = houses.id
+    LEFT JOIN eviction_popup ON tenants.users_id = eviction_popup.users_id
     GROUP BY tenants.id
     ";
     $result = $admin->conn->query($sql);
@@ -166,6 +169,7 @@
                                     <span id="expirationdateSortArrow"></span>
                                 </th>
                                 <th scope="col">Total Missing Payments</th>
+                                <th scope="col">Eviction Preview</th>
                                 <th scope="col">
                                     Actions
                                 </th>
@@ -249,6 +253,13 @@
                                             echo "<td>" . htmlspecialchars($missing_months) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['payment_amounts']) . "</td>";
                                             echo "<td>" . htmlspecialchars($missing_payment_total) . "</td>"; // Display the total missing payment
+                                            echo "<td>";
+                                                echo "<div class='row justify-content-center m-0'>";
+                                                    echo "<div class='col-xxl-12 px-2'>";
+                                                        echo "<img src='../asset/pdf-file.webp' id='pdfpreview' data-contid='" . "../asset/eviction_tenant/" . $row["file_path"] . "' alt='View PDF' class='view-contract-icon img-fluid' data-toggle='modal' data-target='#previewModal' style='cursor:pointer; width: 100px; height: 100px; object-fit: contain;'>";
+                                                    echo "</div>";
+                                                echo "</div>";
+                                            echo "</td>";
                                             echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                 echo "<div class='row justify-content-center m-0'>";
                                                     echo "<div class='col-xxl-6 px-2'>";
@@ -368,6 +379,22 @@
                 </div>
             </div>
 
+            <!-- Modal HTML -->
+            <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="evictionModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" style="max-width: 900px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="evictionModalLabel">Eviction PDF</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Embed the iframe with the PDF -->
+                            <iframe src="../<?php echo $pdfUrl; ?>" id="evictionIframe" width="100%" height="700px"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <script>
                 document.querySelectorAll('#send_eviction').forEach(button => {
                     button.addEventListener('click', function () {
@@ -457,6 +484,25 @@
                     } else {
                         event.preventDefault();
                         alert("Please provide both signatures.");
+                    }
+                });
+            </script>
+
+            <script>
+                document.body.addEventListener('click', function (event) {
+                    if (event.target && event.target.id === 'pdfpreview') {
+                        const testcontract_id = event.target.getAttribute("data-contid");
+
+                        // Get the iframe element
+                        var iframe = document.getElementById('evictionIframe');
+
+                        // Update the iframe's src with the testcontract_id
+                        iframe.src = `${testcontract_id}`; // Adjust the URL as needed
+
+                        var contractModal = new bootstrap.Modal(document.getElementById('previewModal'), {
+                            keyboard: false
+                        });
+                        contractModal.show();
                     }
                 });
             </script>

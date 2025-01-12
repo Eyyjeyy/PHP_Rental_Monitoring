@@ -66,7 +66,8 @@ if ($result_tenant_table->num_rows > 0) {
         echo "<td>" . htmlspecialchars($row['datestart']) . "</td>";
         echo "<td>" . htmlspecialchars($row['expirationdate']) . "</td>";
 
-        $pdfUrl = $admin1->displayContractPDF($row['fileurl']); // Assuming you have an instance of the class
+        // $pdfUrl = $admin1->displayContractPDF($row['fileurl']); // Assuming you have an instance of the class
+        $pdfUrl = ($row['fileurl']);
         
         // Output the iframe with the generated PDF
         // echo "<td>";
@@ -80,7 +81,7 @@ if ($result_tenant_table->num_rows > 0) {
         <td>
             <div class='col-12 px-2'>
                 <!-- Add an icon or image as the clickable element -->
-                <img src='../asset/doc.png' test='". $row['fileurl'] ."' id='testcontract' data-contid='.." . $pdfUrl . "' alt='View Contract' class='view-contract-icon img-fluid' data-toggle='modal' data-target='#contractModal' style='cursor:pointer; width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>
+                <img src='../asset/pdf-file.webp' test='". $row['fileurl'] ."' id='testcontract' data-contid='.." . $pdfUrl . "' alt='View Contract' class='view-contract-icon img-fluid' data-toggle='modal' data-target='#contractModal' style='cursor:pointer; width: 100px; height: 100px; object-fit: cover; margin-right: 5px;'>
             </div>
         </td>
         ";
@@ -112,7 +113,7 @@ if ($result_tenant_table->num_rows > 0) {
     // Pass the contract data to JavaScript
     // echo "<script>var contractsData = " . json_encode($contracts) . ";</script>";
 } else {
-    echo "<tr><td colspan='6' class='text-center'>No contracts found</td></tr>";
+    echo "<tr><td colspan='7' class='text-center'>No contracts found</td></tr>";
 }
 
 // Output pagination buttons

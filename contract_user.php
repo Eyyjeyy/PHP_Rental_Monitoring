@@ -168,9 +168,9 @@
                                                                 echo "</form>";
                                                             echo "</div>";
                                                         }
-                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 ps-xxl-0 " : "") . "px-2'>";
+                                                        echo "<div class='" . ($row["tenantapproval"] === "true" ? "col-12 " : "") . ($row["tenantapproval"] !== "true" ? "col-xxl-4 ps-xxl-0 " : "") . ($row["tenantapproval"] === "false" ? "col-xxl-12 " : "") . "px-2'>";
                                                             if (!empty($row['fileurl'])) { // Ensure fileurl is not empty
-                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download " . ($row["tenantapproval"] === "true" ? "" : "float-xxl-start ") . "justify-content-center' style='width: 120px;height:41px;'>Download</a>";
+                                                                echo "<a href='" . '.' . htmlspecialchars($row['fileurl']) . "' download class='btn btn-success table-buttons-download " . ($row["tenantapproval"] === "true" || $row["tenantapproval"] === "false" ? "" : "float-xxl-start ") . "justify-content-center' style='width: 120px;height:41px;'>Download</a>";
                                                             } else {
                                                                 echo "<span>No file available</span>";
                                                             }

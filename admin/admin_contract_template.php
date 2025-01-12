@@ -665,6 +665,7 @@
                                         <select class="form-select" id="tenantid" name="tenantid" required>
                                             <?php
                                                 if ($result_tenant->num_rows > 0) {
+                                                    echo "<option value=''>Select a Lessee</option>";
                                                     // Output options for each category
                                                     while ($row_tenant = $result_tenant->fetch_assoc()) {
                                                         echo "<option value='" . htmlspecialchars($row_tenant['id']) . "'>" . htmlspecialchars($row_tenant['fname']) . " " . htmlspecialchars($row_tenant['mname']) . " " . htmlspecialchars($row_tenant['lname']) . "</option>";

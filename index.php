@@ -238,7 +238,7 @@
         // Display the modal
         echo "
         <div class='modal fade' id='myModal' tabindex='-1' aria-labelledby='modalLabel' aria-hidden='true'>
-            <div class='modal-dialog' style='margin: 0; top: 50%; left: 50%; transform: translate(-50%, -50%);'>
+            <div class='modal-dialog' style='margin: 0; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 700px;'>
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 class='modal-title' id='modalLabel'>Eviction Notice</h5>
@@ -246,8 +246,12 @@
                     <div class='modal-body'>
                         Dear {$row['firstname']} {$row['lastname']}, check your email for eviction notice or download it with the button below.
                     </div>
-                    <div class='d-flex mb-3 justify-content-center' style='padding: .75rem;'>
-                        <a href='" . "./asset/eviction_tenant/" . ($row['file_path']) . "' class='btn btn-secondary btn-download table-buttons-update' download='" . ($row['file_path']). "' style='text-align: center; max-height: 38px;'>Download</a>
+                    <div class='row mb-3 justify-content-center' style='padding: .75rem;'>
+                        <div class='row d-flex mb-3 justify-content-center'>
+                            <iframe src='" . "asset/eviction_tenant/" . $row['file_path'] . "' class='w-100' style='height: 600px;'>
+                            </iframe>
+                        </div>
+                        <a href='" . "./asset/eviction_tenant/" . ($row['file_path']) . "' class='d-block btn btn-secondary btn-download table-buttons-update' download='" . ($row['file_path']). "' style='text-align: center; max-width: 150px; max-height: 38px;'>Download</a>
                     </div>
                     <div class='modal-footer'>
                         <button id='closeBtn' type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='display: none;'>Close</button>

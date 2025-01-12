@@ -4,6 +4,10 @@ require __DIR__ . '/vendor/autoload.php';
 require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
+
+use setasign\Fpdi\Fpdi;
+
+
 Class Admin {
     public $conn; // Declare the connection variable
     // public $loggedIn = 3; // Define the loggedIn property
@@ -2514,11 +2518,12 @@ $sql = "SELECT
     date_default_timezone_set($default_timezone);
 
     // Path to the contract template file
-    $templatePath = __DIR__ . '/asset/contract.docx';
-    $savePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.docx"; // Save path for the new document
-    $signatureImagePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature.png"; // Path to save signature image
-    $signatureImagePath2 = __DIR__ . "/asset/user_contracts/{$tenantusername}_signature2.png";
-    $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
+    $templatePath = __DIR__ . '/asset/testpdf/contract.pdf';
+    $time_id_generated = time() . "-" . uniqid();
+    $savePath = __DIR__ . "/asset/testpdf/" . $time_id_generated . "_{$tenantusername}_contract.pdf"; // Save path for the new document
+    $signatureImagePath = __DIR__ . "/asset/testpdf/{$tenantusername}_signature.png"; // Path to save signature image
+    $signatureImagePath2 = __DIR__ . "/asset/testpdf/{$tenantusername}_signature2.png";
+    $fileUrl = "/asset/testpdf/" . $time_id_generated . "_{$tenantusername}_contract.pdf"; // Relative URL path for database insertion
 
     // Check if template exists
     if (!file_exists($templatePath)) {
@@ -2545,61 +2550,123 @@ $sql = "SELECT
 
     try {
       // Initialize TemplateProcessor to fill in the contract template
-      $phpWord = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
+      $pdf = new FPDI();
+      $pageCount = $pdf->setSourceFile($templatePath);
 
-      // Replace placeholder in the template with the variables
-      $phpWord->setValue('username', $username);
-      $phpWord->setValue('tenant', $tenantusername);
-      $phpWord->setValue('datestart', $datestart);
-      $phpWord->setValue('formattedDay', $formattedDay);
-      $phpWord->setValue('deposit', $deposit);
-      $phpWord->setValue('date', $current_time_philippines);
-      // $phpWord->setValue('tenantaddress', $tenantaddressinput);
-      $phpWord->setValue('apartmentaddress', $apartmentaddressinput);
-      $phpWord->setValue('rentprice', $rentprice);
-      $phpWord->setValue('dateexpiry', $expirationdate);
-      $phpWord->setValue('lessorwitness', $lessorwitness);
+      // Import the first page of the template
+      $template = $pdf->importPage(1);
 
-      // Insert the signature image at a placeholder location in the document
-      $phpWord->setImageValue('signature', 
-        [
-          'path' => $signatureImagePath,
-          'width' => 150, // Set appropriate width for the signature image
-          'height' => 75, // Set appropriate height for the signature image
-          'ratio' => true, // Maintain aspect ratio
-        ]
-      );
-      $phpWord->setImageValue('signature2', [
-        'path' => $signatureImagePath2,
-        'width' => 150,
-        'height' => 75,
-        'ratio' => true,
-      ]);
+      // Add a page to the new PDF
+      $pdf->AddPage();
+
+      // Use the imported template
+      $pdf->useTemplate($template);
+
+      // Set the font for adding text
+      $pdf->SetFont('Arial', '', 12);
+
+      // Position where you want to add the text and fill in data (replace placeholders)
+      $pdf->SetXY(50, 27); // Adjust these coordinates to match where the placeholder is located
+      $pdf->Cell(0, 10, $username, 0, 1);
+
+      $pdf->SetXY(50, 38); 
+      $pdf->Cell(0, 10, $tenantusername, 0, 1);
+
+      $pdf->SetXY(25, 90); 
+      $pdf->MultiCell(150, 7, $apartmentaddressinput, 0, 'L');
+      
+      $pdf->SetXY(42, 110); 
+      $pdf->Cell(50, 7, $datestart, 0, 'L');
+
+      $pdf->SetXY(102, 110); 
+      $pdf->Cell(50, 7, $expirationdate, 0, 'L');
+
+      $pdf->SetXY(115, 116); 
+      $pdf->Cell(50, 7, $rentprice, 0, 'L');
+
+      $pdf->SetXY(62, 122); 
+      $pdf->Cell(50, 7, $formattedDay, 0, 'L');
+
+      $pdf->SetXY(42, 142); 
+      $pdf->Cell(50, 7, $deposit, 0, 'L');
+
+      // Handle the second page
+      $template2 = $pdf->importPage(2); // Import the second page
+      $pdf->AddPage(); // Add another new page
+      $pdf->useTemplate($template2); // Use the imported second page
+
+      $pdf->SetXY(42, 116); 
+      $pdf->Cell(50, 7, $current_time_philippines, 0, 'L');
+
+      $pdf->SetXY(32, 131); 
+      $pdf->Cell(50, 7, $username, 0, 'L');
+
+      $pdf->SetXY(32, 188); 
+      $pdf->Cell(50, 7, $lessorwitness, 0, 'L');
+
+      $pdf->SetXY(142, 131); 
+      $pdf->Cell(50, 7, $tenantusername, 0, 'L');
+
+      $pdf->Image($signatureImagePath, 30, 120, 50);  // Adjust position and size
+      $pdf->Image($signatureImagePath2, 30, 170, 50);  // Adjust position and size
+
+      // Output the generated PDF (you can also save it to a file or send it as an email)
+      $pdf->Output('F', $savePath); // 'F' means save it on the server, 'I'
+
+      // // Replace placeholder in the template with the variables
+      // $phpWord->setValue('username', $username);
+      // $phpWord->setValue('tenant', $tenantusername);
+      // $phpWord->setValue('datestart', $datestart);
+      // $phpWord->setValue('formattedDay', $formattedDay);
+      // $phpWord->setValue('deposit', $deposit);
+      // $phpWord->setValue('date', $current_time_philippines);
+      // // $phpWord->setValue('tenantaddress', $tenantaddressinput);
+      // $phpWord->setValue('apartmentaddress', $apartmentaddressinput);
+      // $phpWord->setValue('rentprice', $rentprice);
+      // $phpWord->setValue('dateexpiry', $expirationdate);
+      // $phpWord->setValue('lessorwitness', $lessorwitness);
+
+      // // Insert the signature image at a placeholder location in the document
+      // $phpWord->setImageValue('signature', 
+      //   [
+      //     'path' => $signatureImagePath,
+      //     'width' => 150, // Set appropriate width for the signature image
+      //     'height' => 75, // Set appropriate height for the signature image
+      //     'ratio' => true, // Maintain aspect ratio
+      //   ]
+      // );
+      // $phpWord->setImageValue('signature2', [
+      //   'path' => $signatureImagePath2,
+      //   'width' => 150,
+      //   'height' => 75,
+      //   'ratio' => true,
+      // ]);
 
       // Save the updated document
-      $phpWord->saveAs($savePath);
+      // $phpWord->saveAs($savePath);
 
       // Define the output PDF file path
-      $pdfFilePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.pdf";
+      // $pdfFilePath = __DIR__ . "/asset/user_contracts/{$tenantusername}_contract.pdf";
 
       // Set the PDF renderer path to TCPDF (ensure TCPDF is installed via Composer)
-      \PhpOffice\PhpWord\Settings::setPdfRendererPath(__DIR__ . '/vendor/tecnickcom/tcpdf');
-      \PhpOffice\PhpWord\Settings::setPdfRendererName('TCPDF');
+      // \PhpOffice\PhpWord\Settings::setPdfRendererPath(__DIR__ . '/vendor/tecnickcom/tcpdf');
+      // \PhpOffice\PhpWord\Settings::setPdfRendererName('TCPDF');
 
       // Load the saved DOCX file using PhpWord
-      $phpWord = \PhpOffice\PhpWord\IOFactory::load($savePath);
+      // $phpWord = \PhpOffice\PhpWord\IOFactory::load($savePath);
 
       // Use the PdfRenderer to create a PDF writer
-      $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
+      // $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
 
       // Save the document as a PDF
-      $pdfWriter->save($pdfFilePath);
+      // $pdfWriter->save($pdfFilePath);
 
       // Insert contract details into the contracts table
       $query = "INSERT INTO contracts (adminname, tenantname, tenants_id, filename, fileurl, datestart, expirationdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $stmt = $this->conn->prepare($query);
-      $filename = "{$tenantusername}_contract.docx"; // File name for database insertion
-      $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
+      // $filename = "{$tenantusername}_contract.docx"; // File name for database insertion
+      $filename = $time_id_generated . "_{$tenantusername}_contract.pdf";
+      // $fileUrl = "/asset/user_contracts/{$tenantusername}_contract.docx"; // Relative URL path for database insertion
       $stmt->bind_param("sssssss", $username, $tenantusername, $tenantId, $filename, $fileUrl, $datestart, $expirationdate);
 
       if ($stmt->execute()) {
@@ -2998,26 +3065,88 @@ $sql = "SELECT
       $fileUrl = $contract['fileurl'];
       $lessee = $contract['tenantname'];
       if (file_exists(__DIR__ . $fileUrl)) {
-        $templateProcessor = new PhpOffice\PhpWord\TemplateProcessor(__DIR__ . $fileUrl);
+        // $templateProcessor = new PhpOffice\PhpWord\TemplateProcessor(__DIR__ . $fileUrl);
 
-        // Set placeholders with form data
-        $templateProcessor->setValue('lesseewitness', $lesseewitness);
-        $templateProcessor->setValue('tenantaddress', $previousaddressinput);
+        // // Set placeholders with form data
+        // $templateProcessor->setValue('lesseewitness', $lesseewitness);
+        // $templateProcessor->setValue('tenantaddress', $previousaddressinput);
+
+        // Initialize FPDI (extend FPDF class)
+        $pdf = new FPDI();
+
+        // Load the PDF template
+        $templateFile = 'asset/testpdf/' . $contract['filename'];  // Path to your static PDF template
+        $pageCount = $pdf->setSourceFile($templateFile);
+
+        // Import the first page of the template
+        $template = $pdf->importPage(1);
+
+        // Add a page to the new PDF
+        $pdf->AddPage();
+
+        // Use the imported template
+        $pdf->useTemplate($template);
+
+        // Set the font for adding text
+        $pdf->SetFont('Arial', '', 12);
+
+        $pdf->SetXY(35, 48); 
+        $pdf->MultiCell(150, 7, $previousaddressinput, 0, 'L');
+
+        // Handle the second page
+        $template2 = $pdf->importPage(2); // Import the second page
+        $pdf->AddPage(); // Add another new page
+        $pdf->useTemplate($template2); // Use the imported second page
+
+        // $pdf->SetXY(142, 131); 
+        // $pdf->Cell(50, 7, 'Tenant username', 0, 'L');
+
+        $pdf->SetXY(137, 188); 
+        $pdf->Cell(50, 7, $lesseewitness, 0, 'L');
+
+        // Now, handle the signature (base64 image)
+        if (!empty($signatureData) && !empty($signatureData2)) {
+          // Decode base64 image and add it to PDF
+          $signatureImage = str_replace('data:image/png;base64,', '', $signatureData);
+          $signatureImage = base64_decode($signatureImage);
+
+          $signatureImage2 = str_replace('data:image/png;base64,', '', $signatureData2);
+          $signatureImage2 = base64_decode($signatureImage2);
+
+          // Create a temporary file for the signature image
+          $tempSignatureFile = 'asset/testpdf/signature.png';
+          file_put_contents($tempSignatureFile, $signatureImage);
+
+          $tempSignatureFile2 = 'asset/testpdf/signature2.png';
+          file_put_contents($tempSignatureFile2, $signatureImage2);
+
+          // Add the signature image to the PDF
+          $pdf->Image($tempSignatureFile, 130, 120, 50);  // Adjust position and size
+          $pdf->Image($tempSignatureFile2, 130, 170, 50);  // Adjust position and size
+
+          // Remove temporary image file after adding to PDF
+          // unlink($tempSignatureFile);
+          // unlink($tempSignatureFile2);
+        }
+
+        // Output the generated PDF (you can also save it to a file or send it as an email)
+        $savePath = __DIR__ . "/asset/testpdf/" . $contract['filename'];
+        $pdf->Output('F', $savePath); // 'F' means save it on the server, 'I'
 
         // Handle signatures (decode base64 data and save as images)
-        $signaturePath = __DIR__ . "/asset/user_contracts/{$lessee}_signature.png";
-        $signaturePath2 = __DIR__ . "/asset/user_contracts/{$lesseewitness}_witness_signature.png";
-        file_put_contents($signaturePath, base64_decode(explode(',', $signatureData)[1]));
-        file_put_contents($signaturePath2, base64_decode(explode(',', $signatureData2)[1]));
+        // $signaturePath = __DIR__ . "/asset/testpdf/{$lessee}_signature.png";
+        // $signaturePath2 = __DIR__ . "/asset/testpdf/{$lesseewitness}_witness_signature.png";
+        // file_put_contents($signaturePath, base64_decode(explode(',', $signatureData)[1]));
+        // file_put_contents($signaturePath2, base64_decode(explode(',', $signatureData2)[1]));
 
         // Replace placeholders with signature images
-        $templateProcessor->setImageValue('tenantsignature', ['path' => $signaturePath, 'width' => 100, 'height' => 50]);
-        $templateProcessor->setImageValue('lesseewitness_signature', ['path' => $signaturePath2, 'width' => 100, 'height' => 50]);
+        // $templateProcessor->setImageValue('tenantsignature', ['path' => $signaturePath, 'width' => 100, 'height' => 50]);
+        // $templateProcessor->setImageValue('lesseewitness_signature', ['path' => $signaturePath2, 'width' => 100, 'height' => 50]);
 
         // Save the updated Word document using the original file name
         $originalFileName = basename($fileUrl); // Extract the file name from the original URL
-        $updatedFileUrl = __DIR__ . "/asset/user_contracts/" . $originalFileName;
-        $templateProcessor->saveAs($updatedFileUrl);
+        $updatedFileUrl = __DIR__ . "/asset/testpdf/" . $originalFileName;
+        // $templateProcessor->saveAs($updatedFileUrl);
 
         // Optional: Update the database with the completed contract URL
         $updatesql = "UPDATE contracts SET fileurl = ?, tenantapproval = 'true' WHERE id = ?";
@@ -3026,11 +3155,13 @@ $sql = "SELECT
         $updatestmt->execute();
 
         // Delete the signature files
-        if (file_exists($signaturePath)) {
-          unlink($signaturePath);
+        if (file_exists($tempSignatureFile)) {
+          // unlink($signaturePath);
+          unlink($tempSignatureFile);
         }
-        if (file_exists($signaturePath2)) {
-          unlink($signaturePath2);
+        if (file_exists($tempSignatureFile2)) {
+          // unlink($signaturePath2);
+          unlink($tempSignatureFile2);
         }
 
         // Return success
@@ -3202,47 +3333,107 @@ $sql = "SELECT
     if ($retrieveResult->num_rows > 0) {
       $tenant = $retrieveResult->fetch_assoc();
 
-      // Load the Word template
-      $templatePath = __DIR__ . "/asset/eviction_template.docx";
-      if (!file_exists($templatePath)) {
-        return false; // Return false if the template file doesn't exist
-      }
+      $pdf = new FPDI();
 
-      // Create a copy of the template for this eviction notice
-      $newFileName = __DIR__ . "/asset/eviction_tenant/eviction_" . $evictiontenantid . "_" . uniqid() . ".docx";
-      copy($templatePath, $newFileName);
+      // Load the PDF template
+      $templateFile = __DIR__ . "/asset/eviction_template.pdf";
+      $pageCount = $pdf->setSourceFile($templateFile);
 
-      // Load the new Word document
-      $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($newFileName);
+      // Import the first page of the template
+      $template = $pdf->importPage(1);
 
-      $tenantname = $tenant['fname'] . " " . $tenant['mname'] . " " . $tenant['lname'];
+      // Add a page to the new PDF
+      $pdf->AddPage();
 
-      // Replace placeholders in the Word document
-      $templateProcessor->setValue('eviction_date', $evictiondate); 
-      $templateProcessor->setValue('eviction_paydays', $evictionpaydays); 
-      $templateProcessor->setValue('admin_address', $adminaddress);
+      // Use the imported template
+      $pdf->useTemplate($template);
+
+      // Set the font for adding text
+      $pdf->SetFont('Arial', '', 12);
+
+      $pdf->SetXY(80, 60); 
+      $pdf->Cell(150, 7, $evictiondate, 0, 'L');
+
+      $pdf->SetXY(80, 68); 
+      $pdf->Cell(50, 7, $tenantname = $tenant['fname'] . " " . $tenant['mname'] . " " . $tenant['lname'], 0, 'L');
+
+      $pdf->SetXY(80, 77); 
+      $pdf->Cell(50, 7, $tenant['address'], 0, 'L');
+
+      $pdf->SetXY(108, 101); 
+      $pdf->Cell(50, 7, $missedpaymenttotal, 0, 'L');
+
+      $pdf->SetXY(104, 115); 
+      $pdf->Cell(50, 7, $tenant['price'], 0, 'L');
+
+      $pdf->SetXY(87, 122.5); 
+      $pdf->Cell(50, 7, $misseddates, 0, 'L');
+
+      $pdf->SetXY(99, 131); 
+      $pdf->Cell(50, 7, $missedpaymenttotal, 0, 'L');
+
+      $pdf->SetXY(32, 152); 
+      $pdf->Cell(50, 7, $evictionpaydays, 0, 'L',"C");
+
+      $pdf->SetXY(74, 184); 
+      $pdf->Cell(50, 7, $tenant['firstname'] . " " . $tenant['middlename'] . " " . $tenant['lastname'], 0, 'L');
       
-      // System input for non-form placeholders in word doc
-      $templateProcessor->setValue('tenantname', $tenantname); 
-      $templateProcessor->setValue('tenantaddress', $tenant['address']); 
-      $templateProcessor->setValue('missedpaymenttotal', $missedpaymenttotal); 
-      $templateProcessor->setValue('misseddates', $misseddates); 
-      $templateProcessor->setValue('admin_name', $tenant['firstname'] . " " . $tenant['middlename'] . " " . $tenant['lastname']); 
-      $templateProcessor->setValue('phonenumber', $tenant['phonenumber']); 
-      $templateProcessor->setValue('price', $tenant['price']); 
+      $pdf->SetXY(44, 192); 
+      $pdf->Cell(50, 7, $adminaddress, 0, 'L');
+
+      $pdf->SetXY(48, 200); 
+      $pdf->Cell(50, 7, $tenant['phonenumber'], 0, 'L');
+
+      $pdf->SetXY(83, 232); 
+      $pdf->Cell(50, 7, $tenant['firstname'] . " " . $tenant['middlename'] . " " . $tenant['lastname'], 0, 'L',"C");
+
+      $signatureImageforPdf = __DIR__ . "/asset/eviction_tenant/admin_signature_" . $evictiontenantid . "_" . uniqid() . ".png";
+      file_put_contents($signatureImageforPdf, base64_decode(explode(',', $signatureData)[1]));
+      $pdf->Image($signatureImageforPdf, 83, 222, 50);  // Adjust position and size
+      unlink($signatureImageforPdf);
+
+      // Load the Word template
+      // $templatePath = __DIR__ . "/asset/eviction_template.pdf";
+      // if (!file_exists($templatePath)) {
+      //   return false; // Return false if the template file doesn't exist
+      // }
+
+      // // Create a copy of the template for this eviction notice
+      $newFileName = __DIR__ . "/asset/eviction_tenant/eviction_" . $evictiontenantid . "_" . time() . "_" . uniqid() . ".pdf";
+      $pdf->Output('F', $newFileName); // 'F' means save it on the server, 'I'
+      // copy($templatePath, $newFileName);
+
+      // // Load the new Word document
+      // $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($newFileName);
+
+      // $tenantname = $tenant['fname'] . " " . $tenant['mname'] . " " . $tenant['lname'];
+
+      // // Replace placeholders in the Word document
+      // $templateProcessor->setValue('eviction_date', $evictiondate); 
+      // $templateProcessor->setValue('eviction_paydays', $evictionpaydays); 
+      // $templateProcessor->setValue('admin_address', $adminaddress);
+      
+      // // System input for non-form placeholders in word doc
+      // $templateProcessor->setValue('tenantname', $tenantname); 
+      // $templateProcessor->setValue('tenantaddress', $tenant['address']); 
+      // $templateProcessor->setValue('missedpaymenttotal', $missedpaymenttotal); 
+      // $templateProcessor->setValue('misseddates', $misseddates); 
+      // $templateProcessor->setValue('admin_name', $tenant['firstname'] . " " . $tenant['middlename'] . " " . $tenant['lastname']); 
+      // $templateProcessor->setValue('phonenumber', $tenant['phonenumber']); 
+      // $templateProcessor->setValue('price', $tenant['price']); 
 
       // Save the signature image and insert it into the document
-      $signatureImagePath = __DIR__ . "/asset/eviction_tenant/admin_signature_" . $evictiontenantid . "_" . uniqid() . ".png";
-      file_put_contents($signatureImagePath, base64_decode(explode(',', $signatureData)[1]));
-      $templateProcessor->setImageValue('admin_signature', [
-          'path' => $signatureImagePath,
-          'width' => 150,
-          'height' => 75,
-          'ratio' => true,
-      ]);
+      // $signatureImagePath = __DIR__ . "/asset/eviction_tenant/admin_signature_" . $evictiontenantid . "_" . uniqid() . ".png";
+      // file_put_contents($signatureImagePath, base64_decode(explode(',', $signatureData)[1]));
+      // $templateProcessor->setImageValue('admin_signature', [
+      //     'path' => $signatureImagePath,
+      //     'width' => 150,
+      //     'height' => 75,
+      //     'ratio' => true,
+      // ]);
 
       // Save the updated Word document
-      $templateProcessor->saveAs($newFileName);
+      // $templateProcessor->saveAs($newFileName);
 
       // Create email content
       $to = $tenantemail['email'];
