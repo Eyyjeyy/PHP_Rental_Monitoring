@@ -17,7 +17,17 @@
     if (isset($_POST['add_contract'])) {
         $userId = trim(htmlspecialchars($_POST['adminuserid']));
         $tenantId = trim(htmlspecialchars($_POST['tenantid']));
-        $lessorwitness = trim(htmlspecialchars($_POST['lessorwitness']));
+
+        // $lessorwitness = trim(htmlspecialchars($_POST['lessorwitness']));
+        $lessorwitnessfname = trim(htmlspecialchars($_POST['lessorwitnessfname']));
+        $lessorwitnessmname = trim(htmlspecialchars($_POST['lessorwitnessmname']));
+        $lessorwitnesslname = trim(htmlspecialchars($_POST['lessorwitnesslname']));
+
+        $id_ctc_input = trim(htmlspecialchars($_POST['id/ctc']));
+        $idtype = trim(htmlspecialchars($_POST['idtype']));
+        $date_issued = trim(htmlspecialchars($_POST['dateissued']));
+        $expiration_of_id = trim(htmlspecialchars($_POST['expirationofid']));
+
         // $tenantaddressinput = trim(htmlspecialchars($_POST['tenantaddress-input']));
         $apartmentaddressinput = trim(htmlspecialchars($_POST['apartmentaddress-input']));
         $datestart = trim(htmlspecialchars($_POST['datestart']));
@@ -26,6 +36,12 @@
         $signatureData2 = $_POST['signature2'];
         $deposit = trim(htmlspecialchars($_POST['deposit']));
         $rentprice = trim(htmlspecialchars($_POST['rentprice']));
+
+        if (!preg_match('/^[A-Za-z]{3,}$/', $lessorwitnessfname) || !preg_match('/^[A-Za-z]{3,}$/', $lessorwitnessmname) || !preg_match('/^[A-Za-z]{3,}$/', $lessorwitnesslname)) {
+            $_SESSION['error_message'] = "Letters only and at least 3 letters long";
+            header("Location: admin_contract_template.php?error");
+            exit();
+        }
 
         // Validate that deposit is a number (no letters or special characters)
         if (!preg_match("/^\d+$/", $deposit)) {
@@ -102,8 +118,8 @@
             exit();
         }
 
-        $added = $admin->addContract($adminusername, $lessorwitness, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId,  
-        $apartmentaddressinput, $rentprice);
+        $added = $admin->addContract($adminusername, $lessorwitnessfname, $lessorwitnessmname, $lessorwitnesslname, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId,  
+        $apartmentaddressinput, $rentprice, $id_ctc_input, $idtype, $date_issued, $expiration_of_id);
         if($added) {
             // Contract added successfully, you can display a success message here if needed
             // echo "Contract added successfully.";
@@ -313,6 +329,34 @@
     $pageTitle = "RentTrackPro"; // Change this according to the current page
     $page = "admincontracts";
 ?>
+    <!-- Styles -->
+    <style>
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background: white;
+            padding: 0px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .popup-buttons {
+            margin-top: 20px;
+        }
+        .popup-buttons button {
+            margin: 0 10px;
+        }
+    </style>
 
     <div class="container-fluid">
         <div class="row">
@@ -719,9 +763,22 @@
                                         </div>
                                         <!-- <button id="save">Save Signature</button> -->
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="lessorwitness" class="form-label">Lessor Witness</label>
                                         <input type="text" class="form-control" id="lessorwitness" name="lessorwitness" required>
+                                    </div> -->
+
+                                    <div class="mb-3">
+                                        <label for="lessorwitnessfname" class="form-label">Lessor Witness Firstname</label>
+                                        <input type="text" class="form-control" id="lessorwitnessfname" name="lessorwitnessfname" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="lessorwitnessmname" class="form-label">Lessor Witness Middlename</label>
+                                        <input type="text" class="form-control" id="lessorwitnessmname" name="lessorwitnessmname" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="lessorwitnesslname" class="form-label">Lessor Witness Lastname</label>
+                                        <input type="text" class="form-control" id="lessorwitnesslname" name="lessorwitnesslname" required>
                                     </div>
                                     
                                     <div class="mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
@@ -730,6 +787,7 @@
                                             <canvas id="signature-pad-2" class="signature-pad"></canvas>
                                         </div>
                                     </div>
+
                                     <div class="mb-3">
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
@@ -742,8 +800,38 @@
                                     <!-- <div class="mb-3">
                                         <button id="clear">Clear</button>
                                     </div> -->
-                                    <button type="submit" name="add_contract" class="btn btn-primary table-buttons-update addcontract">Add Contract</button>
+                                    
+                                    <div class="mb-3">
+                                        <label for="id-ctc" class="form-label">ID/CTC No. (Number)</label>
+                                        <input type="text" class="form-control" id="id-ctc" name="id/ctc" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="idtype" class="form-label">ID Type</label>
+                                        <input type="text" class="form-control" id="idtype" name="idtype" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dateissued" class="form-label">Date Issued of ID</label>
+                                        <input type="date" class="form-control" id="dateissued" name="dateissued" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="expirationofid" class="form-label">Expiration of ID</label>
+                                        <input type="date" class="form-control" id="expirationofid" name="expirationofid" required>
+                                    </div>
+
+                                    <button type="submit" id="add_contract" name="add_contract" class="btn btn-primary table-buttons-update addcontract d-none">Add Contract</button>
+                                    <button type="button" id="confirmAddContract" class="btn btn-primary table-buttons-update addcontract">Add Contract</button>
                                 </form>
+                                <!-- Confirmation Popup Modal -->
+                                <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+                                    <div class="popup-content">
+                                        <h5 class="text-white" style="background-color: #527853; padding: 16px;">Confirm Action</h5>
+                                        <p style="padding: 20px;">Are you sure you want to add this contract?</p>
+                                        <div class="popup-buttons" style="margin-top: 0; margin-bottom: 16px;">
+                                            <button id="confirmYes" class="btn btn-success">Yes</button>
+                                            <button id="confirmNo" class="btn btn-danger">No</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -841,11 +929,16 @@
 
                 <!-- Modal HTML -->
                 <div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg" style="width: 1200px; max-width: 100%;">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="contractModalLabel">Contract PDF</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="contractModalLabel">Contract PDF</h5>
+                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"></path>
+                                    </svg>
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <!-- Embed the iframe with the PDF -->
@@ -1162,6 +1255,57 @@
                             event.preventDefault();
                             alert("Please provide both signatures.");
                         }
+                    });
+                </script>
+
+                <!-- <script>
+                    document.getElementById('confirmAddContract').addEventListener('click', function () {
+                        // Show the custom confirmation popup
+                        document.getElementById('confirmationPopup').style.display = 'flex';
+                    });
+
+                    document.getElementById('confirmYes').addEventListener('click', function () {
+                        // User confirms action, submit the form programmatically
+                        document.getElementById('newContractForm').submit();
+                    });
+
+                    document.getElementById('confirmNo').addEventListener('click', function () {
+                        // User cancels action, hide the popup
+                        document.getElementById('confirmationPopup').style.display = 'none';
+                    });
+                </script> -->
+
+
+                <!-- <script>
+                    // Select the form
+                    const form = document.getElementById("newContractForm");
+
+                    // Add a submit event listener to the form
+                    form.addEventListener("submit", function (event) {
+                        // Show a confirmation dialog
+                        const confirmation = confirm("Are you sure you want to add this contract?");
+                        
+                        // If the user clicks 'Cancel', prevent form submission
+                        if (!confirmation) {
+                            event.preventDefault();
+                        }
+                    });
+                </script> -->
+
+                <script>
+                    document.getElementById('confirmAddContract').addEventListener('click', function () {
+                        // Show the custom confirmation popup
+                        document.getElementById('confirmationPopup').style.display = 'flex';
+                    });
+
+                    document.getElementById('confirmYes').addEventListener('click', function () {
+                        // User confirms action, submit the form programmatically
+                        document.getElementById('add_contract').click();
+                    });
+
+                    document.getElementById('confirmNo').addEventListener('click', function () {
+                        // User cancels action, hide the popup
+                        document.getElementById('confirmationPopup').style.display = 'none';
                     });
                 </script>
 

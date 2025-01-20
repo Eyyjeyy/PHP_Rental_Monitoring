@@ -233,27 +233,47 @@ The project is built using PHP, MySQL for database management, and incorporates 
 12/16/24
 - phpmyadmin, added file_path column for eviction_popup table <br>
 
-1/07/24
+1/07/25
 - created testpdf.php to test pdf generate using fpdf <br>
 - admin_contract_template.php, in adding a new digital contract, added a default "Select a Lessee" value to prevent issue with Apartment Address field
 not being autofilled when there is only a single tenant in the database <br>
 
-1/08/24
+1/08/25
 - installed fpdf and fpdi using composer
 
-1/10/24
+1/10/25
 - Revising admin.php's addContract function to utilize fpdf and create pdf file instead of ms word <br>
 - Revised search_contract.php to preview the pdf
 - TO DO: <br>
   - Revise User Side Complete Contract function - DONE <br>
   - Revise Admin Side's Archiving for the revised contract process <br>
 
-1/11/24
+1/11/25
 - ONGOING Revision of admin.php's sendeviction to utilizing pdf instead of word docx <br>
 
-1/12/24
+1/12/25
 - Finished revision of admin.php's sendeviction to use pdf <br>
 - Revised admindelinquency.php, added Eviction preview column <br>
   - Added Left Join for eviction_popup to retrieve pdf file_path <br>
   - Added Eviction PDF Popup Modal Preview <br>
   - Revised index.php's javascript code to include eviction file preview for the popup <br>
+
+- Revised regular/includes/footer.php <br>
+- Revised contract_user.php <br>
+- Revised user/payments.php <br>
+
+1/13
+- Revised admin_contract_template.php's PDF Modal for digital to be larger <br>
+
+1/15
+- Created sendFourMonthsEviction.php file
+- Added notification_sent_months column to tenants table <br>
+
+1/18/25
+- Added Confirmation Popup to contracts <br>
+- Added automation for eviction <br>
+- Added proper name format checker <br>
+- PDF input changes <br>
+
+Unfinished:
+- Added adminreports.php for reports page <br>

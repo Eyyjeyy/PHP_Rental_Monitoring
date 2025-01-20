@@ -271,7 +271,7 @@ if ($result->num_rows > 0) {
         echo "</div>";
         // echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] === 'true' ? ' visible' : ' invisible') . " justify-content-center px-2'>";
         // echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' ? ' visible' : ' invisible') . " justify-content-center px-2'>";
-        echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' ? ' visible' : ' d-none') . " justify-content-center px-2'>";
+        echo "<div class='col-xxl-auto d-flex" . ($row['payment_type'] === 'deposit' && $row['approval'] !== '' && $row['approval'] !== 'Unapproved' ? ' visible' : ' d-none') . " justify-content-center px-2'>";
         echo "<button class='btn btn-primary float-end table-buttons-update' id='update_deposit' data-id='" . $row['id'] . "' style='width: 120px;'><i class='fa fa-plus'></i>Update</button>";
         echo "</div>";
         

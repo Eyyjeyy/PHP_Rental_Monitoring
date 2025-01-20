@@ -15,8 +15,17 @@
     }
     
     if(isset($_POST['finish_contract'])) {
-        $lesseewitness = trim(htmlspecialchars($_POST['lesseewitness']));
+        // $lesseewitness = trim(htmlspecialchars($_POST['lesseewitness']));
+
+        $lesseewitnessfname = trim(htmlspecialchars($_POST['lesseewitnessfname']));
+        $lesseewitnessmname = trim(htmlspecialchars($_POST['lesseewitnessmname']));
+        $lesseewitnesslname = trim(htmlspecialchars($_POST['lesseewitnesslname']));
         $previousaddressinput = trim(htmlspecialchars($_POST['previousaddress-input']));
+
+        $id_ctc_input = trim(htmlspecialchars($_POST['id/ctc']));
+        $idtype = trim(htmlspecialchars($_POST['idtype']));
+        $date_issued = trim(htmlspecialchars($_POST['dateissued']));
+        $expiration_of_id = trim(htmlspecialchars($_POST['expirationofid']));
 
         $signatureData = $_POST['signature'];
         $signatureData2 = $_POST['signature2'];
@@ -28,8 +37,14 @@
         $loadstmt->bind_param("i", $admin->session_id);
         $loadstmt->execute();
         $loadresult = $loadstmt->get_result();
-
-        $completed = $admin->completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2);
+        
+        if (!preg_match('/^[A-Za-z]{3,}$/', $lesseewitnessfname) || !preg_match('/^[A-Za-z]{3,}$/', $lesseewitnessmname) || !preg_match('/^[A-Za-z]{3,}$/', $lesseewitnesslname)) {
+            $_SESSION['error_message'] = "Letters only and at least 3 letters long";
+            header("Location: contract_user.php?error");
+            exit();
+        }
+        // $completed = $admin->completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2);
+        $completed = $admin->completeContract($lesseewitnessfname, $lesseewitnessmname, $lesseewitnesslname, $id_ctc_input, $idtype, $date_issued, $expiration_of_id, $previousaddressinput, $signatureData, $signatureData2);
         if ($completed) {
             header("Location: contract_user.php?contract_completed=1");
             exit();
@@ -98,6 +113,32 @@
 <style>
     .wrapper {min-height:200px;border: 1px solid #000;}
     .signature-pad {position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
+
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .popup-content {
+        background: white;
+        padding: 0px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .popup-buttons {
+        margin-top: 20px;
+    }
+    .popup-buttons button {
+        margin: 0 10px;
+    }
 </style>
 
 <div class="container-fluid" style="margin-top: 200px; margin-bottom: 130px;">
@@ -180,7 +221,10 @@
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
+                                            if ($result_physical->num_rows == 0) {
+                                                echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
+                                            }
+                                            // echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
                                         }
                                     ?>
                                 </tbody>
@@ -207,7 +251,7 @@
                                             }
                                         } else {
                                             if (!$result_physical->num_rows > 0 && !$result->num_rows > 0) {
-                                                echo "<tr><td colspan='6' class='text-center'>No Physical contracts</td></tr>";
+                                                // echo "<tr><td colspan='6' class='text-center'>No Physical contracts</td></tr>";
                                             }
                                             // echo "<tr><td colspan='6' class='text-center'>No contracts</td></tr>";
                                         }
@@ -269,9 +313,21 @@
                         <!-- <button id="clear1" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button> -->
                         <!-- <button id="save">Save Signature</button> -->
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="lesseewitness" class="form-label">Lessee Witness</label>
                         <input type="text" class="form-control" id="lesseewitness" name="lesseewitness" required>
+                    </div> -->
+                    <div class="mb-3">
+                        <label for="lesseewitnessfname" class="form-label">Lessee Witness Firstname</label>
+                        <input type="text" class="form-control" id="lesseewitnessfname" name="lesseewitnessfname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lesseewitnessmname" class="form-label">Lessee Witness Middlename</label>
+                        <input type="text" class="form-control" id="lesseewitnessmname" name="lesseewitnessmname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lesseewitnesslname" class="form-label">Lessee Witness Lastname</label>
+                        <input type="text" class="form-control" id="lesseewitnesslname" name="lesseewitnesslname" required>
                     </div>
                     <div class="mb-3 position-relative" style="min-height: 150px; flex: 1;">
                         <label for="signature-pad-2" class="form-label">Lessee Witness's Signature</label>
@@ -292,25 +348,58 @@
                         <button id="clear" style="background-color: #527853;color: #F9E8D9;padding: 10px;border: none;border-radius: 4px;cursor: pointer;">Clear</button>
                         <button id="save">Save Signature</button>
                     </div> -->
+                    <div class="mb-3">
+                        <label for="id-ctc" class="form-label">ID/CTC No. (Number)</label>
+                        <input type="text" class="form-control" id="id-ctc" name="id/ctc" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="idtype" class="form-label">ID Type</label>
+                        <input type="text" class="form-control" id="idtype" name="idtype" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateissued" class="form-label">Date Issued of ID</label>
+                        <input type="date" class="form-control" id="dateissued" name="dateissued" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expirationofid" class="form-label">Expiration of ID</label>
+                        <input type="date" class="form-control" id="expirationofid" name="expirationofid" required>
+                    </div>
                     <div class="row justify-content-center">
                         <div class="col-auto">
-                        <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button>
+                        <button type="submit" id="finish_contract" name="finish_contract" class="btn btn complete table-buttons-update d-none">Complete Contract</button>
+                        <button type="button" id="confirmCompleteContract" class="btn btn-primary table-buttons-update addcontract">Complete Contract</button>
                         </div>
                     </div>
                     <!-- <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button> -->
                 </form>
+                <!-- Confirmation Popup Modal -->
+                <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+                    <div class="popup-content">
+                        <h5 class="text-white" style="background-color: #527853; padding: 16px;">Confirm Action</h5>
+                        <p style="padding: 20px;">Are you sure you want to add this contract?</p>
+                        <div class="popup-buttons" style="margin-top: 0; margin-bottom: 16px;">
+                            <button id="confirmYes" class="btn btn-success">Yes</button>
+                            <button id="confirmNo" class="btn btn-danger">No</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Image Preview Modal -->
+<!-- Contract Preview Modal -->
 <div class="modal fade" id="contractPreviewModal" tabindex="-1" aria-labelledby="contractPreviewLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="width: 1200px; max-width: 100%;">
         <div class="modal-content" style="height: 1500px; max-height: 90vh; overflow-y: hidden;">
             <div class="modal-header">
-                <h5 class="modal-title" id="contractPreviewLabel">Image Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="contractPreviewLabel">Contract Preview</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                <button type="button" class="btn-svg" data-bs-dismiss="modal" aria-label="Close"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"></path>
+                    </svg>
+                </button>
             </div>
             <div class="modal-body text-center" style="max-height: 100%;">
                 <img id="modalImage" src="" alt="Preview" class="w-100 img-fluid" style="height: 100%; object-fit: cover;">
@@ -331,6 +420,25 @@
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+<script>
+    document.body.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'id-ctc') {
+            const idCtcInput = event.target;
+
+            // Check if the listener is already added
+            if (!idCtcInput.dataset.listenerAdded) {
+                idCtcInput.addEventListener('input', function () {
+                    // Replace any non-numeric characters with an empty string
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+
+                // Mark the listener as added
+                idCtcInput.dataset.listenerAdded = true;
+            }
+        }
+    });
+</script>
 <script>
     // Initialize both signature pads
     const canvas1 = document.getElementById("signature-pad");
@@ -415,6 +523,24 @@
         }
     });
 </script>
+
+<script>
+    document.getElementById('confirmCompleteContract').addEventListener('click', function () {
+        // Show the custom confirmation popup
+        document.getElementById('confirmationPopup').style.display = 'flex';
+    });
+
+    document.getElementById('confirmYes').addEventListener('click', function () {
+        // User confirms action, submit the form programmatically
+        document.getElementById('finish_contract').click();
+    });
+
+    document.getElementById('confirmNo').addEventListener('click', function () {
+        // User cancels action, hide the popup
+        document.getElementById('confirmationPopup').style.display = 'none';
+    });
+</script>
+
 <!-- Include jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>

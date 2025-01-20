@@ -601,7 +601,7 @@
                             <th scope="col">Payment Type</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Image</th>
-                            <th scope="col">Approved</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Payment Date</th>
                         </tr>
                     </thead>
@@ -633,7 +633,7 @@
                               echo "<td>" . $row["amount"] . "</td>"; 
                               echo "<td><img src='" . $row["filepath"] . "' alt='Receipt' class='img-fluid' style='max-width: 150px; height: 150px;'></td>";
                               // echo "<td>" . ($row["approval"] == "true" ? "APPROVED" : "UNAPPROVED") . "</td>";
-                              echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" ? "UNAPPROVED" : ($row["approval"] === "2 Months Consumed" || $row["approval"] === "1 Month Consumed" ? $row["approval"] : "PENDING"))) . "</td>";
+                              echo "<td>" . ($row["approval"] === "true" ? "APPROVED" : ($row["approval"] === "false" || $row["approval"] === "Unapproved" ? "UNAPPROVED" : ($row["approval"] === "2 Months Consumed" || $row["approval"] === "1 Month Consumed" ? $row["approval"] : "PENDING"))) . "</td>";
                               echo "<td>" . $row["transaction_date"] . "</td>"; // actual column name from your database
                               echo "</tr>";
                           }

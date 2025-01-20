@@ -1,5 +1,8 @@
 <?php
-    include '../admin.php';
+
+use FontLib\Table\Type\head;
+
+include '../admin.php';
     $admin = new Admin();
     // $admin->handleRedirect(); // Call handleRedirect to check login status and redirect
 
@@ -68,6 +71,23 @@
         }
     }
 
+    if (isset($_POST['eviction_settings_save'])) {
+        $update_landlordaddress_setting = (htmlspecialchars($_POST['landlordaddress_setting']));
+        $update_paydays_setting = trim(htmlspecialchars($_POST['paydays_setting']));
+
+        $saveEvictionSettings = $admin->saveEvictionSettings($admin->session_id, $update_landlordaddress_setting, $update_paydays_setting);
+        if($saveEvictionSettings) {
+            header("Location: admindelinquency.php?eviction_setting=1");
+            exit();
+        } else {
+            if(empty($_SESSION['error_message'])) {
+                $_SESSION['error_message'] = "Saving Setting Failed due to an error";
+            }
+            header("Location: admindelinquency.php?error=eviction_setting");
+            exit();
+        }
+    }
+
     // Check if there's an error message stored in the session
     if (isset($_SESSION['error_message'])) {
         // Display the error message as an alert
@@ -103,6 +123,22 @@
     // GROUP BY tenants.id
     // ";
 
+    // $sql = "
+    // SELECT 
+    //     tenants.id AS tenant_id,
+    //     tenants.*, 
+    //     houses.*,
+    //     eviction_popup.users_id AS eviction_users_id,
+    //     eviction_popup.file_path,
+    //     GROUP_CONCAT(payments.amount ORDER BY payments.date_payment DESC) AS payment_amounts,
+    //     GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
+    //     MAX(payments.date_payment) AS last_payment_date  -- Get the last payment date
+    // FROM tenants 
+    // LEFT JOIN payments ON tenants.id = payments.tenants_id AND payments.approval = 'true' -- Include only approved payments
+    // LEFT JOIN houses ON tenants.house_id = houses.id
+    // LEFT JOIN eviction_popup ON tenants.users_id = eviction_popup.users_id
+    // GROUP BY tenants.id
+    // ";
     $sql = "
     SELECT 
         tenants.id AS tenant_id,
@@ -116,10 +152,33 @@
     FROM tenants 
     LEFT JOIN payments ON tenants.id = payments.tenants_id AND payments.approval = 'true' -- Include only approved payments
     LEFT JOIN houses ON tenants.house_id = houses.id
-    LEFT JOIN eviction_popup ON tenants.users_id = eviction_popup.users_id
+    LEFT JOIN (
+        SELECT 
+            users_id, 
+            file_path 
+        FROM eviction_popup 
+        WHERE id = (
+            SELECT MAX(id) 
+            FROM eviction_popup AS ep_sub 
+            WHERE ep_sub.users_id = eviction_popup.users_id
+        )
+    ) AS eviction_popup ON tenants.users_id = eviction_popup.users_id
     GROUP BY tenants.id
     ";
     $result = $admin->conn->query($sql);
+
+
+
+    $sqlevictionsettings = "
+    SELECT * FROM eviction_setting
+    ";
+    $sqlevictionsettings_results = $admin->conn->query($sqlevictionsettings);
+
+    $sqlevictionsettings_2 = "
+    SELECT * FROM eviction_setting
+    ";
+    $sqlevictionsettings_results_2 = $admin->conn->query($sqlevictionsettings_2);
+
 
     // Set the title for this page
     $pageTitle = "RentTrackPro"; // Change this according to the current page
@@ -134,8 +193,13 @@
                 <div class="row">
                     <div class="col-lg-12" id="tableheader">
                         <div class="row">
-                            <div class="col-6">
-                                <input type="text" id="searchBar" placeholder="Search..." class="form-control mb-3 " style="max-width: 180px;" />
+                            <div class="col-12 col-lg-6">
+                                <input type="text" id="searchBar" placeholder="Search..." class="form-control d-inline mb-3 " style="max-width: 180px;" />
+                                <a class="d-inline-block position-relative" href="" style="height: 38px; top: -1; padding-left: 10px; color: #F28543;" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-gear-fill ms-0" viewBox="0 0 16 16">
+                                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                                    </svg>
+                                </a>
                             </div>
                             <!-- <div class="col-6">
                                 <button class="btn btn-primary float-end table-buttons-update" id="new_contract"><i class="fa fa-plus"></i> New Contract</button>
@@ -391,6 +455,66 @@
                             <!-- Embed the iframe with the PDF -->
                             <iframe src="../<?php echo $pdfUrl; ?>" id="evictionIframe" width="100%" height="700px"></iframe>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eviction settings Modal -->
+            <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header" style="background-color: #527853;">
+                        <h5 class="modal-title text-white" id="settingsModalLabel">Eviction Setting</h5>
+                        <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="evictionSettingForm" method="POST" action="admindelinquency.php">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="landlordaddress_setting" class="form-label">Default LandLord Address</label>
+                                        <?php
+                                            if ($sqlevictionsettings_results->num_rows > 0) {
+                                                // Output data of each row
+                                                while($sqlevictionsettings_row = $sqlevictionsettings_results->fetch_assoc()) {
+                                                    $selected_landlord_address = $sqlevictionsettings_row['landlord_address'];
+                                                    echo "<input type='text' class='form-control' id='landlordaddress_setting' name='landlordaddress_setting' value='" . (empty($selected_landlord_address) ? "Bagatua Compound" : $selected_landlord_address ) ."' required>";
+                                                }
+                                            } else {
+                                                echo "<input type='text' class='form-control' id='landlordaddress_setting' name='landlordaddress_setting' value='Bagatua Compound' required>";
+                                            }
+                                        ?>
+                                        <!-- <input type="text" class="form-control" id="landlordaddress_setting" name="landlordaddress_setting" required> -->
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="paydays_setting" class="form-label">Days to Pay</label>
+                                        <?php
+                                            if ($sqlevictionsettings_results_2->num_rows > 0) {
+                                                // Output data of each row
+                                                while($sqlevictionsettings_row_2 = $sqlevictionsettings_results_2->fetch_assoc()) {
+                                                    $selected_days_to_pay = $sqlevictionsettings_row_2['days_to_pay'];
+                                                    echo "<input type='number' class='form-control' id='paydays_setting' name='paydays_setting' value='" . ($selected_days_to_pay) . "' required>";
+                                                }
+                                            } else {
+                                                echo "<input type='number' class='form-control' id='paydays_setting' name='paydays_setting' value='15' required>";
+                                            }
+                                        ?>
+                                        <!-- <input type="number" class="form-control" id="paydays_setting" name="paydays_setting" required> -->
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" name="eviction_settings_save" class="btn btn-primary table-buttons-update">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     </div>
                 </div>
             </div>

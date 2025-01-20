@@ -2014,7 +2014,19 @@ $sql = "SELECT
 
   public function countPendingApprovals() {
     // SQL query to count records where the approval is not true or false
-    $sql = "SELECT COUNT(*) as count FROM payments WHERE approval NOT IN ('true', 'false')";
+    // $sql = "SELECT COUNT(*) as count FROM payments WHERE approval NOT IN ('true', 'false')";
+    $sql = "
+      SELECT SUM(total_count) AS total_count
+      FROM (
+          SELECT COUNT(*) AS total_count
+          FROM payments
+          WHERE approval NOT IN ('true', 'false')
+          UNION ALL
+          SELECT COUNT(*) AS total_count
+          FROM deposit
+          WHERE approval NOT IN ('true', 'false', 'Unapproved')
+      ) AS combined_counts;
+    ";
     
     // Execute the query
     $result = $this->conn->query($sql);
@@ -2022,7 +2034,7 @@ $sql = "SELECT
     // Fetch the result
     if ($result->num_rows > 0) {
       $row = $result->fetch_assoc();
-      return $row['count'];
+      return $row['total_count'];
     } else {
       return 0; // No records found
     }
@@ -2479,10 +2491,13 @@ $sql = "SELECT
   //   }
   // }
 
-  public function addContract($username, $lessorwitness, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId, $apartmentaddressinput, $rentprice) {
+  public function addContract($username, $lessorwitnessfname, $lessorwitnessmname, $lessorwitnesslname, $tenantusername, $signatureData, $signatureData2, $datestart, $expirationdate, $formattedDay, $deposit, $tenantId, $apartmentaddressinput, $rentprice, $id_ctc_input, $idtype, $date_issued, $expiration_of_id) {
     // Sanitize and validate input
     $username = trim(htmlspecialchars($username));
-    $lessorwitness = trim(htmlspecialchars($lessorwitness));
+
+    // $lessorwitness = trim(htmlspecialchars($lessorwitness));
+    $lessorwitness = $lessorwitnessfname . " " . $lessorwitnessmname . " " . $lessorwitnesslname;
+
     $tenantusername = trim(htmlspecialchars($tenantusername));
     $apartmentaddressinput = trim(htmlspecialchars($apartmentaddressinput));
     $datestart = trim(htmlspecialchars($datestart));
@@ -2595,20 +2610,32 @@ $sql = "SELECT
       $pdf->AddPage(); // Add another new page
       $pdf->useTemplate($template2); // Use the imported second page
 
-      $pdf->SetXY(42, 116); 
+      $pdf->SetXY(42, 111); 
       $pdf->Cell(50, 7, $current_time_philippines, 0, 'L');
 
-      $pdf->SetXY(32, 131); 
+      $pdf->SetXY(32, 126); 
       $pdf->Cell(50, 7, $username, 0, 'L');
 
       $pdf->SetXY(32, 188); 
       $pdf->Cell(50, 7, $lessorwitness, 0, 'L');
 
-      $pdf->SetXY(142, 131); 
+      $pdf->SetXY(142, 126); 
       $pdf->Cell(50, 7, $tenantusername, 0, 'L');
 
-      $pdf->Image($signatureImagePath, 30, 120, 50);  // Adjust position and size
-      $pdf->Image($signatureImagePath2, 30, 170, 50);  // Adjust position and size
+      $pdf->SetXY(48, 147); 
+      $pdf->Cell(50, 7, $id_ctc_input, 0, 'L');
+
+      $pdf->SetXY(44, 152); 
+      $pdf->Cell(50, 7, $idtype, 0, 'L');
+
+      $pdf->SetXY(52, 157); 
+      $pdf->Cell(50, 7, $date_issued, 0, 'L');
+
+      $pdf->SetXY(50, 162); 
+      $pdf->Cell(50, 7, $expiration_of_id, 0, 'L');
+
+      $pdf->Image($signatureImagePath, 32, 116, 50);  // Adjust position and size
+      $pdf->Image($signatureImagePath2, 34, 180, 50);  // Adjust position and size
 
       // Output the generated PDF (you can also save it to a file or send it as an email)
       $pdf->Output('F', $savePath); // 'F' means save it on the server, 'I'
@@ -3047,7 +3074,9 @@ $sql = "SELECT
 
 
   
-  public function completeContract($lesseewitness, $previousaddressinput, $signatureData, $signatureData2) {
+  public function completeContract($lesseewitnessfname, $lesseewitnessmname, $lesseewitnesslname, $id_ctc_input, $idtype, $date_issued, $expiration_of_id, $previousaddressinput, $signatureData, $signatureData2) {
+    $lesseewitness = $lesseewitnessfname . " " . $lesseewitnessmname . " " . $lesseewitnesslname;
+
     // Database query to retrieve the contract
     $loadsql = "SELECT contracts.* FROM contracts 
                 INNER JOIN tenants ON contracts.tenants_id = tenants.id
@@ -3090,7 +3119,7 @@ $sql = "SELECT
         // Set the font for adding text
         $pdf->SetFont('Arial', '', 12);
 
-        $pdf->SetXY(35, 48); 
+        $pdf->SetXY(25, 50); 
         $pdf->MultiCell(150, 7, $previousaddressinput, 0, 'L');
 
         // Handle the second page
@@ -3101,8 +3130,20 @@ $sql = "SELECT
         // $pdf->SetXY(142, 131); 
         // $pdf->Cell(50, 7, 'Tenant username', 0, 'L');
 
-        $pdf->SetXY(137, 188); 
+        $pdf->SetXY(140, 188); 
         $pdf->Cell(50, 7, $lesseewitness, 0, 'L');
+
+        $pdf->SetXY(148, 147); 
+        $pdf->Cell(50, 7, $id_ctc_input, 0, 'L');
+
+        $pdf->SetXY(144, 152); 
+        $pdf->Cell(50, 7, $idtype, 0, 'L');
+
+        $pdf->SetXY(154, 157); 
+        $pdf->Cell(50, 7, $date_issued, 0, 'L');
+
+        $pdf->SetXY(152, 162); 
+        $pdf->Cell(50, 7, $expiration_of_id, 0, 'L');
 
         // Now, handle the signature (base64 image)
         if (!empty($signatureData) && !empty($signatureData2)) {
@@ -3121,8 +3162,8 @@ $sql = "SELECT
           file_put_contents($tempSignatureFile2, $signatureImage2);
 
           // Add the signature image to the PDF
-          $pdf->Image($tempSignatureFile, 130, 120, 50);  // Adjust position and size
-          $pdf->Image($tempSignatureFile2, 130, 170, 50);  // Adjust position and size
+          $pdf->Image($tempSignatureFile, 132, 116, 50);  // Adjust position and size
+          $pdf->Image($tempSignatureFile2, 132, 180, 50);  // Adjust position and size
 
           // Remove temporary image file after adding to PDF
           // unlink($tempSignatureFile);
@@ -3517,6 +3558,18 @@ $sql = "SELECT
       $retrievestmt->close();
       $_SESSION['error_message'] = "No Tenant Found";
       return false; // Return false if no record found
+    }
+  }
+
+  public function saveEvictionSettings($id, $update_landlordaddress_setting, $update_paydays_setting) {
+    $update_eviction_setting = "UPDATE eviction_setting SET landlord_address = ?, days_to_pay = ?";
+    $stmt_eviction_setting = $this->conn->prepare($update_eviction_setting);
+    $stmt_eviction_setting->bind_param("si", $update_landlordaddress_setting, $update_paydays_setting);
+
+    if ($stmt_eviction_setting->execute()) {
+      return true;
+    } else {
+      return false;
     }
   }
 
