@@ -69,14 +69,15 @@
 
 
 
-    // $sql_3 = "SELECT house_name
-    //     FROM houses h
-    //     WHERE NOT EXISTS (
-    //         SELECT 1 
-    //         FROM tenants t 
-    //         WHERE t.house_id = h.id
-    //     )
-    // ";
+    $sql_3 = "SELECT house_name
+        FROM houses h
+        WHERE NOT EXISTS (
+            SELECT 1 
+            FROM tenants t 
+            WHERE t.house_id = h.id
+        )
+    ";
+
     $sql_3 = "
     SELECT h.id, h.house_name, 
            IFNULL(MAX(t.date_end), CURDATE()) AS vacant_until
@@ -85,6 +86,30 @@
     GROUP BY h.id
     HAVING MAX(t.date_end) < CURDATE() OR MAX(t.date_end) IS NULL
     ";
+    // $sql_3 = "
+    // SELECT 
+    //     h.id AS house_id,
+    //     h.house_name,
+    //     MAX(t.date_end) AS last_occupied_date,
+    //     GROUP_CONCAT(
+    //         CONCAT(
+    //             IFNULL(t.date_end, 'Start of Time'),
+    //             ' to ',
+    //             COALESCE(
+    //                 (
+    //                     SELECT MIN(t2.date_start) 
+    //                     FROM tenants t2 
+    //                     WHERE t2.house_id = h.id AND t2.date_start > t.date_end
+    //                 ),
+    //                 'Vacant Indefinitely'
+    //             )
+    //         ) SEPARATOR ', '
+    //     ) AS vacant_periods
+    // FROM houses h
+    // LEFT JOIN tenants t ON h.id = t.house_id
+    // GROUP BY h.id
+    // HAVING MAX(t.date_end) IS NULL OR MAX(t.date_end) < CURDATE()
+    // ";
     $result_3 = $admin->conn->query($sql_3);
 
 
@@ -150,20 +175,17 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary table-buttons-update" id="general_income_filter"><i class="fa fa-plus"></i> Filter</button>
-                                        <button class="btn btn-primary table-buttons-update ms-2" id="new_user"><i class="fa fa-plus"></i> Monthly</button>
-                                        <button class="btn btn-primary table-buttons-update mx-2" id="new_user"><i class="fa fa-plus"></i> Quarterly</button>
-                                        <button class="btn btn-primary table-buttons-update me-2" id="new_user"><i class="fa fa-plus"></i> Yearly</button>
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Download</button>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary table-buttons-update me-1" id="general_income_filter"><i class="fa fa-plus"></i> Filter</button>
+                                        <button class="btn btn-primary table-buttons-update ms-1" id="general_income_download"><i class="fa fa-plus"></i> Download</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
-                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
-                            <thead>
+                        <table class="table table-striped table-bordered" id="general_income_table" style="margin-bottom: 0;">
+                            <thead id="general_income_table_header">
                                 <tr>
                                     <!-- <th scope="col" class="sortable-column" data-column="id">ID</th> -->
                                     <th scope="col" class="sortable-column" data-column="username">Number of Payments</th>
@@ -230,20 +252,17 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Filter</button>
-                                        <button class="btn btn-primary table-buttons-update ms-2" id="new_user"><i class="fa fa-plus"></i> Monthly</button>
-                                        <button class="btn btn-primary table-buttons-update mx-2" id="new_user"><i class="fa fa-plus"></i> Quarterly</button>
-                                        <button class="btn btn-primary table-buttons-update me-2" id="new_user"><i class="fa fa-plus"></i> Yearly</button>
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Download</button>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary table-buttons-update me-1" id="income_per_tenant_filter"><i class="fa fa-plus"></i> Filter</button>
+                                        <button class="btn btn-primary table-buttons-update ms-1" id="income_per_tenant_download"><i class="fa fa-plus"></i> Download</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
-                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
-                            <thead>
+                        <table class="table table-striped table-bordered" id="income_per_tenant_table" style="margin-bottom: 0;">
+                            <thead id="income_per_tenant_table_header">
                                 <tr>
                                     <!-- <th scope="col" class="sortable-column" data-column="id">ID</th> -->
                                     <th scope="col" class="sortable-column" data-column="username">Tenant</th>
@@ -255,7 +274,7 @@
                                     <th scope="col" class="sortable-column" data-column="email">Dates</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="income_per_tenant_tbody">
                                 <?php
                                 if ($result_2->num_rows > 0) {
                                     // Output data of each row
@@ -293,20 +312,17 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Filter</button>
-                                        <button class="btn btn-primary table-buttons-update ms-2" id="new_user"><i class="fa fa-plus"></i> Monthly</button>
-                                        <button class="btn btn-primary table-buttons-update mx-2" id="new_user"><i class="fa fa-plus"></i> Quarterly</button>
-                                        <button class="btn btn-primary table-buttons-update me-2" id="new_user"><i class="fa fa-plus"></i> Yearly</button>
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Download</button>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary table-buttons-update me-1" id="vacancies_filter"><i class="fa fa-plus"></i> Filter</button>
+                                        <button class="btn btn-primary table-buttons-update ms-1" id="vacancies_download"><i class="fa fa-plus"></i> Download</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
-                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
-                            <thead>
+                        <table class="table table-striped table-bordered" id="vacancies_table" style="margin-bottom: 0;">
+                            <thead id="vacancies_table_header">
                                 <tr>
                                     <!-- <th scope="col" class="sortable-column" data-column="id">ID</th> -->
                                     <th scope="col" class="sortable-column" data-column="username">Vacant Apartment</th>
@@ -314,7 +330,7 @@
                                     <th scope="col" class="sortable-column" data-column="middlename">Dates</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="vacancies_tbody">
                                 <?php
                                 if ($result_3->num_rows > 0) {
                                     // Output data of each row
@@ -323,6 +339,11 @@
                                         echo "<th scope='row' style='width: 100px;'>" . $row_3['house_name'] . "</th>";
                                         echo "<td style='width: 150px;'>" . htmlspecialchars($row_3['vacant_until']) . "</td>";
                                         echo "<td style='width: 100px;'>" . htmlspecialchars($row_3['vacant_until']) . "</td>";
+
+                                        // echo "<th scope='row' style='width: 100px;'>" . $row_3['house_name'] . "</th>";
+                                        // echo "<td style='width: 150px;'>" . htmlspecialchars($row_3['vacant_periods']) . "</td>";
+                                        // echo "<td style='width: 100px;'>" . htmlspecialchars($row_3['last_occupied_date']) . "</td>";
+
                                         echo "</td>";
                                         echo "</tr>";
                                     }
@@ -346,20 +367,17 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Filter</button>
-                                        <button class="btn btn-primary table-buttons-update ms-2" id="new_user"><i class="fa fa-plus"></i> Monthly</button>
-                                        <button class="btn btn-primary table-buttons-update mx-2" id="new_user"><i class="fa fa-plus"></i> Quarterly</button>
-                                        <button class="btn btn-primary table-buttons-update me-2" id="new_user"><i class="fa fa-plus"></i> Yearly</button>
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Download</button>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary table-buttons-update me-1" id="tenant_and_apartment_filter"><i class="fa fa-plus"></i> Filter</button>
+                                        <button class="btn btn-primary table-buttons-update ms-1" id="tenant_and_apartment_download"><i class="fa fa-plus"></i> Download</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
-                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
-                            <thead>
+                        <table class="table table-striped table-bordered" id="tenant_and_apartment_table" style="margin-bottom: 0;">
+                            <thead id="tenant_and_apartment_header">
                                 <tr>
                                     <!-- <th scope="col" class="sortable-column" data-column="id">ID</th> -->
                                     <th scope="col" class="sortable-column" data-column="username">Tenant Count</th>
@@ -367,7 +385,7 @@
                                     <th scope="col" class="sortable-column" data-column="middlename">Dates</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tenant_and_apartment_tbody">
                                 <?php
                                 if ($result_4->num_rows > 0) {
                                     // Output data of each row
@@ -400,20 +418,17 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Filter</button>
-                                        <button class="btn btn-primary table-buttons-update ms-2" id="new_user"><i class="fa fa-plus"></i> Monthly</button>
-                                        <button class="btn btn-primary table-buttons-update mx-2" id="new_user"><i class="fa fa-plus"></i> Quarterly</button>
-                                        <button class="btn btn-primary table-buttons-update me-2" id="new_user"><i class="fa fa-plus"></i> Yearly</button>
-                                        <button class="btn btn-primary table-buttons-update" id="new_user"><i class="fa fa-plus"></i> Download</button>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary table-buttons-update me-1" id="summary_of_delinquencies_filter"><i class="fa fa-plus"></i> Filter</button>
+                                        <button class="btn btn-primary table-buttons-update ms-1" id="new_user"><i class="fa fa-plus"></i> Download</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive" id="tablelimiter" style="max-height: 100%;">
-                        <table class="table table-striped table-bordered" style="margin-bottom: 0;">
-                            <thead>
+                        <table class="table table-striped table-bordered" id="summary_of_delinquencies_table" style="margin-bottom: 0;">
+                            <thead id="summary_of_delinquencies_header">
                                 <tr>
                                     <!-- <th scope="col" class="sortable-column" data-column="id">ID</th> -->
                                     <th scope="col" class="sortable-column" data-column="username">Tenant</th>
@@ -424,7 +439,7 @@
                                     <th scope="col" class="sortable-column" data-column="middlename">Dates</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="summary_of_delinquencies_tbody">
                                 <?php
                                 if ($result_5->num_rows > 0) {
                                     // Output data of each row
@@ -494,10 +509,10 @@
                                         echo "<tr>";
                                         echo "<th scope='row' style='width: 100px;'>" . $row_5['fname'] . "</th>";
                                         echo "<td style='width: 150px;'>" . htmlspecialchars($row_5['house_name']) . "</td>";
-                                        echo "<td style='width: 100px;'>" . htmlspecialchars($row_5['date_payment']) . "</td>";
                                         echo "<td style='width: 100px;'>" . $missing_months . "</td>";
+                                        echo "<td style='width: 100px;'>" . htmlspecialchars($missing_payment_total) . "</td>"; // Display the total missing payment
                                         echo "<td style='width: 100px;'>" . htmlspecialchars($row_5['total_amount_payment']) . "</td>";
-                                        echo "<td style='width: 100px;'>" . htmlspecialchars($row_5['date_start']) . "</td>";
+                                        echo "<td style='width: 100px;'>" . htmlspecialchars(implode(', ', $missed_months_dates)) . "</td>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
@@ -551,6 +566,162 @@
                     </div>
                 </div>
 
+                <!-- Income per Tenant/Apartment Filter Modal -->
+                <div class="modal fade" id="incomeperTenantModal" tabindex="-1" aria-labelledby="incomeperTenantModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="incomeperTenantModal">Filter - Income Per Tenant</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="incomeperTenantFilterForm" method="POST" action="adminreports.php">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="startdate" class="form-label">Start Date</label>
+                                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="enddate" class="form-label">End Date</label>
+                                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" id="income_per_tenant_filter_submit" name="income_per_tenant_filter_submit" class="btn btn-primary table-buttons-update">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vacancies Filter Modal -->
+                <div class="modal fade" id="vacanciesModal" tabindex="-1" aria-labelledby="vacanciesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="vacanciesModal">Filter - Vacancies</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="vacanciesFilterForm" method="POST" action="adminreports.php">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="startdate" class="form-label">Start Date</label>
+                                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="enddate" class="form-label">End Date</label>
+                                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" id="vacancies_filter_submit" name="vacancies_filter_submit" class="btn btn-primary table-buttons-update">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tenant and Apartment Filter Modal -->
+                <div class="modal fade" id="tenantandapartmentModal" tabindex="-1" aria-labelledby="tenantandapartmentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="tenantandapartmentModal">Filter - Tenant and Apartment</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="tenantandapartmentFilterForm" method="POST" action="adminreports.php">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="startdate" class="form-label">Start Date</label>
+                                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="enddate" class="form-label">End Date</label>
+                                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" id="tenant_and_apartment_filter_submit" name="tenant_and_apartment_filter_submit" class="btn btn-primary table-buttons-update">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary of Delinquencies Filter Modal -->
+                <div class="modal fade" id="summaryofdelinquenciesModal" tabindex="-1" aria-labelledby="summaryofdelinquenciesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #527853;">
+                                <h5 class="modal-title text-white" id="summaryofdelinquenciesModal">Filter - Summary of Delinquencies</h5>
+                                <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="summaryofdelinquenciesFilterForm" method="POST" action="adminreports.php">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="startdate" class="form-label">Start Date</label>
+                                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="updateUserId" name="user_id">
+                                            <div class="mb-3">
+                                                <label for="enddate" class="form-label">End Date</label>
+                                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" id="summary_of_delinquencies_submit" name="summary_of_delinquencies_submit" class="btn btn-primary table-buttons-update">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
                     document.getElementById('general_income_filter').addEventListener('click', function () {
                         var generalIncomeModal = new bootstrap.Modal(document.getElementById('generalIncomeModal'), {
@@ -560,8 +731,135 @@
                     });
                 </script>
 
+                <script>
+                    document.getElementById('income_per_tenant_filter').addEventListener('click', function () {
+                        var incomeperTenantModal = new bootstrap.Modal(document.getElementById('incomeperTenantModal'), {
+                            keyboard: false
+                        });
+                        incomeperTenantModal.show();
+                    });
+                </script>
+
+                <script>
+                    document.getElementById('vacancies_filter').addEventListener('click', function () {
+                        var vacanciesModal = new bootstrap.Modal(document.getElementById('vacanciesModal'), {
+                            keyboard: false
+                        });
+                        vacanciesModal.show();
+                    });
+                </script>
+
+                <script>
+                    document.getElementById('tenant_and_apartment_filter').addEventListener('click', function () {
+                        var tenantandapartmentModal = new bootstrap.Modal(document.getElementById('tenantandapartmentModal'), {
+                            keyboard: false
+                        });
+                        tenantandapartmentModal.show();
+                    });
+                </script>
+
+                <script>
+                    document.getElementById('summary_of_delinquencies_filter').addEventListener('click', function () {
+                        var summaryofdelinquenciesModal = new bootstrap.Modal(document.getElementById('summaryofdelinquenciesModal'), {
+                            keyboard: false
+                        });
+                        summaryofdelinquenciesModal.show();
+                    });
+                </script>
+
+
                 <!-- Include jQuery library -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+                
+                <script>
+                    document.getElementById('general_income_download').addEventListener('click', function () {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF();
+                        const contentHTML = document.getElementById('general_income_table'); // Get the table element
+                        const tableheader = document.getElementById('general_income_table_header');
+
+                        tableheader.style.backgroundColor = '#527853';
+
+                        pdf.html(contentHTML, {
+                            callback: function (pdf) {
+                                pdf.save('contracts.pdf');
+                                tableheader.style.backgroundColor = 'unset';
+                            },
+                            x: 15, 
+                            y: 10, 
+                            width: 180, 
+                            windowWidth: 800 
+                        });
+                    });
+                </script>
+                <script>
+                    document.getElementById('income_per_tenant_download').addEventListener('click', function () {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF();
+                        const contentHTML = document.getElementById('income_per_tenant_table'); // Get the table element
+                        const tableheader = document.getElementById('income_per_tenant_table_header');
+
+                        tableheader.style.backgroundColor = '#527853';
+
+                        pdf.html(contentHTML, {
+                            callback: function (pdf) {
+                                pdf.save('contracts.pdf');
+                                tableheader.style.backgroundColor = 'unset';
+                            },
+                            x: 15, 
+                            y: 10, 
+                            width: 180, 
+                            windowWidth: 800 
+                        });
+                    });
+                </script>
+
+                <script>
+                    document.getElementById('vacancies_download').addEventListener('click', function () {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF();
+                        const contentHTML = document.getElementById('vacancies_table'); // Get the table element
+                        const tableheader = document.getElementById('vacancies_table_header');
+
+                        tableheader.style.backgroundColor = '#527853';
+
+                        pdf.html(contentHTML, {
+                            callback: function (pdf) {
+                                pdf.save('contracts.pdf');
+                                tableheader.style.backgroundColor = 'unset';
+                            },
+                            x: 15, 
+                            y: 10, 
+                            width: 180, 
+                            windowWidth: 800 
+                        });
+                    });
+                </script>
+
+                <script>
+                    document.getElementById('tenant_and_apartment_download').addEventListener('click', function () {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF();
+                        const contentHTML = document.getElementById('tenant_and_apartment_table'); // Get the table element
+                        const tableheader = document.getElementById('tenant_and_apartment_header');
+
+                        tableheader.style.backgroundColor = '#527853';
+
+                        pdf.html(contentHTML, {
+                            callback: function (pdf) {
+                                pdf.save('contracts.pdf');
+                                tableheader.style.backgroundColor = 'unset';
+                            },
+                            x: 15, 
+                            y: 10, 
+                            width: 180, 
+                            windowWidth: 800 
+                        });
+                    });
+                </script>
+
                 <script>
                     $(document).ready(function() {
                         // Attach event listener to the button
@@ -573,7 +871,7 @@
 
                             // Send AJAX request
                             $.ajax({
-                                url: 'search/filter_reports.php', // Replace with your PHP script path
+                                url: 'search/filter_reports_table_1.php', // Replace with your PHP script path
                                 type: 'POST',
                                 data: formData, // Send serialized form data
                                 success: function (response) {
@@ -583,6 +881,188 @@
                                 },
                                 error: function (xhr, status, error) {
                                     // Handle error
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+
+                        $('#general_income_mothly').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_1.php', // Replace with your PHP script path
+                                type: 'POST',
+                                data: {
+                                    month: 1
+                                }, // Send serialized form data
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#general_income_tbody').html(response); // Update table body with response data
+                                    $('#generalIncomeModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    // Handle error
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+
+                        $('#general_income_quarterly').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_1.php', // Replace with your PHP script path
+                                type: 'POST',
+                                data: {
+                                    quarterly: 1
+                                }, // Send serialized form data
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#general_income_tbody').html(response); // Update table body with response data
+                                    $('#generalIncomeModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    // Handle error
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+
+                        $('#general_income_yearly').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_1.php', // Replace with your PHP script path
+                                type: 'POST',
+                                data: {
+                                    yearly: 1
+                                }, // Send serialized form data
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#general_income_tbody').html(response); // Update table body with response data
+                                    $('#generalIncomeModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    // Handle error
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#income_per_tenant_filter_submit').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Collect form data
+                            var formData = $('#incomeperTenantFilterForm').serialize(); // Serialize form data
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_2.php', // Replace with your PHP script path
+                                type: 'POST',
+                                data: formData, // Send serialized form data
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#income_per_tenant_tbody').html(response); // Update table body with response data
+                                    $('#incomeperTenantModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    // Handle error
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#vacancies_filter_submit').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Collect form data
+                            var formData = $('#vacanciesFilterForm').serialize(); 
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_3.php', 
+                                type: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#vacancies_tbody').html(response); // Update table body with response data
+                                    $('#vacanciesModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#tenant_and_apartment_filter_submit').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Collect form data
+                            var formData = $('#tenantandapartmentFilterForm').serialize(); 
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_4.php', 
+                                type: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#tenant_and_apartment_tbody').html(response); // Update table body with response data
+                                    $('#tenantandapartmentModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    
+                                    console.error('Error:', error);
+                                    alert('An error occurred while processing your request.');
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#summary_of_delinquencies_submit').on('click', function (e) {
+                            e.preventDefault(); // Prevent default button behavior
+
+                            // Collect form data
+                            var formData = $('#summaryofdelinquenciesFilterForm').serialize(); 
+
+                            // Send AJAX request
+                            $.ajax({
+                                url: 'search/filter_reports_table_5.php', 
+                                type: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    // Handle success response
+                                    $('#summary_of_delinquencies_tbody').html(response); // Update table body with response data
+                                    $('#summaryofdelinquenciesModal').modal('hide'); // Hide the modal
+                                },
+                                error: function (xhr, status, error) {
+                                    
                                     console.error('Error:', error);
                                     alert('An error occurred while processing your request.');
                                 }

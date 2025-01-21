@@ -1292,7 +1292,7 @@ Class Admin {
           // Set up the cURL request to send SMS
           $ch = curl_init();
           $parameters = array(
-            'apikey' => '', // Replace with your actual API key
+            'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
             'number' => $user_number,  // Recipient's number
             'message' => $smsMessage,
             'sendername' => 'Thesis' // Replace with your registered sender name
@@ -1328,15 +1328,15 @@ Class Admin {
   }
 
 
-  public function addExpenses($expensesname, $infodata, $expensesamount, $house) {
+  public function addExpenses($expensesname, $infodata, $expensesamount, $house, $expensesdate) {
     if (!empty($house)) {
-      $sql = "INSERT INTO expenses (name, info, amount, house_id) VALUES (?, ?, ?, ?)";
+      $sql = "INSERT INTO expenses (name, info, amount, house_id, date) VALUES (?, ?, ?, ?, ?)";
       $stmt = $this->conn->prepare($sql);
-      $stmt->bind_param("ssdi", $expensesname, $infodata, $expensesamount, $house);
+      $stmt->bind_param("ssdis", $expensesname, $infodata, $expensesamount, $house, $expensesdate);
     } else {
-      $sql = "INSERT INTO expenses (name, info, amount) VALUES (?, ?, ?)";
+      $sql = "INSERT INTO expenses (name, info, amount, date) VALUES (?, ?, ?, ?)";
       $stmt = $this->conn->prepare($sql);
-      $stmt->bind_param("ssd", $expensesname, $infodata, $expensesamount);
+      $stmt->bind_param("ssds", $expensesname, $infodata, $expensesamount, $expensesdate);
     }
 
     $stmt->execute();
@@ -1543,7 +1543,7 @@ Class Admin {
       // Set up the cURL request to send SMS
       $ch = curl_init();
       $parameters = array(
-        'apikey' => '', // Replace with your actual API key
+        'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
         'number' => $phoneNumber,  // Recipient's number
         'message' => $smsMessage,
         'sendername' => 'Thesis' // Replace with your registered sender name
@@ -1654,7 +1654,7 @@ Class Admin {
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
         $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
-        $mail->Password = ''; // SMTP password
+        $mail->Password = 'cdzc dueq yfzl rcve'; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
@@ -3500,7 +3500,7 @@ $sql = "SELECT
           // Set up the cURL request to send SMS
           $ch = curl_init();
           $parameters = array(
-            'apikey' => '', // Replace with your actual API key
+            'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
             'number' => $tenant_number,  // Recipient's number
             'message' => $smsMessage,
             'sendername' => 'Thesis' // Replace with your registered sender name

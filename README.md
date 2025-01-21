@@ -277,3 +277,18 @@ not being autofilled when there is only a single tenant in the database <br>
 
 Unfinished:
 - Added adminreports.php for reports page <br>
+
+1/21/25
+- Added filter_reports_table_1.php and filter_reports_table_2.php for first two tables in adminreports.php <br>
+- Enabled download for tables: <br>
+  - General Income <br>
+  - Income per Tenant/Apartment <br>
+
+1/22/25
+- Added sendYearlyTax.php to remind me the admin landlord to pay tax every year on december 1 <br>
+- Finished filters for <br>
+  - General Income <br>
+  - Income per Tenant/Apartment <br>
+  - Vacancies <br>
+  - Tenant and Apartment Count <br>
+  - Summary of Delinquencies <br>

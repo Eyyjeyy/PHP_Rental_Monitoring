@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2025 at 04:27 PM
+-- Generation Time: Jan 21, 2025 at 08:45 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -379,16 +379,17 @@ CREATE TABLE `tenants` (
   `date_start` date NOT NULL,
   `date_end` date DEFAULT NULL,
   `date_preferred` date DEFAULT NULL,
-  `notification_sent_months` int(11) NOT NULL
+  `notification_sent_months` int(11) NOT NULL,
+  `reminder_sent_months` int(22) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tenants`
 --
 
-INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`, `notification_sent_months`) VALUES
-(1, 'john angelo', 'payo', 'junio', '', '105', 'aj', 1, 'studio', '2025-01-15', NULL, '2024-08-04', 4),
-(2, 'romeo', 'juliet', 'gary', '', '10500', 'romeo', 1, 'studio', '2025-01-15', NULL, '2024-08-04', 4);
+INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`, `notification_sent_months`, `reminder_sent_months`) VALUES
+(1, 'john angelo', 'payo', 'junio', '', '105', 'aj', 1, 'studio', '2025-01-15', NULL, '2024-10-04', 4, 2),
+(2, 'romeo', 'juliet', 'gary', '', '10500', 'romeo', 1, 'studio', '2025-01-15', NULL, '2024-08-04', 4, 0);
 
 -- --------------------------------------------------------
 
@@ -416,7 +417,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`, `otp`) VALUES
 (84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', 'jerslippad3@gmail.com', 'admin', '2024-10-29 19:18:15', '09955835160', NULL),
-(105, 'aj', 'john angelo', 'payo', 'junio', '1234567', 'johnangelo.junio@gmail.com', 'user', '2025-01-15 04:58:21', '09398380417', NULL);
+(105, 'aj', 'john angelo', 'payo', 'junio', '1234567', 'jerslippad3@gmail.com', 'user', '2025-01-15 04:58:21', '09955835160', NULL);
 
 --
 -- Indexes for dumped tables

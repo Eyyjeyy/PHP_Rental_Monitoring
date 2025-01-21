@@ -13,7 +13,7 @@ $query = "
     SELECT 
         tenants.id AS tenant_id,
         tenants.*, 
-        users.email, users.firstname, users.middlename, users.lastname, 
+        users.email, users.phonenumber, users.firstname, users.middlename, users.lastname, 
         houses.*,
         GROUP_CONCAT(payments.amount ORDER BY payments.date_payment DESC) AS payment_amounts,
         GROUP_CONCAT(payments.date_payment ORDER BY payments.date_payment DESC) AS date_payment,
@@ -32,13 +32,79 @@ echo "<tbody>";
 if ($result->num_rows > 0) {
     // Output data of each row
     while($row = $result->fetch_assoc()) {
+        // $tenant_id = $row['id']; // Tenant ID
+        // $date_preferred = $row['date_preferred'];
+        // $last_payment_date = $row['last_payment_date'];
+        // $monthly_rent = $row['price'];  // Monthly rent from the houses table
+
+        // // Fetch notificationsendmonths from tenants table
+        // $notificationsendmonths = (int)$row['notification_sent_months'];
+
+        // // If no payment has been made, set the last payment date to the current date
+        // if (!$last_payment_date) {
+        //     $last_payment_date = date('Y-m-d');
+        // }
+
+        // // Convert dates to timestamps for easier date manipulation
+        // $date_preferred_timestamp = strtotime($date_preferred);
+        // $current_date_timestamp = strtotime(date('Y-m-d'));  // Today's date
+
+        // // Offset date_preferred by 1 month
+        // $start_date_timestamp = strtotime("+1 month", $date_preferred_timestamp);
+
+        // // Calculate the number of months between start_date and today
+        // $months_difference = (date('Y', $current_date_timestamp) - date('Y', $start_date_timestamp)) * 12 
+        //                     + date('m', $current_date_timestamp) - date('m', $start_date_timestamp);
+
+        // $missing_months = 0;
+        // $missed_months_dates = []; // Array to store missed months
+        // $missing_payment_total = 0; // Total amount of missing payments
+        // $total_paid = array_sum(explode(',', $row['payment_amounts'])); // Total payments made
+        // $remaining_payment_balance = $total_paid; // Track remaining payment balance
+
+        // Loop through all months from start_date to today
+        // for ($i = 0; $i <= $months_difference; $i++) {
+        //     $current_month = date('Y-m', strtotime("+$i months", $start_date_timestamp));
+        //     $payment_found = false;
+
+        //     // Check if the current month has any payment
+        //     foreach (explode(',', $row['date_payment']) as $key => $payment_date) {
+        //         if (substr($payment_date, 0, 7) == $current_month) { // Check year-month format
+        //             $payment_found = true;
+
+        //             // Add the corresponding amount paid to the monthly tracker
+        //             $amounts = explode(',', $row['payment_amounts']);
+        //             $monthly_paid = isset($amounts[$key]) ? (float)$amounts[$key] : 0;
+
+        //             echo "<br>" . $current_month . " " . $remaining_payment_balance . " * " . $monthly_paid . ", <br><br>";
+
+        //             // Deduct from remaining payment balance
+        //             $remaining_payment_balance -= $monthly_paid;
+        //             $remaining_payment_balance = max(0, $remaining_payment_balance); // Ensure it doesn't go below 0
+        //             break;
+        //         }
+        //     }
+
+        //     // If no payment is found for this month OR the payment balance can't cover this month
+        //     if (!$payment_found || $remaining_payment_balance < $monthly_rent) {
+        //         $missing_months++;
+        //         $missed_months_dates[] = $current_month; // Add to missed months list
+        //         echo $remaining_payment_balance . " - " . $monthly_rent . ", ";
+        //         // Deduct monthly rent from the remaining payment balance (if any)
+        //         $remaining_payment_balance -= $monthly_rent;
+        //         $remaining_payment_balance = max(0, $remaining_payment_balance); // Ensure it doesn't go below 0
+                
+        //         // Add the monthly rent to the total missing payment amount
+        //         $missing_payment_total += $monthly_rent; // Add the house price (monthly rent) to the total
+        //     }
+        // }
+
+
+
         $tenant_id = $row['id']; // Tenant ID
         $date_preferred = $row['date_preferred'];
         $last_payment_date = $row['last_payment_date'];
         $monthly_rent = $row['price'];  // Monthly rent from the houses table
-
-        // Fetch notificationsendmonths from tenants table
-        $notificationsendmonths = (int)$row['notification_sent_months'];
 
         // If no payment has been made, set the last payment date to the current date
         if (!$last_payment_date) {
@@ -59,46 +125,39 @@ if ($result->num_rows > 0) {
         $missing_months = 0;
         $missed_months_dates = []; // Array to store missed months
         $missing_payment_total = 0; // Total amount of missing payments
-        $total_paid = array_sum(explode(',', $row['payment_amounts'])); // Total payments made
-        $remaining_payment_balance = $total_paid; // Track remaining payment balance
 
-        // Loop through all months from start_date to today
+        // Split payment dates and amounts into arrays
+        $payment_dates = explode(',', $row['date_payment']);
+        $payment_amounts = array_map('floatval', explode(',', $row['payment_amounts'])); // Convert to float
+
         for ($i = 0; $i <= $months_difference; $i++) {
             $current_month = date('Y-m', strtotime("+$i months", $start_date_timestamp));
-            $payment_found = false;
+            $monthly_paid = 0; // Track payments for the current month
 
-            // Check if the current month has any payment
-            foreach (explode(',', $row['date_payment']) as $key => $payment_date) {
+            // Check payments for the current month
+            foreach ($payment_dates as $key => $payment_date) {
                 if (substr($payment_date, 0, 7) == $current_month) { // Check year-month format
-                    $payment_found = true;
-
-                    // Add the corresponding amount paid to the monthly tracker
-                    $amounts = explode(',', $row['payment_amounts']);
-                    $monthly_paid = isset($amounts[$key]) ? (float)$amounts[$key] : 0;
-
-                    // Deduct from remaining payment balance
-                    $remaining_payment_balance -= $monthly_paid;
-                    $remaining_payment_balance = max(0, $remaining_payment_balance); // Ensure it doesn't go below 0
-                    break;
+                    $monthly_paid += isset($payment_amounts[$key]) ? $payment_amounts[$key] : 0;
                 }
             }
+            echo $monthly_paid . ", ";
 
-            // If no payment is found for this month OR the payment balance can't cover this month
-            if (!$payment_found || $remaining_payment_balance < $monthly_rent) {
+            // If payments for the current month are less than the monthly rent, count as missed
+            if ($monthly_paid < $monthly_rent) {
                 $missing_months++;
                 $missed_months_dates[] = $current_month; // Add to missed months list
-                echo $remaining_payment_balance . " - " . $monthly_rent . ", ";
-                // Deduct monthly rent from the remaining payment balance (if any)
-                $remaining_payment_balance -= $monthly_rent;
-                $remaining_payment_balance = max(0, $remaining_payment_balance); // Ensure it doesn't go below 0
-                
-                // Add the monthly rent to the total missing payment amount
-                $missing_payment_total += $monthly_rent; // Add the house price (monthly rent) to the total
+
+                // Calculate the shortfall for this month
+                $shortfall = $monthly_rent - $monthly_paid;
+                $missing_payment_total += $shortfall; // Add shortfall to total missing payment
             }
         }
 
         // Ensure missing_payment_total does not go below 0
-        $missing_payment_total = max(0, $missing_payment_total);
+        // $missing_payment_total = max(0, $missing_payment_total);
+
+        $remindersendmonths = $row['reminder_sent_months'];
+        $tenant_probably_real_id = $row['tenant_id'];
 
         echo "<table>";
         echo "<tbody style='border: 1px solid black;'>";
@@ -112,6 +171,45 @@ if ($result->num_rows > 0) {
         echo "</tr>";
         echo "</tbody>";
         echo "</table>";
+
+        // Send Reminders automatically when tenant has 2 missing months
+        if ($missing_months == $remindersendmonths + 2) {
+            $message = '<p style="font-size: 18px; color: #004c00; font-family: Helvetica;">' . htmlspecialchars($row['fname']) . " " . htmlspecialchars($row['mname']) . " " . htmlspecialchars($row['lname']) . ', <strong></strong>,</p>';
+            $message .= '<p style="font-size: 16px; color: #414141;">';
+            $message .= 'Be reminded of your ' . $missing_months . ' missed payments.<br><br> For the months of ' . htmlspecialchars(implode(', ', $missed_months_dates));
+            $message .= '<br>Best regards,<br>Renttrack Pro<br></p>';
+            $admin->sendEmail($row['email'], "Reminder", $message);
+
+            $phoneNumber = $row['phonenumber'];
+            if ($phoneNumber) {
+                // Prepare the message
+                $smsMessage = "Be reminded of your " . $missing_months . " missed payments. For the months of " . htmlspecialchars(implode(', ', $missed_months_dates));
+
+                // Set up the cURL request to send SMS
+                $ch = curl_init();
+                $parameters = array(
+                    'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+                    'number' => $phoneNumber,  // Recipient's number
+                    'message' => $smsMessage,
+                    'sendername' => 'Thesis' // Replace with your registered sender name
+                );
+
+                // Set cURL options for the request
+                curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                // Execute the cURL request and get the response
+                $output = curl_exec($ch);
+
+                // Close the cURL session
+                curl_close($ch);
+            }
+            
+            $reminder_query = "UPDATE tenants set reminder_sent_months = 2 WHERE id=$tenant_probably_real_id";
+            $admin->conn->query($reminder_query);
+        }
         return;
 
         // Check if we should send the reminder based on missing months

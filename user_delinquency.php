@@ -63,7 +63,7 @@
                                         <th scope="col">House</th>
                                         <th scope="col">Months Missed</th>
                                         <th scope="col"># of Missed Payments</th>
-                                        <th scope="col">Amonut Paid</th>
+                                        <th scope="col">Amount Paid</th>
                                         <th scope="col">Total Missing Payments</th>
                                     </tr>
                                 </thead>

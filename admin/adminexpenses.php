@@ -20,6 +20,7 @@
         $infodata = htmlspecialchars($_POST['expensesinfo']);
         $expensesamount = htmlspecialchars($_POST['expensesamount']);
         $house = htmlspecialchars($_POST['house']);
+        $expensesdate = htmlspecialchars($_POST['expensesdate']);
 
         // Validate that the expenses amount is a valid number (integer or float)
         if (filter_var($expensesamount, FILTER_VALIDATE_FLOAT) === false || !is_numeric($expensesamount)) {
@@ -28,7 +29,7 @@
             exit();
         } else {
             // Call the addExpenses method to add the new expenses
-            $added = $admin->addExpenses($expensesname, $infodata, $expensesamount, $house);
+            $added = $admin->addExpenses($expensesname, $infodata, $expensesamount, $house, $expensesdate);
             if ($added) {
                 // Expenses added successfully
                 header("Location: adminexpenses.php?expenses_added=1");
@@ -243,6 +244,10 @@
                                         }
                                     ?>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date of Expense</label>
+                                <input type="date" class="form-control" id="date" name="expensesdate" required>
                             </div>
                             <div class="col-12">
                                 <button type="submit" name="add_expenses" class="btn btn-primary table-buttons-update">Add Expenses</button>
