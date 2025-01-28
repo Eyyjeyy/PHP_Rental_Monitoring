@@ -293,7 +293,7 @@ button {
 button:hover {
     background-color: #EE7214; /* Bright orange color */
 }
-button#clear:hover, button#clear1:hover, button#clear2:hover, button.addcontract:hover, button.uploadcontract:hover {
+button#clear:hover, button#clear1:hover, button#clear2:hover, button.addcontract:hover, button.uploadcontract:hover, button.eviction:hover {
     background-color: #3A583C !important; /* Change color on hover */
     border-color: #3A583C !important;
 }

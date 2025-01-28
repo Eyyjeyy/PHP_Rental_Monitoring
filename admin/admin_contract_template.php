@@ -827,8 +827,8 @@
                                         <h5 class="text-white" style="background-color: #527853; padding: 16px;">Confirm Action</h5>
                                         <p style="padding: 20px;">Are you sure you want to add this contract?</p>
                                         <div class="popup-buttons" style="margin-top: 0; margin-bottom: 16px;">
-                                            <button id="confirmYes" class="btn btn-success">Yes</button>
-                                            <button id="confirmNo" class="btn btn-danger">No</button>
+                                            <button id="confirmYes" class="btn table-buttons-update text-white">Yes</button>
+                                            <button id="confirmNo" class="btn table-buttons-delete text-white">No</button>
                                         </div>
                                     </div>
                                 </div>

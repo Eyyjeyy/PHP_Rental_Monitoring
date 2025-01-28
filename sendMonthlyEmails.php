@@ -40,7 +40,7 @@ foreach ($notifications as $notification) {
 
     // Set the parameters for the API request
     $parameters = array(
-        'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+        'apikey' => '', // Replace with your actual API key
         'number' => $notification['phonenumber'],  // Replace with the recipient's number
         'message' => $message,
         'sendername' => 'Thesis' // Replace with your registered sender name
@@ -66,7 +66,7 @@ curl_close($ch);
 
 // // Set the parameters for the API request
 // $parameters = array(
-//     'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+//     'apikey' => '', // Replace with your actual API key
 //     'number' => '09955835160',  // Replace with the recipient's number
 //     'message' => 'I just sent my first message with Semaphore',
 //     'sendername' => 'Thesis' // Replace with your registered sender name

@@ -154,8 +154,13 @@
     // $sql_option = "SELECT houses.*, categories.name AS house_name FROM houses INNER JOIN categories ON categories.id = houses.category_id";
     // $result_option = $admin->conn->query($sql_option);
 
-    $sql_option = "SELECT houses.*, categories.name AS category_name FROM houses 
-    INNER JOIN categories ON categories.id = houses.category_id";
+    // $sql_option = "SELECT houses.*, categories.name AS category_name FROM houses 
+    // INNER JOIN categories ON categories.id = houses.category_id";
+    $sql_option = "SELECT houses.*, categories.name AS category_name 
+    FROM houses
+    INNER JOIN categories ON categories.id = houses.category_id
+    LEFT JOIN tenants ON tenants.house_id = houses.id
+    WHERE tenants.house_id IS NULL";
     $result_option = $admin->conn->query($sql_option);
 
     // $user_option = "SELECT * FROM users WHERE role = 'user'";

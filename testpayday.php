@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
     // Set up the cURL request to send SMS
     $ch = curl_init();
     $parameters = array(
-    'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+    'apikey' => '', // Replace with your actual API key
     'number' => $phonenumber,  // Recipient's number
     'message' => $smsMessage,
     'sendername' => 'Thesis' // Replace with your registered sender name

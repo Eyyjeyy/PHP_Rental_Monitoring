@@ -367,7 +367,8 @@
                     <div class="row justify-content-center">
                         <div class="col-auto">
                         <button type="submit" id="finish_contract" name="finish_contract" class="btn btn complete table-buttons-update d-none">Complete Contract</button>
-                        <button type="button" id="confirmCompleteContract" class="btn btn-primary table-buttons-update addcontract">Complete Contract</button>
+                        <button type="button" id="confirmCompleteContract" class="btn btn-primary table-buttons-update addcontract" 
+                        style="background-color: #527853;border-color: #527853;color: white;padding: 7.5px 10px;border-radius: 4px;">Complete Contract</button>
                         </div>
                     </div>
                     <!-- <button type="submit" name="finish_contract" class="btn btn complete table-buttons-update">Complete Contract</button> -->
@@ -378,8 +379,8 @@
                         <h5 class="text-white" style="background-color: #527853; padding: 16px;">Confirm Action</h5>
                         <p style="padding: 20px;">Are you sure you want to add this contract?</p>
                         <div class="popup-buttons" style="margin-top: 0; margin-bottom: 16px;">
-                            <button id="confirmYes" class="btn btn-success">Yes</button>
-                            <button id="confirmNo" class="btn btn-danger">No</button>
+                            <button id="confirmYes" class="btn table-buttons-update" style="background-color: #527853; color: white;">Yes</button>
+                            <button id="confirmNo" class="btn table-buttons-delete" style="background-color: #EE7214; color: white;">No</button>
                         </div>
                     </div>
                 </div>

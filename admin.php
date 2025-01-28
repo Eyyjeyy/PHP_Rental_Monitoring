@@ -1292,7 +1292,7 @@ Class Admin {
           // Set up the cURL request to send SMS
           $ch = curl_init();
           $parameters = array(
-            'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+            'apikey' => '', // Replace with your actual API key
             'number' => $user_number,  // Recipient's number
             'message' => $smsMessage,
             'sendername' => 'Thesis' // Replace with your registered sender name
@@ -1543,7 +1543,7 @@ Class Admin {
       // Set up the cURL request to send SMS
       $ch = curl_init();
       $parameters = array(
-        'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+        'apikey' => '', // Replace with your actual API key
         'number' => $phoneNumber,  // Recipient's number
         'message' => $smsMessage,
         'sendername' => 'Thesis' // Replace with your registered sender name
@@ -1654,7 +1654,7 @@ Class Admin {
         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
         $mail->SMTPAuth = true; // Enable SMTP authentication
         $mail->Username = 'renttrackpro@gmail.com'; // SMTP username
-        $mail->Password = 'cdzc dueq yfzl rcve'; // SMTP password
+        $mail->Password = ''; // SMTP password
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption, `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port = 587; // TCP port to connect to
 
@@ -3500,7 +3500,7 @@ $sql = "SELECT
           // Set up the cURL request to send SMS
           $ch = curl_init();
           $parameters = array(
-            'apikey' => '2c26226aae5c0438695f2e851d4482e9', // Replace with your actual API key
+            'apikey' => '', // Replace with your actual API key
             'number' => $tenant_number,  // Recipient's number
             'message' => $smsMessage,
             'sendername' => 'Thesis' // Replace with your registered sender name

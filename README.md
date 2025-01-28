@@ -292,3 +292,29 @@ Unfinished:
   - Vacancies <br>
   - Tenant and Apartment Count <br>
   - Summary of Delinquencies <br>
+
+1/23/25
+- Added date_registered column for houses TABLE <br>
+- Revised sql_3 query of adminreports.php for vacancies table to correctly display vacant dates of each house including houses with no tenants <br>
+- Revised filter_reports_table_3.php for the filter date of new base query for table 3 Vacancies in adminreports.php <br>
+- Revised admindelinquency.php for Amount paid column to fixed with to prevent squeezing other columns when amount paid has many variables <br>
+
+1/24/25
+- Added Confirm Popup for send eviction in admindelinquency.php
+
+1/26/25
+- Revised filter_reports_table_1.php for filter start and end dates query to use collation to avoid issue in hosted <br>
+- Adminreports.php: <br>
+  - Reports table now have Monthly, Quarterly, Yearly Button Filters <br>
+    - filter_reports_table_2.php queries for the 3 button filters <br>
+
+- Fixes <br>
+  - filter_reports_table_2.php: Monthly, Quarterly, Yearly Revised to display by current date, Quarterly to display current month and 2 months before, Monthly for today's current month <br>
+
+1/27/25
+- filter_reports_table_5.php now has Quarterly and Yearly based on current date <br>
+- 4th Table Now shown and counts total tenants and total houses <br>
+- filter_reports_table_1.php quarterly revised to current month and previous two months <br>
+
+1/28/25
+- Tentative Final Meeting <br>

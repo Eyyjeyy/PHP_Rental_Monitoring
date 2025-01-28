@@ -188,6 +188,36 @@ include '../admin.php';
 <div class="container-fluid">
     <div class="row">
         <?php include 'includes/header.php'; ?>
+        <style>
+            .wrapper {min-height:200px;border: 1px solid #000;}
+            .signature-pad {position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
+
+            .popup-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            }
+            .popup-content {
+                background: white;
+                padding: 0px;
+                border-radius: 8px;
+                text-align: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            .popup-buttons {
+                margin-top: 20px;
+            }
+            .popup-buttons button {
+                margin: 0 10px;
+            }
+        </style>
         <div class="col main content" style="padding-top: 12px; padding-bottom: 12px;">
             <div class="card-body" style="margin-top: 0; height:100%; max-height: 100%; overflow-y: auto;">
                 <div class="row">
@@ -315,7 +345,7 @@ include '../admin.php';
                                             echo "<td class='text-center'>" . ($row['house_name']) . "</td>";
                                             echo "<td>" . htmlspecialchars(implode(', ', $missed_months_dates)) . "</td>";
                                             echo "<td>" . htmlspecialchars($missing_months) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['payment_amounts']) . "</td>";
+                                            echo "<td><p style='max-width: 150px; word-wrap: break-word;'>" . htmlspecialchars($row['payment_amounts']) . "</p></td>";
                                             echo "<td>" . htmlspecialchars($missing_payment_total) . "</td>"; // Display the total missing payment
                                             echo "<td>";
                                                 echo "<div class='row justify-content-center m-0'>";
@@ -326,7 +356,7 @@ include '../admin.php';
                                             echo "</td>";
                                             echo "<td class='justify-content-center text-center align-middle' style='height: 100%;'>";
                                                 echo "<div class='row justify-content-center m-0'>";
-                                                    echo "<div class='col-xxl-6 px-2'>";
+                                                    echo "<div class='col-12 px-2'>";
                                                         // Add a form with a delete button for each record
                                                         // echo "<form method='POST' action='adminpayments.php' class='float-xxl-end align-items-center'>";
                                                         echo "<form method='POST' action='admindelinquency.php' class='align-items-center'>";
@@ -338,7 +368,7 @@ include '../admin.php';
                                                             </button>";
                                                         echo "</form>";
                                                     echo "</div>";
-                                                    echo "<div class='col-xxl-6 px-2'>";
+                                                    echo "<div class='col-12 px-2'>";
                                                         echo "<button class='btn btn-primary table-buttons-update' data-bs-toggle='modal' data-bs-target='#sendEvictionModal' id='send_eviction' data-id='" . $row['tenant_id'] . "' data-missedpaymenttotal='" . $missing_payment_total . "' data-misseddates='" . htmlspecialchars(implode(', ', $missed_months_dates)) . "' style='width: 160px;'><i class='fa fa-plus'></i>Send Eviction</button>";
                                                     echo "</div>";
                                                 echo "</div>";
@@ -390,55 +420,68 @@ include '../admin.php';
             <div class="modal fade" id="sendEvictionModal" tabindex="-1" aria-labelledby="sendEvictionModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                    <div class="modal-header" style="background-color: #527853;">
-                        <h5 class="modal-title text-white" id="sendEvictionModalLabel">Send Eviction</h5>
-                        <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
-                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                </svg>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="sendEvictionForm" method="POST" action="admindelinquency.php">
+                        <div class="modal-header" style="background-color: #527853;">
+                            <h5 class="modal-title text-white" id="sendEvictionModalLabel">Send Eviction</h5>
+                            <button type="button" class="btn-svg p-0" data-bs-dismiss="modal" aria-label="Close" style="width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg w-100" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="sendEvictionForm" method="POST" action="admindelinquency.php">
 
-                            <input type="hidden" id="evictiontenantid" name="evictiontenantid">
-                            <input type="hidden" id="missedpaymenttotal" name="missedpaymenttotal">
-                            <input type="hidden" id="misseddates" name="misseddates">
-                            <input type="hidden" id="signature" name="signature">
-                            
-                            <div class="mb-3">
-                                <label for="evictiondate" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="evictiondate" name="evictiondate" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="evictionpaydays" class="form-label">Number of Days for Tenant to Pay</label>
-                                <input type="text" class="form-control" id="evictionpaydays" name="evictionpaydays" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="adminaddress" class="form-label">Admin Address</label>
-                                <input type="text" class="form-control" id="adminaddress" name="adminaddress" required>
-                            </div>
-                            <div class="mb-3 position-relative">
-                                <label for="signature-pad" class="form-label position-absolute">Admin Signature</label>
-                            </div>
-                            <div class="mt-3 mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
-                                <div class="wrapper" style="min-height: 200px; border: 1px solid #000;">
-                                    <canvas id="signature-pad" class="signature-pad" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
+                                <input type="hidden" id="evictiontenantid" name="evictiontenantid">
+                                <input type="hidden" id="missedpaymenttotal" name="missedpaymenttotal">
+                                <input type="hidden" id="misseddates" name="misseddates">
+                                <input type="hidden" id="signature" name="signature">
+                                
+                                <div class="mb-3">
+                                    <label for="evictiondate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="evictiondate" name="evictiondate" required>
                                 </div>
-                            </div>
-                            <div class="mb-4">
-                                <div class="row justify-content-center">
-                                    <div class="col-auto">
-                                        <button id="clear1" class="text-white" type="button">Clear</button>
+                                <div class="mb-3">
+                                    <label for="evictionpaydays" class="form-label">Number of Days for Tenant to Pay</label>
+                                    <input type="text" class="form-control" id="evictionpaydays" name="evictionpaydays" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="adminaddress" class="form-label">Admin Address</label>
+                                    <input type="text" class="form-control" id="adminaddress" name="adminaddress" required>
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <label for="signature-pad" class="form-label position-absolute">Admin Signature</label>
+                                </div>
+                                <div class="mt-3 mb-3 position-relative d-inline-block" style="min-height: 150px; flex: 1;">
+                                    <div class="wrapper" style="min-height: 200px; border: 1px solid #000;">
+                                        <canvas id="signature-pad" class="signature-pad" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
                                     </div>
                                 </div>
-                                <!-- <button id="save">Save Signature</button> -->
+                                <div class="mb-4">
+                                    <div class="row justify-content-center">
+                                        <div class="col-auto">
+                                            <button id="clear1" class="text-white" type="button">Clear</button>
+                                        </div>
+                                    </div>
+                                    <!-- <button id="save">Save Signature</button> -->
+                                </div>
+                                <div class="col-4 align-self-center mb-3">
+                                    <button type="submit" id="submit_eviction" name="submit_eviction" class="btn btn-primary table-buttons-update d-block mx-auto w-100 d-none">Send Eviction</button>
+                                    <button type="button" id="confirmSendEviction" class="btn btn-primary table-buttons-update eviction d-block mx-auto" 
+                                    style="background-color: #527853;border-color: #527853;color: white;padding: 7.5px 10px;border-radius: 4px;">Send Eviction</button>
+                                </div>
+                            </form>
+                            <!-- Confirmation Popup Modal -->
+                            <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+                                <div class="popup-content">
+                                    <h5 class="text-white" style="background-color: #527853; padding: 16px;">Confirm Action</h5>
+                                    <p style="padding: 20px;">Are the details provided correct?</p>
+                                    <div class="popup-buttons" style="margin-top: 0; margin-bottom: 16px;">
+                                        <button id="confirmYes" class="btn table-buttons-update" style="background-color: #527853; color: white;">Yes</button>
+                                        <button id="confirmNo" class="btn table-buttons-delete" style="background-color: #EE7214; color: white;">No</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-4 align-self-center mb-3">
-                                <button type="submit" name="submit_eviction" class="btn btn-primary table-buttons-update d-block mx-auto w-100">Send Eviction</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -609,6 +652,23 @@ include '../admin.php';
                         event.preventDefault();
                         alert("Please provide both signatures.");
                     }
+                });
+            </script>
+
+            <script>
+                document.getElementById('confirmSendEviction').addEventListener('click', function () {
+                    // Show the custom confirmation popup
+                    document.getElementById('confirmationPopup').style.display = 'flex';
+                });
+
+                document.getElementById('confirmYes').addEventListener('click', function () {
+                    // User confirms action, submit the form programmatically
+                    document.getElementById('submit_eviction').click();
+                });
+
+                document.getElementById('confirmNo').addEventListener('click', function () {
+                    // User cancels action, hide the popup
+                    document.getElementById('confirmationPopup').style.display = 'none';
                 });
             </script>
 
