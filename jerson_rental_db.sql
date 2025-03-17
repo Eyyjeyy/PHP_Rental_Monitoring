@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2025 at 08:45 PM
+-- Generation Time: Mar 17, 2025 at 06:44 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -87,13 +87,6 @@ CREATE TABLE `contracts` (
   `upload_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `contracts`
---
-
-INSERT INTO `contracts` (`id`, `tenants_id`, `adminname`, `tenantname`, `filename`, `fileurl`, `tenantapproval`, `datestart`, `expirationdate`, `upload_date`) VALUES
-(7, 1, 'Jerson Wayas Lippad', 'john angelo payo junio', '1737138126-678a9fcee8336_john angelo payo junio_contract.pdf', '/asset/testpdf/1737138126-678a9fcee8336_john angelo payo junio_contract.pdf', 'true', '2025-01-17', '2025-02-06', '2025-01-17 18:22:06');
-
 -- --------------------------------------------------------
 
 --
@@ -125,13 +118,6 @@ CREATE TABLE `deposit` (
   `reason` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `deposit`
---
-
-INSERT INTO `deposit` (`id`, `tenantid`, `adminid`, `deposit_filepath`, `houses_id`, `depositamount`, `depositdate`, `approval`, `reason`) VALUES
-(1, 1, 105, '../deposits/GAMEPOSTER_678a42f2233ac.jpg', 1, 9000, '2025-01-17', 'Unapproved', '');
-
 -- --------------------------------------------------------
 
 --
@@ -144,15 +130,6 @@ CREATE TABLE `eviction_popup` (
   `seen` varchar(255) NOT NULL,
   `file_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `eviction_popup`
---
-
-INSERT INTO `eviction_popup` (`id`, `users_id`, `seen`, `file_path`) VALUES
-(6, 105, 'true', 'eviction_1_1736987198_6788523e741a0.pdf'),
-(7, 105, 'true', 'eviction_1_1737029148_6788f61c1f2b3.pdf'),
-(8, 105, 'true', 'eviction_1_1737029969_6788f951c0cf3.pdf');
 
 -- --------------------------------------------------------
 
@@ -188,14 +165,6 @@ CREATE TABLE `expenses` (
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `expenses`
---
-
-INSERT INTO `expenses` (`id`, `name`, `info`, `amount`, `house_id`, `date`) VALUES
-(1, 'Floor Repair', 'Repaired', 300, 1, '2024-12-16'),
-(2, 'Floor Repair', 'Repaired', 300, 1, '2024-12-16');
-
 -- --------------------------------------------------------
 
 --
@@ -209,24 +178,6 @@ CREATE TABLE `history` (
   `details` text NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `history`
---
-
-INSERT INTO `history` (`id`, `admin_id`, `action`, `details`, `timestamp`) VALUES
-(1, 84, 'Add', 'Added User, ID: 104<br> Username: aj', '2025-01-14 20:57:59'),
-(2, 84, 'Delete', 'Deleted User, ID: 104<br> Username: aj', '2025-01-14 20:58:04'),
-(3, 84, 'Add', 'Added User, ID: 105<br> Username: aj', '2025-01-14 20:58:21'),
-(4, 84, 'Update', 'Updated User, ID: 105<br> New Username: aj<br> Old Username: aj', '2025-01-14 20:58:37'),
-(5, 84, 'Add', 'Added Category, ID: 1<br> Username: studio', '2025-01-14 20:59:47'),
-(6, 84, 'Add', 'Added House, ID: 1<br> Housename: Serpent Lodging<br> Category: 1<br> Price: 565<br> Electric Account: serpentmeralco (656565656565)<br> Water Account: serpentmaynilad (656565656565)', '2025-01-14 21:00:37'),
-(7, 84, 'Add', 'Added Tenant, ID: 1<br>First Name: john angelo<br>Middle Name: payo<br>Last Name: junio<br>Contact: <br>User ID: 105<br>Username: aj<br>House ID: 1<br>House Category: studio', '2025-01-14 21:05:42'),
-(8, 84, 'Declined', 'Deposit Declined, ID: 1<br>Approval: Pending -> Declined', '2025-01-17 12:00:19'),
-(9, 84, 'Delete', 'Deleted Contract, ID: 4<br>Contract Tenant Name: john angelo payo junio<br>', '2025-01-17 16:10:50'),
-(10, 84, 'Delete', 'Deleted Contract, ID: 5<br>Contract Tenant Name: john angelo payo junio<br>', '2025-01-17 17:50:37'),
-(11, 84, 'Delete', 'Deleted Contract, ID: 6<br>Contract Tenant Name: john angelo payo junio<br>', '2025-01-17 18:21:46'),
-(12, 84, 'Add', 'Added Expenses, ID: 1<br>Expenses Name : Floor Repair<br>Expenses Info : Repaired<br>Expenses Amount : 400<br>House ID: 1<br>', '2025-01-18 12:14:37');
 
 -- --------------------------------------------------------
 
@@ -263,16 +214,17 @@ CREATE TABLE `houses` (
   `house_name` varchar(100) NOT NULL,
   `price` double NOT NULL,
   `category_id` int(50) NOT NULL,
-  `address` varchar(100) NOT NULL
+  `address` varchar(100) NOT NULL,
+  `date_registered` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `houses`
 --
 
-INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`, `address`) VALUES
-(1, 'Serpent Lodging', 565, 1, 'Hongkong Disneyland'),
-(2, 'Cable House', 565, 1, 'Hongkong Disneyland');
+INSERT INTO `houses` (`id`, `house_name`, `price`, `category_id`, `address`, `date_registered`) VALUES
+(1, 'Serpent Lodging', 565, 1, 'Hongkong Disneyland', '2024-01-02'),
+(2, 'Cable House', 565, 1, 'Hongkong Disneyland', '2024-01-11');
 
 -- --------------------------------------------------------
 
@@ -336,15 +288,6 @@ CREATE TABLE `payments` (
   `archive` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`id`, `name`, `amount`, `tenants_id`, `houses_id`, `filepath`, `date_payment`, `approval`, `archive`) VALUES
-(1, 'gg', 800, 1, 1, '', '2024-12-16', 'true', ''),
-(2, 'gg', 200, 1, 1, '', '2024-12-16', 'true', ''),
-(3, 'gg', 200, 2, 1, '', '2024-12-17', 'true', '');
-
 -- --------------------------------------------------------
 
 --
@@ -383,14 +326,6 @@ CREATE TABLE `tenants` (
   `reminder_sent_months` int(22) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `tenants`
---
-
-INSERT INTO `tenants` (`id`, `fname`, `mname`, `lname`, `contact`, `users_id`, `users_username`, `house_id`, `house_category`, `date_start`, `date_end`, `date_preferred`, `notification_sent_months`, `reminder_sent_months`) VALUES
-(1, 'john angelo', 'payo', 'junio', '', '105', 'aj', 1, 'studio', '2025-01-15', NULL, '2024-10-04', 4, 2),
-(2, 'romeo', 'juliet', 'gary', '', '10500', 'romeo', 1, 'studio', '2025-01-15', NULL, '2024-08-04', 4, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -416,8 +351,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `middlename`, `lastname`, `password`, `email`, `role`, `Date`, `phonenumber`, `otp`) VALUES
-(84, 'admin', 'Jerson', 'Wayas', 'Lippad', '1234567', 'jerslippad3@gmail.com', 'admin', '2024-10-29 19:18:15', '09955835160', NULL),
-(105, 'aj', 'john angelo', 'payo', 'junio', '1234567', 'jerslippad3@gmail.com', 'user', '2025-01-15 04:58:21', '09955835160', NULL);
+(1, 'admin', 'John Angelo', 'Payo', 'Junio', '1234567', 'YourEmail@gmail.com', 'admin', '2025-03-18 01:34:41', '09xxxxxxxxx', NULL);
 
 --
 -- Indexes for dumped tables
@@ -553,7 +487,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `contracts`
 --
 ALTER TABLE `contracts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contract_images`
@@ -565,13 +499,13 @@ ALTER TABLE `contract_images`
 -- AUTO_INCREMENT for table `deposit`
 --
 ALTER TABLE `deposit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `eviction_popup`
 --
 ALTER TABLE `eviction_popup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `eviction_setting`
@@ -583,25 +517,25 @@ ALTER TABLE `eviction_setting`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `houseaccounts`
 --
 ALTER TABLE `houseaccounts`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `houses`
 --
 ALTER TABLE `houses`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -625,7 +559,7 @@ ALTER TABLE `paper_files`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `physical_contracts`
@@ -637,13 +571,13 @@ ALTER TABLE `physical_contracts`
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
